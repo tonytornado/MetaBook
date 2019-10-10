@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29318.209
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaBookPrime", "MetaBookPrime\MetaBookPrime.csproj", "{BA12468F-94B0-4D98-8D8F-FB5C1B53FD4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetabookDataSource", "MetabookDataSource\MetabookDataSource.csproj", "{A137F332-121C-455C-9998-93979254FD87}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA12468F-94B0-4D98-8D8F-FB5C1B53FD4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA12468F-94B0-4D98-8D8F-FB5C1B53FD4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA12468F-94B0-4D98-8D8F-FB5C1B53FD4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA12468F-94B0-4D98-8D8F-FB5C1B53FD4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A137F332-121C-455C-9998-93979254FD87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A137F332-121C-455C-9998-93979254FD87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A137F332-121C-455C-9998-93979254FD87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A137F332-121C-455C-9998-93979254FD87}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC5733C0-440F-4173-AB6E-BFB9C5E8CB8A}
+	EndGlobalSection
+EndGlobal
