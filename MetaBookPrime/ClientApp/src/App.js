@@ -24,7 +24,7 @@ export default class App extends Component {
             <AuthorizeRoute exact path='/event_add' component={EventCreator} />
             <AuthorizeRoute exact path='/directory' component={Contacts} />
             <AuthorizeRoute exact path='/contact/:id' component={Contact} />
-            <AuthorizeRoute path='/contactform/:id' component={ContactForm} />
+            <AuthorizeRoute path='/add' component={ContactForm} />
             <AuthorizeRoute path='/edit/:id' component={ContactForm} />
             <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
       </Layout>

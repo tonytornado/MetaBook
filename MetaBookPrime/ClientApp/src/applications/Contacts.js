@@ -13,7 +13,7 @@ import { faEnvelope, faUser, faGlobe, faPhone, faHome, faCalendarDay } from '@fo
 function PhoneData(props) {
     const phones = props.phones;
 
-    if (phones != null) {
+    if (phones != null  && phones.length > 0) {
         return (
             <table className="table table-bordered">
                 <thead className="thead-dark">
@@ -32,7 +32,7 @@ function PhoneData(props) {
             </table>
         );
     } else {
-        return (<li>No phone data found</li>);
+        return null;
     }
 }
 
@@ -43,7 +43,7 @@ function PhoneData(props) {
 function AddressData(props) {
     const addresses = props.addresses;
 
-    if (addresses != null) {
+    if (addresses != null && addresses.length > 0) {
         return (
             <table className="table table-bordered">
                 <thead className="thead-dark">
@@ -62,30 +62,34 @@ function AddressData(props) {
             </table>
         );
     } else {
-        return <li>No address data found.</li>
-    }
+        return null;
+    } 
 
 }
 
 function PersonalEvents(props) {
     const events = props.eventData;
 
-    return (
-        <table className="table table-responsive-sm">
-            <thead className="thead-dark">
-                <tr>
-                    <th colSpan="1"><FontAwesomeIcon icon={faCalendarDay} /> Events</th>
-                </tr>
-            </thead>
-            <tbody>
-                {events.map(e =>
-                    <tr key={e.id}>
-                        <td><Link to={`/events/${e.id}`}>{e.name}</Link></td>
+    if (events && events.length > 0) {
+        return (
+            <table className="table table-responsive-sm">
+                <thead className="thead-dark">
+                    <tr>
+                        <th colSpan="1"><FontAwesomeIcon icon={faCalendarDay} /> Events</th>
                     </tr>
-                )}
-            </tbody>
-        </table>
-    );
+                </thead>
+                <tbody>
+                    {events.map(e =>
+                        <tr key={e.id}>
+                            <td><Link to={`/events/${e.id}`}>{e.name}</Link></td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        );
+    } else {
+        return null;
+    }
 }
 
 /**

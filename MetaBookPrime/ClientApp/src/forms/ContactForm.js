@@ -20,7 +20,7 @@ function PhoneForm(props) {
             <div className="form-group">
                 <label className="label">Phone Number</label>
                 <input
-                    type="tel" name="phoneNumber" placeholder="Phone Number (10 digits only)" className="form-control" defaultValue={caller.phoneNumber} />
+                    name="phoneNumber" placeholder="Phone Number (10 digits only)" className="form-control" defaultValue={caller.phoneNumber} />
             </div>
             <div className="form-group">
                 <label className="label">Phone Type</label>
@@ -199,6 +199,9 @@ export class ContactForm extends Component {
                 {
                     method: 'PUT',
                     body: data,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
                 }).then((res) => {
                     if (res.ok) {
                         console.log("Updated!");
@@ -209,11 +212,12 @@ export class ContactForm extends Component {
                 }).catch(e => {
                     console.log("error: " + e);
                 });
-        } else {
+        }
+        else {
             fetch('api/People',
                 {
                     method: 'POST',
-                    body: data,
+                    body: data
                 }).then((res) => {
                     if (res.ok) {
                         console.log("Perfect!");
@@ -231,12 +235,14 @@ export class ContactForm extends Component {
         this.setState(state => ({
             addAddress: !state.addAddress
         }));
+        document.getElementById("addressCheck").checked = this.state.addAddress;
     }
 
     handlePhoneChange() {
         this.setState(state => ({
             addPhone: !state.addPhone
         }));
+        document.getElementById("phoneCheck").checked = this.state.addAddress;
     }
 
     render() {

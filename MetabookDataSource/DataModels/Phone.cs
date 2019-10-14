@@ -12,7 +12,6 @@ namespace MetaBookDataSource.Data
 
         [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber, ErrorMessage = "This must have ten-digits.")]
-        [Range(10, 10)]
         public long PhoneNumber { get; set; }
 
         [Display(Name = "Caller Type")]

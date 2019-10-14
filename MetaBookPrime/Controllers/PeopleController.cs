@@ -110,35 +110,25 @@ namespace MetaBookPrime.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Person>> PostPerson([FromForm]string AddressCheck,
-            [FromForm]string phoneCheck,
+        public async Task<ActionResult<Person>> PostPerson([FromForm]bool AddressCheck,
+            [FromForm]bool phoneCheck,
             [FromForm]Person peep,
             [FromForm]Address address,
             [FromForm]Phone phone)
         {
-            if (string.IsNullOrEmpty(AddressCheck))
-            {
-                throw new ArgumentException("This can't be a null, though", nameof(AddressCheck));
-            }
-
-            if (string.IsNullOrEmpty(phoneCheck))
-            {
-                throw new ArgumentException("This can't be null tho.", nameof(phoneCheck));
-            }
 
             Person person = peep;
 
-
-            if (AddressCheck == "on")
+            if (AddressCheck)
             {
                 Address addy = address;
-                person.Addresses = new Collection<Address> { addy };
+                person.Addresses.Add(addy);
             }
 
-            if (phoneCheck == "on")
+            if (phoneCheck)
             {
                 Phone caller = phone;
-                person.Phones = new Collection<Phone> { caller };
+                person.Phones.Add(caller);
             }
 
             _context.People.Add(person);

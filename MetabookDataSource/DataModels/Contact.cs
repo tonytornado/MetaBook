@@ -31,8 +31,8 @@ namespace MetaBookDataSource.Data
 
         public MetaUser Owner { get; set; }
 
-        public ICollection<Phone> Phones { get; set;  }
-        public ICollection<Address> Addresses { get; set; }
+        public ICollection<Phone> Phones { get; } = new HashSet<Phone>();
+        public ICollection<Address> Addresses { get; } = new HashSet<Address>();
 
     }
 
@@ -53,8 +53,7 @@ namespace MetaBookDataSource.Data
         {
             FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));
             LastName = lastName ?? throw new ArgumentNullException(nameof(lastName));
-            Email = email ?? throw new ArgumentNullException(message: "You cannot have empty space there",
-                                                             paramName: nameof(email));
+            Email = email ?? throw new ArgumentNullException(nameof(email));
             Website = website ?? throw new ArgumentNullException(nameof(website));
         }
 

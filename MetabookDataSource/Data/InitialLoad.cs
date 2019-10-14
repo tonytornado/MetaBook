@@ -43,7 +43,7 @@ namespace MetaBookDataResource.DataLoaders
             };
 
             // Make yourself.
-            Person book = new Person { FirstName = "Tony", LastName = "Thigpen", Email = "tonyt@gmail.com", Website = "https://www.tonythigpen.com", Addresses = new Collection<Address>(), Phones = new Collection<Phone>() };
+            Person book = new Person { FirstName = "Tony", LastName = "Thigpen", Email = "tonyt@gmail.com", Website = "https://www.tonythigpen.com"};
 
             book.Addresses.Add(addys);
             context.SaveChanges();
@@ -63,7 +63,6 @@ namespace MetaBookDataResource.DataLoaders
                     StartTime = new DateTime(2019,9,3,12,0,0),
                     EndTime = new DateTime(2019,9,3,18,0,0),
                     Description = "There is a thing that is happening and you should definitely be in the know about it.",
-                    Participants = new Collection<Person>() { book }
                 },
                 new Moment()
                 {
@@ -72,12 +71,13 @@ namespace MetaBookDataResource.DataLoaders
                     StartTime = new DateTime(2019,9,3,12,0,0),
                     EndTime = new DateTime(2019,9,3,18,0,0),
                     Description = "Well, it's happening again.",
-                    Participants = new Collection<Person>() { book }
                 }
             };
             foreach (var item in happening)
             {
+                item.Participants.Add(book);
                 context.Events.Add(item);
+
             }
             context.SaveChanges();
         }

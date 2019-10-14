@@ -18,7 +18,7 @@ namespace MetaBookDataSource.Data
         public string Location { get; set; }
         public string Description { get; set; }
 
-        public ICollection<Person> Participants { get; set; }
+        public ICollection<Person> Participants { get; } = new HashSet<Person>();
 
         public enum Color
         {
