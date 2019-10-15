@@ -235,14 +235,12 @@ export class ContactForm extends Component {
         this.setState(state => ({
             addAddress: !state.addAddress
         }));
-        document.getElementById("addressCheck").checked = this.state.addAddress;
     }
 
     handlePhoneChange() {
         this.setState(state => ({
             addPhone: !state.addPhone
         }));
-        document.getElementById("phoneCheck").checked = this.state.addAddress;
     }
 
     render() {
@@ -254,14 +252,12 @@ export class ContactForm extends Component {
                     <MainForm data={dataBits} />
                     <hr />
                     <div className="form-check">
-                        <input type="checkbox" id="phoneCheck" className="form-check-input" onClick={this.handlePhoneChange} name="phoneCheck"
-                            defaultValue={dataBits.phones.length > 0 ? true : false} />
+                        <input type="checkbox" id="phoneCheck" className="form-check-input" onClick={this.handlePhoneChange} name="phoneCheck" value="true" />
                         <label htmlFor="phoneCheck" className="form-check-label">Add phone?</label>
 
                     </div>
                     <div className="form-check">
-                        <input type="checkbox" id="addressCheck" className="form-check-input" onClick={this.handleAddressChange} name="addressCheck"
-                            defaultValue={dataBits.addresses.length > 0 ? true : false} />
+                        <input type="checkbox" id="addressCheck" className="form-check-input" onClick={this.handleAddressChange} name="addressCheck" value="true" />
                         <label htmlFor="addressCheck" className="form-check-label">Add address?</label>
                     </div>
                     <br />
