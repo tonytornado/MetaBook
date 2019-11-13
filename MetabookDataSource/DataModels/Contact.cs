@@ -49,12 +49,14 @@ namespace MetaBookDataSource.Data
             string firstName,
             string lastName,
             string email,
-            string website)
+            string website,
+            MetaUser owner)
         {
             FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));
             LastName = lastName ?? throw new ArgumentNullException(nameof(lastName));
             Email = email ?? throw new ArgumentNullException(nameof(email));
             Website = website ?? throw new ArgumentNullException(nameof(website));
+            Owner = owner ?? throw new ArgumentNullException(nameof(owner));
         }
 
         public string FirstName { get; set; }

@@ -5,7 +5,12 @@ namespace MetaBookDataSource.Data
 {
     public class MetaUser : IdentityUser
     {
-        public ICollection<Person> UserContacts { get; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
+        public ICollection<Person> UserContacts { get; } = new HashSet<Person>();
+        
+
         //public ICollection<Event> Events { get; }
     }
 }

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import authService from './AuthorizeService';
 import { ApplicationPaths } from './ApiAuthorizationConstants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt, faSignInAlt, faRegistered, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faSignInAlt, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 
 export class LoginMenu extends Component {
     constructor(props) {
@@ -29,7 +29,7 @@ export class LoginMenu extends Component {
         const [isAuthenticated, user] = await Promise.all([authService.isAuthenticated(), authService.getUser()])
         this.setState({
             isAuthenticated,
-            userName: user && user.name
+            userName: user && user.name,
         });
     }
 
@@ -61,10 +61,10 @@ export class LoginMenu extends Component {
     anonymousView(registerPath, loginPath) {
         return (<Fragment>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to={registerPath} alt="Register" title="Register here!"><FontAwesomeIcon icon={faUserPlus} size={2} /></NavLink>
+                <NavLink tag={Link} className="text-dark" to={registerPath} alt="Register" title="Register here!"><FontAwesomeIcon icon={faUserPlus} size="1x" /></NavLink>
             </NavItem>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to={loginPath} alt="Sign In" title="Login"><FontAwesomeIcon icon={faSignInAlt} size={2} /></NavLink>
+                <NavLink tag={Link} className="text-dark" to={loginPath} alt="Sign In" title="Login"><FontAwesomeIcon icon={faSignInAlt} size="1x" /></NavLink>
             </NavItem>
         </Fragment>);
     }

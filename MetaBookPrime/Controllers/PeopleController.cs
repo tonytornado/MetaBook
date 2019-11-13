@@ -27,6 +27,10 @@ namespace MetaBookPrime.Controllers
         }
 
         // GET: api/People/Phones
+        /// <summary>
+        /// Gets all phone types from enum list
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("Phones")]
         public ActionResult<IEnumerable<PhoneType>> GetPhoneTypes()
         {
@@ -34,12 +38,20 @@ namespace MetaBookPrime.Controllers
         }
 
         // GET: api/People/Address
+        /// <summary>
+        /// Gets all address types from enum list
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("Addresses")]
         public ActionResult<IEnumerable<BuildingType>> GetAddressTypes()
         {
             return Ok(EnumExtensions.GetValues<BuildingType>());
         }
 
+        /// <summary>
+        /// Gets all states from enum list
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("States")]
         public ActionResult<IEnumerable<State>> GetStates()
         {
@@ -47,17 +59,25 @@ namespace MetaBookPrime.Controllers
         }
 
         // GET: api/People
+        /// <summary>
+        /// Gets all contacts that are public
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Person>>> GetPeople()
         {
-
-            MetaUser user = await _userManager.GetUserAsync(HttpContext.User);
+            MetaUser user = await _userManager.GetUserAsync(User);
 
             return await _context.People.Where(p => p.Owner == user)
                 .ToListAsync();
         }
 
         // GET: api/People/5
+        /// <summary>
+        /// Retrieve a person with a specified id
+        /// </summary>
+        /// <param name="id">Person object's id</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Person>> GetPerson(int id)
         {
@@ -78,8 +98,16 @@ namespace MetaBookPrime.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPerson(int id, Person person)
+        public async Task<IActionResult> PutPerson(
+            int id,
+            MetaUser user,
+            [FromForm] Person person)
         {
+            if (user is null)
+            {
+                return BadRequest();
+            }
+
             if (id != person.Id)
             {
                 return BadRequest();
@@ -110,26 +138,37 @@ namespace MetaBookPrime.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Person>> PostPerson([FromForm]bool AddressCheck,
+        public async Task<ActionResult<Person>> PostPerson(
+            [FromForm]bool AddressCheck,
             [FromForm]bool phoneCheck,
             [FromForm]Person peep,
             [FromForm]Address address,
             [FromForm]Phone phone)
         {
+            MetaUser user = await _userManager.GetUserAsync(User);
+
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
 
             Person person = peep;
 
+            // Check for an address
             if (AddressCheck)
             {
                 Address addy = address;
                 person.Addresses.Add(addy);
             }
 
+            // Check for a phone
             if (phoneCheck)
             {
                 Phone caller = phone;
                 person.Phones.Add(caller);
             }
+
+            person.Owner = user;
 
             _context.People.Add(person);
             await _context.SaveChangesAsync();
@@ -138,6 +177,11 @@ namespace MetaBookPrime.Controllers
         }
 
         // DELETE: api/People/5
+        /// <summary>
+        /// Deletes a person
+        /// </summary>
+        /// <param name="id">Person's id to remove</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult<Person>> DeletePerson(int id)
         {
