@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Container } from 'reactstrap';
 import { NavMenu } from './NavMenu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faSync } from '@fortawesome/free-solid-svg-icons';
 
 export class Layout extends Component {
   static displayName = Layout.name;
@@ -64,6 +64,17 @@ export function Loader() {
     return (
         <div className="text-center">
             <FontAwesomeIcon icon={faSpinner} size="6x" spin />
+        </div>
+    )
+}
+
+/**
+ * A function for loading the login screen animation
+ * */
+export function LoginLoader() {
+    return (
+        <div className="text-center">
+            <FontAwesomeIcon icon={faSync} size="6x" spin />
         </div>
     )
 }

@@ -21,8 +21,7 @@
     "@fortawesome/free-brands-svg-icons": "latest",
     "@fortawesome/free-regular-svg-icons": "latest",
     "@fortawesome/fontawesome-svg-core": "latest",
-    "react-datepicker": "latest",
-    "@aspnet/signalr-client": "1.0.0-alpha2-update1"
+    "react-datepicker": "latest"
   },
   "devDependencies": {
     "ajv": "^6.9.1",
