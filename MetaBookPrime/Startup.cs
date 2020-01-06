@@ -1,6 +1,8 @@
 using MetaBookDataSource.Data;
 using MetaBookDataSource.Models;
+
 using MetaBookPrime.Data;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,7 +37,8 @@ namespace MetaBookPrime
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<MetaUser, ApplicationDbContext>();
+                    .AddApiAuthorization<MetaUser, ApplicationDbContext>()
+                    .AddProfileService<ProfileService>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();

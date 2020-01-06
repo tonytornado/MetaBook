@@ -145,7 +145,7 @@ namespace MetaBookPrime.Controllers
             [FromForm]Address address,
             [FromForm]Phone phone)
         {
-            MetaUser user = await _userManager.GetUserAsync(User);
+            MetaUser user = await _userManager.GetUserAsync(HttpContext.User);
 
             if (user is null)
             {

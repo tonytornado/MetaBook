@@ -12,6 +12,9 @@ namespace MetaBookPrime.Data
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
+
         }
+
+        public DbSet<MetaUser> MetaUsers { get; set; }
     }
 }

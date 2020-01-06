@@ -29,12 +29,14 @@ export class LoginMenu extends Component {
         const [isAuthenticated, user] = await Promise.all([authService.isAuthenticated(), authService.getUser()])
         this.setState({
             isAuthenticated,
-            userName: user && user.name,
+            userFirstName: user && user.FirstName,
+            userLastName: user && user.LastName,
+            userId: user && user.Id
         });
     }
 
     render() {
-        const { isAuthenticated, userName } = this.state;
+        const { isAuthenticated, userFirstName } = this.state;
         if (!isAuthenticated) {
             const registerPath = `${ApplicationPaths.Register}`;
             const loginPath = `${ApplicationPaths.Login}`;
@@ -42,7 +44,7 @@ export class LoginMenu extends Component {
         } else {
             const profilePath = `${ApplicationPaths.Profile}`;
             const logoutPath = { pathname: `${ApplicationPaths.LogOut}`, state: { local: true } };
-            return this.authenticatedView(userName, profilePath, logoutPath);
+            return this.authenticatedView(userFirstName, profilePath, logoutPath);
         }
     }
 
