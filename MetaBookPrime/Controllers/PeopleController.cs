@@ -139,13 +139,14 @@ namespace MetaBookPrime.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(
+            [FromForm]string id,
             [FromForm]bool AddressCheck,
             [FromForm]bool phoneCheck,
             [FromForm]Person peep,
             [FromForm]Address address,
             [FromForm]Phone phone)
         {
-            MetaUser user = await _userManager.GetUserAsync(HttpContext.User);
+            MetaUser user = await _userManager.FindByIdAsync(id);
 
             if (user is null)
             {

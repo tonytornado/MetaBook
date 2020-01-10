@@ -277,7 +277,18 @@ export class ContactForm extends Component {
             </main>
         );
     }
+
+    async populateUserData() {
+        const token = await authService.getAccessToken();
+        const response = await fetch('contact', {
+            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        this.setState({ forecasts: data, loading: false });
+    }
 }
+
+
 
 class ContactData {
     id = 0;
