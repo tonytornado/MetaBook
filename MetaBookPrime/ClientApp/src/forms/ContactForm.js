@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import authService from "../components/api-authorization/AuthorizeService";
 
 
 /**
@@ -140,7 +141,8 @@ export class ContactForm extends Component {
             states: [],
             addAddress: false,
             addPhone: false,
-            contactData: new ContactData()
+            contactData: new ContactData(),
+            userData: []
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -149,6 +151,7 @@ export class ContactForm extends Component {
     }
 
     componentDidMount() {
+        this.populateUserData();
         const { match: { params } } = this.props;
         var contact_id = params.id;
 
@@ -249,6 +252,7 @@ export class ContactForm extends Component {
         return (
             <main>
                 <form onSubmit={this.handleSubmit} className="border p-3 rounded">
+                    <input type="hidden" name="substring" defaultValue={this.state.userData.sub} />
                     <MainForm data={dataBits} />
                     <hr />
                     <div className="form-check">
@@ -280,11 +284,11 @@ export class ContactForm extends Component {
 
     async populateUserData() {
         const token = await authService.getAccessToken();
-        const response = await fetch('contact', {
+        const response = await fetch('connect/userinfo', {
             headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
-        this.setState({ forecasts: data, loading: false });
+        this.setState({ userData: data, loading: false });
     }
 }
 

@@ -1,15 +1,17 @@
-﻿using System;
+﻿using MetaBookDataResource.Enums;
+
+using MetaBookDataSource.Data;
+using MetaBookDataSource.Models;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MetaBookDataSource.Data;
-using MetaBookDataSource.Models;
-using MetaBookDataResource.Enums;
-using System.Collections.ObjectModel;
-using Microsoft.AspNetCore.Identity;
 
 namespace MetaBookPrime.Controllers
 {
@@ -58,27 +60,39 @@ namespace MetaBookPrime.Controllers
             return Ok(EnumExtensions.GetValues<State>());
         }
 
-        // GET: api/People
+        // GET: api/People/Phonebook
         /// <summary>
-        /// Gets all contacts that are public
+        /// Gets all contacts that are private
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetPeople()
+        [HttpGet("phonebook/{id}")]
+        public async Task<ActionResult<IEnumerable<Person>>> GetPeople(string id)
         {
-            MetaUser user = await _userManager.GetUserAsync(User);
+            //MetaUser user = await _userManager.GetUserAsync(User);
+            MetaUser user = await _userManager.FindByNameAsync(id);
 
             return await _context.People.Where(p => p.Owner == user)
                 .ToListAsync();
         }
 
-        // GET: api/People/5
+        // GET: api/People
+        /// <summary>
+        /// Gets all contacts that are private
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<Person>>> GetAllPeople()
+        {
+            return await _context.People.ToListAsync();
+        }
+
+        // GET: api/People/detail/5
         /// <summary>
         /// Retrieve a person with a specified id
         /// </summary>
         /// <param name="id">Person object's id</param>
         /// <returns></returns>
-        [HttpGet("{id}")]
+        [HttpGet("details/{id}")]
         public async Task<ActionResult<Person>> GetPerson(int id)
         {
             Person person = await _context.People
@@ -139,14 +153,14 @@ namespace MetaBookPrime.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(
-            [FromForm]string id,
+            [FromForm]string substring,
             [FromForm]bool AddressCheck,
             [FromForm]bool phoneCheck,
             [FromForm]Person peep,
             [FromForm]Address address,
             [FromForm]Phone phone)
         {
-            MetaUser user = await _userManager.FindByIdAsync(id);
+            MetaUser user = await _userManager.FindByIdAsync(substring);
 
             if (user is null)
             {
@@ -174,7 +188,7 @@ namespace MetaBookPrime.Controllers
             _context.People.Add(person);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPerson", new { id = person.Id }, person);
+            return CreatedAtAction("GetAllPeople","");
         }
 
         // DELETE: api/People/5

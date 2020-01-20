@@ -41,7 +41,7 @@ namespace MetaBookPrime.Controllers
         }
 
         //GET: api/Events/personal/5
-        [HttpGet("personal/{id}")]
+        [HttpGet("itinerary/{id}")]
         public async Task<ActionResult<ICollection<Moment>>> GetPersonalEvents(int id)
         {
             Person person = await _context.People.FindAsync(id);

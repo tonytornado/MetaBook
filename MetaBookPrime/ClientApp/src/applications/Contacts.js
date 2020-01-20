@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import authService from "../components/api-authorization/AuthorizeService";
 import { Banner, Loader } from '../components/Layout';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -67,6 +68,10 @@ function AddressData(props) {
 
 }
 
+/**
+ * Adds personal events
+ * @param {any} props
+ */
 function PersonalEvents(props) {
     const events = props.eventData;
 
@@ -102,13 +107,19 @@ export class Contacts extends Component {
         super(props);
         this.state = {
             contacts: [],
+            userData: [],
             loading: true,
             missingData: false,
         };
     }
 
     componentDidMount() {
-        fetch('api/People')
+        this.populateUserData();
+        this.getContactData();
+    }
+
+    async getContactData() {
+        fetch(`api/People/phonebook/${this.state.userData.Id}`)
             .then(response => response.json())
             .then(
                 (result) => {
@@ -121,6 +132,11 @@ export class Contacts extends Component {
             )
     }
 
+    /**
+     * Renders the contact list full out.
+     * 
+     * @param {array} contacts
+     */
     static renderContactList(contacts) {
         return (
             <div>
@@ -148,10 +164,23 @@ export class Contacts extends Component {
         );
     }
 
+    async populateUserData() {
+        const token = await authService.getAccessToken();
+        const response = await fetch('connect/userinfo/', {
+            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        this.setState({ userData: data });
+    }
+
     render() {
         let contents = this.state.loading
             ? <div><Loader /></div>
-            : Contacts.renderContactList(this.state.contacts);
+            : this.state.contacts.length
+                ? Contacts.renderContactList(this.state.contacts)
+                : <div><p>There are no contacts.</p>
+                    <div><Link to="/add" className="btn btn-sm btn-primary">Add Contact</Link></div>
+                </div>;
 
         return (
             <div>
@@ -180,7 +209,7 @@ export class Contact extends Component {
     componentDidMount() {
         const { match: { params } } = this.props;
 
-        fetch(`api/People/${params.id}`)
+        fetch(`api/People/Details/${params.id}`)
             .then(response => response.json())
             .then(
                 (result) => {
@@ -200,7 +229,7 @@ export class Contact extends Component {
      * @param {number} id
      */
     getPersonalEvents(id) {
-        fetch(`api/Events/Personal/${id}`)
+        fetch(`api/Events/Itinerary/${id}`)
             .then(response => response.json())
             .then(
                 (result) => {

@@ -54,7 +54,7 @@ export class LoginMenu extends Component {
                 <NavLink tag={Link} className="text-dark" to={profilePath}>{userName}</NavLink>
             </NavItem>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to={logoutPath}><FontAwesomeIcon icon={faSignOutAlt} size={2} /></NavLink>
+                <NavLink tag={Link} className="text-dark" to={logoutPath}><FontAwesomeIcon icon={faSignOutAlt} size="1x" /></NavLink>
             </NavItem>
         </Fragment>);
 
