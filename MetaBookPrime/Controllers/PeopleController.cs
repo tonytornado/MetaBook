@@ -64,15 +64,15 @@ namespace MetaBookPrime.Controllers
         /// <summary>
         /// Gets all contacts that are private
         /// </summary>
-        /// <returns></returns>
-        [HttpGet("phonebook/{id}")]
-        public async Task<ActionResult<IEnumerable<Person>>> GetPeople(string id)
+        /// <returns>List of private contacts</returns>
+        [Authorize]
+        [HttpGet("phonebook/{searchString}")]
+        public async Task<ActionResult<IEnumerable<Person>>> GetPeople(string searchString)
         {
             //MetaUser user = await _userManager.GetUserAsync(User);
-            MetaUser user = await _userManager.FindByNameAsync(id);
+            MetaUser user = await _userManager.FindByIdAsync(searchString);
 
-            return await _context.People.Where(p => p.Owner == user)
-                .ToListAsync();
+            return await _context.People.Where(p => p.OwnerId == searchString).ToListAsync();
         }
 
         // GET: api/People
@@ -80,7 +80,6 @@ namespace MetaBookPrime.Controllers
         /// Gets all contacts that are private
         /// </summary>
         /// <returns></returns>
-        [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<Person>>> GetAllPeople()
         {
             return await _context.People.ToListAsync();
@@ -111,6 +110,7 @@ namespace MetaBookPrime.Controllers
         // PUT: api/People/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPerson(
             int id,
@@ -151,6 +151,7 @@ namespace MetaBookPrime.Controllers
         // POST: api/People
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(
             [FromForm]string substring,
@@ -183,12 +184,13 @@ namespace MetaBookPrime.Controllers
                 person.Phones.Add(caller);
             }
 
-            person.Owner = user;
-
+            person.OwnerId = substring;
             _context.People.Add(person);
+            user.UserContacts.Add(person);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAllPeople","");
+            return CreatedAtAction("GetPerson", new { id = person.Id }, person);
+
         }
 
         // DELETE: api/People/5
@@ -197,6 +199,7 @@ namespace MetaBookPrime.Controllers
         /// </summary>
         /// <param name="id">Person's id to remove</param>
         /// <returns></returns>
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Person>> DeletePerson(int id)
         {

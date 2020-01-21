@@ -52,7 +52,7 @@ export class EventList extends Component {
      * Returns people for all events
      */
     getPeople() {
-        fetch('api/People')
+        fetch('api/People/')
             .then(response => response.json())
             .then(
                 (result) => {

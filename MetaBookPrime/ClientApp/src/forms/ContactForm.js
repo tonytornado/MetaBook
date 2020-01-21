@@ -193,16 +193,18 @@ export class ContactForm extends Component {
         }
     }
 
-    handleSubmit(e) {
+    async handleSubmit(e) {
         e.preventDefault();
         const data = new FormData(e.target);
+        const token = await authService.getAccessToken();
 
         if (data.id) {
-            fetch(`api/People/${data.id}`,
+            await fetch(`api/People/${data.id}`,
                 {
                     method: 'PUT',
                     body: data,
                     headers: {
+                        'Authorization': `Bearer ${token}`,
                         "Content-Type": "application/json"
                     },
                 }).then((res) => {
@@ -217,8 +219,11 @@ export class ContactForm extends Component {
                 });
         }
         else {
-            fetch('api/People',
+            await fetch('api/People',
                 {
+                    headers: { 
+                        'Authorization': `Bearer ${token}` 
+                    },
                     method: 'POST',
                     body: data
                 }).then((res) => {

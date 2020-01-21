@@ -9,9 +9,10 @@ namespace MetaBookDataSource.Data
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public ICollection<Person> UserContacts { get; } = new HashSet<Person>();
+        public ICollection<Person> UserContacts { get; set; } = new HashSet<Person>();
         
 
         //public ICollection<Event> Events { get; }
     }
 }
+ 

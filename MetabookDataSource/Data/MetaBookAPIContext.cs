@@ -18,5 +18,6 @@ namespace MetaBookDataSource.Models
         public DbSet<Address> Locations { get; set; }
         public DbSet<Phone> Phones { get; set; }
         public DbSet<Moment> Events { get; set; }
+        public DbSet<MetaUser> UserBoxes { get; set; }
     }
 }

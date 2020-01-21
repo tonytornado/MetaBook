@@ -14,7 +14,7 @@ import { faEnvelope, faUser, faGlobe, faPhone, faHome, faCalendarDay } from '@fo
 function PhoneData(props) {
     const phones = props.phones;
 
-    if (phones != null  && phones.length > 0) {
+    if (phones != null && phones.length > 0) {
         return (
             <table className="table table-bordered">
                 <thead className="thead-dark">
@@ -64,7 +64,7 @@ function AddressData(props) {
         );
     } else {
         return null;
-    } 
+    }
 
 }
 
@@ -115,21 +115,6 @@ export class Contacts extends Component {
 
     componentDidMount() {
         this.populateUserData();
-        this.getContactData();
-    }
-
-    async getContactData() {
-        fetch(`api/People/phonebook/${this.state.userData.Id}`)
-            .then(response => response.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        contacts: result,
-                        loading: false
-                    });
-                    if (result.length < 1) this.setState({ missingData: true, });
-                }
-            )
     }
 
     /**
@@ -164,13 +149,35 @@ export class Contacts extends Component {
         );
     }
 
+    async populatedContactData(clump){
+        const token = await authService.getAccessToken();
+        const merk = clump.sub;
+        await fetch(`api/People/phonebook/${merk}`, {
+            headers: !token ? {} : {
+                'Authorization': `Bearer ${token}`,
+            }
+        }).then(response => response.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        contacts: result,
+                        loading: false
+                    });
+                    if (result.length < 1) this.setState({ missingData: true, });
+                }
+            )
+    }
+
     async populateUserData() {
         const token = await authService.getAccessToken();
-        const response = await fetch('connect/userinfo/', {
+        const response = await fetch('/connect/userinfo', {
             headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
-        this.setState({ userData: data });
+        this.setState({
+            userData: data
+        });
+        await this.populatedContactData(data);
     }
 
     render() {

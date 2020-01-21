@@ -29,6 +29,8 @@ namespace MetaBookDataSource.Data
         [Display(Name = "Email Address")]
         public string Email { get; set; }
 
+        public string OwnerId { get; set; }
+        [ForeignKey("OwnerId")]
         public MetaUser Owner { get; set; }
 
         public ICollection<Phone> Phones { get; } = new HashSet<Phone>();
