@@ -3,6 +3,7 @@ import { Component } from 'react';
 import authService from './AuthorizeService';
 import { AuthenticationResultStatus } from './AuthorizeService';
 import { QueryParameterNames, LogoutActions, ApplicationPaths } from './ApiAuthorizationConstants';
+import { LoginLoader } from '../Layout';
 
 // The main responsibility of this component is to handle the user's logout process.
 // This is the starting point for the logout process, which is usually initiated when a
@@ -53,9 +54,8 @@ export class Logout extends Component {
             const action = this.props.action;
             switch (action) {
                 case LogoutActions.Logout:
-                    return (<div>Processing logout</div>);
                 case LogoutActions.LogoutCallback:
-                    return (<div>Processing logout callback</div>);
+                    return (<LoginLoader />);
                 case LogoutActions.LoggedOut:
                     return (<div>{message}</div>);
                 default:
@@ -73,7 +73,7 @@ export class Logout extends Component {
                 case AuthenticationResultStatus.Redirect:
                     break;
                 case AuthenticationResultStatus.Success:
-                    await this.navigateToReturnUrl(returnUrl);
+                    this.navigateToReturnUrl(returnUrl);
                     break;
                 case AuthenticationResultStatus.Fail:
                     this.setState({ message: result.message });
@@ -95,7 +95,7 @@ export class Logout extends Component {
                 // is when we are doing a redirect sign in flow.
                 throw new Error('Should not redirect.');
             case AuthenticationResultStatus.Success:
-                await this.navigateToReturnUrl(this.getReturnUrl(result.state));
+                this.navigateToReturnUrl(this.getReturnUrl(result.state));
                 break;
             case AuthenticationResultStatus.Fail:
                 this.setState({ message: result.message });

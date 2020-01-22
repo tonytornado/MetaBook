@@ -120,7 +120,7 @@ export class Contacts extends Component {
     /**
      * Renders the contact list full out.
      * 
-     * @param {array} contacts
+     * @param {array} contacts  The Contacts Listing
      */
     static renderContactList(contacts) {
         return (
@@ -149,7 +149,11 @@ export class Contacts extends Component {
         );
     }
 
-    async populatedContactData(clump){
+    /**
+     * Populates the contact data for a section
+     * @param {array} clump UserData in a clump
+     */
+    async populateContactData(clump){
         const token = await authService.getAccessToken();
         const merk = clump.sub;
         await fetch(`api/People/phonebook/${merk}`, {
@@ -168,6 +172,9 @@ export class Contacts extends Component {
             )
     }
 
+    /**
+     * Grabs user data from the server after verifying with token
+     */
     async populateUserData() {
         const token = await authService.getAccessToken();
         const response = await fetch('/connect/userinfo', {
@@ -177,14 +184,14 @@ export class Contacts extends Component {
         this.setState({
             userData: data
         });
-        await this.populatedContactData(data);
+        await this.populateContactData(data);
     }
 
     render() {
         let contents = this.state.loading
             ? <div><Loader /></div>
             : this.state.contacts.length
-                ? Contacts.renderContactList(this.state.contacts)
+                ? this.renderContactList(this.state.contacts)
                 : <div><p>There are no contacts.</p>
                     <div><Link to="/add" className="btn btn-sm btn-primary">Add Contact</Link></div>
                 </div>;
