@@ -113,10 +113,12 @@ namespace MetaBookPrime.Controllers
         [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPerson(
-            int id,
-            MetaUser user,
-            [FromForm] Person person)
+            [FromForm]int id,
+            [FromForm]string substring,
+            [FromForm]Person person)
         {
+            MetaUser user = await _userManager.FindByIdAsync(substring);
+
             if (user is null)
             {
                 return BadRequest();
@@ -131,6 +133,8 @@ namespace MetaBookPrime.Controllers
 
             try
             {
+                person.OwnerId = substring;
+                user.UserContacts.Add(person);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

@@ -155,41 +155,44 @@ export class ContactForm extends Component {
         const { match: { params } } = this.props;
         var contact_id = params.id;
 
-        // Get the phone types
+        // Get the menu types
+        this.getContactFormMenus();
+
+        // Check for editable data
+        this.checkForUserData(contact_id);
+    }
+
+    getContactFormMenus() {
         fetch("api/People/Phones").then(response => response.json())
             .then(data => {
                 this.setState({ phone: data });
             });
-
         // Get the address types
         fetch("api/People/Addresses").then(response => response.json())
             .then(data => {
                 this.setState({ address: data });
             });
-
         // Get the address types
         fetch("api/People/States").then(response => response.json())
             .then(data => {
                 this.setState({ states: data, loading: false });
             });
-
-        this.checkForUserData(contact_id);
     }
 
     checkForUserData(id) {
         if (id > 0) {
-            document.getElementById('phoneCheck').checked = true;
-            document.getElementById("addressCheck").checked = true;
-            if (this.state.contactData.addresses) this.handleAddressChange();
-            if (this.state.contactData.phones) this.handlePhoneChange();
+            // document.getElementById('phoneCheck').checked = true;
+            // document.getElementById("addressCheck").checked = true;
 
-            fetch(`api/People/${id}`)
+            fetch(`api/People/details/${id}`)
                 .then(response => response.json())
                 .then(data => {
                     setTimeout(function () {
                         this.setState({ contactData: data })
                     }.bind(this), 1000)
                 });
+            this.state.contactData.addresses ?? this.handleAddressChange();
+            this.state.contactData.phones ?? this.handlePhoneChange();
         }
     }
 
@@ -197,32 +200,30 @@ export class ContactForm extends Component {
         e.preventDefault();
         const data = new FormData(e.target);
         const token = await authService.getAccessToken();
+        let col = this.state.contactData.id;
 
-        if (data.id) {
-            await fetch(`api/People/${data.id}`,
+        if (col !== 0) {
+            await fetch(`api/People/${col}`,
                 {
                     method: 'PUT',
                     body: data,
                     headers: {
-                        'Authorization': `Bearer ${token}`,
-                        "Content-Type": "application/json"
+                        'Authorization': `Bearer ${token}`
                     },
                 }).then((res) => {
                     if (res.ok) {
                         console.log("Updated!");
-                        console.log(res.json());
                         this.props.history.push('/directory');
                     } else
                         console.error("Post error: " + res.status);
                 }).catch(e => {
                     console.log("error: " + e);
                 });
-        }
-        else {
+        }else if(col === 0) {
             await fetch('api/People',
                 {
-                    headers: { 
-                        'Authorization': `Bearer ${token}` 
+                    headers: {
+                        'Authorization': `Bearer ${token}`
                     },
                     method: 'POST',
                     body: data
@@ -257,6 +258,7 @@ export class ContactForm extends Component {
         return (
             <main>
                 <form onSubmit={this.handleSubmit} className="border p-3 rounded">
+                    <input type="hidden" name="id" defaultValue={this.state.contactData.id} />
                     <input type="hidden" name="substring" defaultValue={this.state.userData.sub} />
                     <MainForm data={dataBits} />
                     <hr />
