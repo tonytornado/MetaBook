@@ -13,8 +13,6 @@ export default class ContactScroll extends Component {
         }
     }
 
-
-
     componentDidMount() {
         this.populateUserData();
     }
@@ -57,18 +55,27 @@ export default class ContactScroll extends Component {
         await this.populateContactData(data);
     }
 
+    contactListSelector(contacts) {
+        return <div className="form-group">
+            <label for="contactSelect"><h5>Available Contacts</h5></label>
+            <select multiple className="form-control form-control-lg" id="contactSelect" size="20" name="participants">
+                {contacts.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+        </div>;
+    }
+
     render() {
         const contacts = this.state.contacts;
+        var widget;
 
-        return (
-            <div className="form-group col-sm col-5-md">
-                <label for="contactSelect"><h5>Available Contacts</h5></label>
-                <select multiple className="form-control form-control-lg" id="contactSelect" size="20" name="participants">
-                    {contacts.map(c =>
-                        <option key={c.id} value={c.id}>{c.name}</option>
-                    )}
-                </select>
-            </div>
-        );
+        if(contacts.length > 0){
+            widget = this.contactListSelector(contacts);
+        } else {
+            widget = <div className="jumbotron border text-center shadow-sm">
+                <h3>No contacts to add.</h3>
+                <p className="lead">Please add contacts to your contacts list.</p></div>;
+        }
+
+        return <div className="col-sm col-5-md">{widget}</div>;
     }
 }

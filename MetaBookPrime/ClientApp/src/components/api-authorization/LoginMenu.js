@@ -25,6 +25,9 @@ export class LoginMenu extends Component {
         authService.unsubscribe(this._subscription);
     }
 
+    /**
+     * Populates the state of the component
+     */
     async populateState() {
         const [isAuthenticated, user] = await Promise.all([authService.isAuthenticated(), authService.getUser()])
         this.setState({
@@ -48,6 +51,13 @@ export class LoginMenu extends Component {
         }
     }
 
+    /**
+     * Authenticated view for the logged in user.
+     * 
+     * @param {string} userName The User's Username
+     * @param {string} profilePath The path to the User's profile
+     * @param {string} logoutPath The path to logOut
+     */
     authenticatedView(userName, profilePath, logoutPath) {
         return (<Fragment>
             <NavItem>
@@ -60,6 +70,12 @@ export class LoginMenu extends Component {
 
     }
 
+    /**
+     * Anonymous view for unlogged visitors
+     * 
+     * @param {string} registerPath The path to the Register page
+     * @param {string} loginPath The path to the Log In page
+     */
     anonymousView(registerPath, loginPath) {
         return (<Fragment>
             <NavItem>

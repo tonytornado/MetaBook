@@ -5,7 +5,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Link } from 'react-router-dom';
 import { Banner, Loader } from '../components/Layout';
 
-function dateFormatter(date) {
+/**
+ * Formats the date returned.
+ * 
+ * @param {datetime} date The formatted date.
+ */
+export function dateFormatter(date) {
     var event = new Date(date);
     var options = {
         weekday: "long",
@@ -20,96 +25,9 @@ function dateFormatter(date) {
 }
 
 /**
- * Renders an event list component in a table.
- */
-export class EventList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loading: true,
-            events: [],
-            people: []
-        };
-    }
-
-    /**
-     * Returns all events
-     */
-    getEvents() {
-        fetch('api/Events')
-            .then(response => response.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        events: result,
-                        loading: false,
-                    })
-                }
-            );
-    }
-
-    /**
-     * Returns people for all events
-     */
-    getPeople() {
-        fetch('api/People/')
-            .then(response => response.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        people: result,
-                        loading: false,
-                    })
-                }
-            );
-    }
-
-    componentDidMount() {
-        this.getEvents();
-        this.getPeople();
-    }
-
-    render() {
-        if (this.state.loading === true) {
-            return (<div><Loader /></div>);
-        } else {
-            let events = this.state.events;
-
-            return (
-                <section className="container-fluid">
-                    <Banner title="Events" subtitle={`${this.state.events.length} ${this.state.events.length > 1 ? "events" : "event"}`} />
-                    {/* <Calendar /> */}
-                    <table className="table table-responsive-sm table-striped">
-                        <thead className="thead-dark">
-                            <tr>
-                                <th>Name</th>
-                                <th>Start</th>
-                                <th>End</th>
-                                <th>Participants</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {events.map(e =>
-                                <tr key={e.id}>
-                                    <td><Link to={`/events/${e.id}`}>{e.name}</Link></td>
-                                    <td>{dateFormatter(e.startTime)}</td>
-                                    <td>{dateFormatter(e.endTime)}</td>
-                                    {e.participants.length === 0 ? <td>None</td> : <td>{e.participants.length} participants</td>}
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                    <Link to="/event_add" className="btn btn-primary">Add Event</Link>
-                </section>
-            );
-        }
-    }
-}
-
-/**
  * Renders an event component
  */
-export class Event extends Component {
+export default class Event extends Component {
     static displayName = Event.name;
 
     constructor(props) {
@@ -185,11 +103,11 @@ function Participants(props) {
                 {invitees.map(i =>
                     <tr key={i.id}>
                         <td>
-                        {i.photo ? <img src={i.photo} alt={i.name} /> : <FontAwesomeIcon icon={faUserAlt} size="1x" />}
+                            {i.photo ? <img src={i.photo} alt={i.name} /> : <FontAwesomeIcon icon={faUserAlt} size="1x" />}
                             <Link to={`/contact/${i.id}`}> {i.name} ({i.email})</Link>
                         </td>
                     </tr>
                 )}
             </tbody>
-            </table>
-        }
+        </table>
+}

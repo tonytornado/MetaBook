@@ -6,7 +6,7 @@ import ContactScroll from '../components/contactScroller';
 
 
 /**
- * Renders a React datepicker!
+ * Renders a React datepicker.
  * */
 function DatesAndTimes() {
     const [startDate, setStartDate] = useState(new Date(Date.now()));
@@ -14,7 +14,7 @@ function DatesAndTimes() {
 
     return (
         <section className="row">
-            <div className="form-group col-sm-6">
+            <div className="form-group col-sm mx-auto">
                 <label className="label" htmlFor="startTime">Start</label>
                 <br />
                 <DatePicker
@@ -32,7 +32,7 @@ function DatesAndTimes() {
                     dateFormat="MMM d, yyyy h:mm aa"
                 />
             </div>
-            <div className="form-group col-sm-6">
+            <div className="form-group col-sm mx-auto">
                 <label className="label" htmlFor="endTime">End</label>
                 <br />
                 <DatePicker
@@ -144,10 +144,9 @@ export class EventCreator extends Component {
                             className="form-control form-control-lg"></textarea>
                     </div>
                     <DatesAndTimes />
-                    <br /> 
                 </div>
                 <ContactScroll />
-                <input type="submit" className="btn btn-primary btn-block p-3" value="Submit" />
+                <input type="submit" className="btn btn-primary btn-block" value="Submit" />
             </form>
         );
     }
