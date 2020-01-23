@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Banner } from '../../components/Layout';
-import { dateFormatter } from '../Moments/Event';
+import { dateFormatter } from "../Moments/Event";
 
 
 export default class TodoList extends Component {
@@ -20,7 +20,7 @@ export default class TodoList extends Component {
     render() {
         const items = this.state.items;
 
-        if (items.length == 0) {
+        if (items.length === 0) {
             return <div>
                 <h3>There are no tasks available.</h3>
                 <Link tag={Link} className="btn btn-primary disabled" to="" >Add Task</Link>
@@ -29,7 +29,7 @@ export default class TodoList extends Component {
 
         return (
             <section className="container-fluid">
-                <Banner title="Tasks" subtitle={`${this.state.items.length} ${this.state.items.length > 1 ? "tasks" : "task"}`} />
+                <Banner title="Tasks" subtitle={`${items.length} ${items.length > 1 ? "tasks" : "task"}`} />
                 <table className="table table-striped">
                     <thead className="thead-dark">
                         <tr>

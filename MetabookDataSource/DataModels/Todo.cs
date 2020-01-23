@@ -17,6 +17,7 @@ namespace MetaBookDataSource.Data {
         public DateTime CreatedDate { get; set; }
         [DataType(DataType.Date)]
         public DateTime CompletedDate { get; set; }
+        public bool Completed { get; set; }
 
         //public string OwnerId { get; set; }
         /// <summary>
