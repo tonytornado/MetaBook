@@ -1,9 +1,9 @@
-﻿import React, { Component } from 'react';
-import { Banner, Loader } from '../components/Layout';
-import { Link } from 'react-router-dom';
-import "react-datepicker/dist/react-datepicker.css";
+﻿import { faClipboardList, faClock, faLocationArrow, faUserAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLocationArrow, faClock, faClipboardList, faUserAlt } from '@fortawesome/free-solid-svg-icons';
+import React, { Component } from 'react';
+import "react-datepicker/dist/react-datepicker.css";
+import { Link } from 'react-router-dom';
+import { Banner, Loader } from '../components/Layout';
 
 function dateFormatter(date) {
     var event = new Date(date);
@@ -175,17 +175,21 @@ function Participants(props) {
     let invitees = props.people;
 
     return (invitees === undefined || invitees.length < 1)
-        ?
-        <h3 className="text-center alert alert-warning">Nobody's at it. <br /> Maybe invite some people?</h3>
+        ? <h3 className="text-center alert alert-warning">Nobody's at it. <br /> Maybe invite some people?</h3>
         :
-        <div>
-            <h3 className="text-center">Participants</h3>
-            <ul className="list-group list-group-flush">
+        <table className="table table-striped rounded">
+            <thead className="thead-dark">
+                <tr><th>Participants</th></tr>
+            </thead>
+            <tbody>
                 {invitees.map(i =>
-                    <li className="list-group-item" key={i.id}>
-                        {i.photo ? <img src={i.photo} alt={i.name} /> : <FontAwesomeIcon icon={faUserAlt} size="2x" />}
-                        <Link to={`/contact/${i.id}`}> {i.name} ({i.email})</Link></li>
+                    <tr key={i.id}>
+                        <td>
+                        {i.photo ? <img src={i.photo} alt={i.name} /> : <FontAwesomeIcon icon={faUserAlt} size="1x" />}
+                            <Link to={`/contact/${i.id}`}> {i.name} ({i.email})</Link>
+                        </td>
+                    </tr>
                 )}
-            </ul>
-        </div>
-}
+            </tbody>
+            </table>
+        }

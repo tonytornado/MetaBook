@@ -88,8 +88,15 @@ namespace MetaBookPrime.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Moment>> PostMoment([FromForm]Moment moment)
+        public async Task<ActionResult<Moment>> PostMoment([FromForm]Moment moment, [FromForm]int[] participants)
         {
+            // Add people to the event
+            foreach (var item in participants)
+            {
+                Person doink = _context.People.SingleOrDefault(c => c.Id == item);
+                moment.Participants.Add(doink);
+            }
+
             _context.Events.Add(moment);
             await _context.SaveChangesAsync();
 

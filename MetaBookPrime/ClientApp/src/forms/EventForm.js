@@ -2,6 +2,7 @@
 import DatePicker from 'react-datepicker';
 import { Banner } from '../components/Layout';
 import { WarningModal } from '../components/Modals';
+import ContactScroll from '../components/contactScroller';
 
 
 /**
@@ -117,31 +118,36 @@ export class EventCreator extends Component {
         return <WarningModal text={status} />;
     }
 
+
+
     /**
      * Renders the form for the page.
      */
     formRender() {
         return (
-            <form encType="multipart/form-data" onSubmit={this.handleSubmit} className="border p-3">
-                <div className="form-group">
-                    <label className="label">Event Name</label>
-                    <input
-                        type="text" name="name" placeholder="What?" className="form-control" />
+            <form encType="multipart/form-data" onSubmit={this.handleSubmit} className="border rounded shadow p-3 row mx-auto">
+                <div className="col-md">
+                    <div className="form-group">
+                        <label className="label"><h5>Event Name</h5></label>
+                        <input
+                            type="text" name="name" placeholder="What?" className="form-control form-control-lg" />
+                    </div>
+                    <div className="form-group">
+                        <label><h5>Location</h5></label>
+                        <input
+                            type="text" name="location" placeholder="Where?" className="form-control form-control-lg" />
+                    </div>
+                    <div className="form-group">
+                        <label className="label"><h5>Description</h5></label>
+                        <textarea name="description" placeholder="Why?"
+                            rows="7"
+                            className="form-control form-control-lg"></textarea>
+                    </div>
+                    <DatesAndTimes />
+                    <br /> 
                 </div>
-                <div className="form-group">
-                    <label>Location</label>
-                    <input
-                        type="text" name="location" placeholder="Where?" className="form-control" />
-                </div>
-                <div className="form-group">
-                    <label className="label">Description</label>
-                    <textarea name="description" placeholder="Why?"
-                        rows="7"
-                        className="form-control"></textarea>
-                </div>
-                <DatesAndTimes />
-                <br />
-                <input type="submit" className="btn btn-primary btn-block" value="Submit" />
+                <ContactScroll />
+                <input type="submit" className="btn btn-primary btn-block p-3" value="Submit" />
             </form>
         );
     }
@@ -151,6 +157,7 @@ export class EventCreator extends Component {
 
         return <section>
             <Banner title="Add Event" subtitle="Create something." />
-            {clamp}</section>
+            {clamp}
+        </section>
     }
 }

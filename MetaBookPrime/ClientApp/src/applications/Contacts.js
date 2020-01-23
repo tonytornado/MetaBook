@@ -191,7 +191,7 @@ export class Contacts extends Component {
         let contents = this.state.loading
             ? <div><Loader /></div>
             : this.state.contacts.length
-                ? this.renderContactList(this.state.contacts)
+                ? Contacts.renderContactList(this.state.contacts)
                 : <div><p>There are no contacts.</p>
                     <div><Link to="/add" className="btn btn-sm btn-primary">Add Contact</Link></div>
                 </div>;
