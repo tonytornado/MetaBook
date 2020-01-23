@@ -19,12 +19,12 @@ function PhoneForm(props) {
     return (
         <div className="border p-2">
             <div className="form-group">
-                <label className="label">Phone Number</label>
+                <label className="label" htmlFor="phoneNumber">Phone Number</label>
                 <input
                     name="phoneNumber" placeholder="Phone Number (10 digits only)" className="form-control" defaultValue={caller.phoneNumber} />
             </div>
             <div className="form-group">
-                <label className="label">Phone Type</label>
+                <label className="label" htmlFor="">Phone Type</label>
                 <select name="CallerType" className="form-control" defaultValue={caller.callerType}>
                     <option></option>
                     {phones}
@@ -103,23 +103,23 @@ function MainForm(props) {
         <div>
             <div className="row">
                 <div className="form-group col-sm">
-                    <label className="label">First Name</label>
+                    <label className="label" htmlFor="firstName">First Name</label>
                     <input
                         type="text" name="firstName" className="form-control" defaultValue={mainFormData.firstName} />
                 </div>
                 <div className="form-group col-sm">
-                    <label>Last Name</label>
+                    <label className="label" htmlFor="lastName">Last Name</label>
                     <input
                         type="text" name="lastName" className="form-control" defaultValue={mainFormData.lastName} />
                 </div>
             </div>
             <div className="form-group">
-                <label className="label">Email Address</label>
+                <label className="label" htmlFor="email">Email Address</label>
                 <input
                     type="email" name="email" className="form-control" defaultValue={mainFormData.email} />
             </div>
             <div className="form-group">
-                <label className="label">Website</label>
+                <label className="label" htmlFor="website">Website</label>
                 <input
                     type="url" name="website" className="form-control" placeholder="https://example.com"
                     defaultValue={mainFormData.website} pattern="https://.*" />
@@ -162,6 +162,9 @@ export class ContactForm extends Component {
         this.checkForUserData(contact_id);
     }
 
+    /**
+     * Gets all the lists from the server
+     */
     getContactFormMenus() {
         fetch("api/People/Phones").then(response => response.json())
             .then(data => {
@@ -179,6 +182,11 @@ export class ContactForm extends Component {
             });
     }
 
+    /**
+     * Gets information about the contact and changes things around for the contact's data
+     * 
+     * @param {int} id Id for the contact
+     */
     checkForUserData(id) {
         if (id > 0) {
             // document.getElementById('phoneCheck').checked = true;
@@ -191,8 +199,8 @@ export class ContactForm extends Component {
                         this.setState({ contactData: data })
                     }.bind(this), 1000)
                 });
-            this.state.contactData.addresses ?? this.handleAddressChange();
-            this.state.contactData.phones ?? this.handlePhoneChange();
+            this.state.contactData.addresses.length > 0 ?? this.handleAddressChange();
+            this.state.contactData.phones.length > 0 ?? this.handlePhoneChange();
         }
     }
 

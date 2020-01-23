@@ -5,20 +5,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faSync } from '@fortawesome/free-solid-svg-icons';
 
 export class Layout extends Component {
-  static displayName = Layout.name;
+    static displayName = Layout.name;
 
-  render () {
-    return (
-      <div>
-            <NavMenu />
-            <Banner />
-            <Container className="py-4">
-          {this.props.children}
-            </Container>
-            <Footer />
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div>
+                <NavMenu />
+                <Banner />
+                <Container className="py-4">
+                    {this.props.children}
+                </Container>
+                <Footer />
+            </div>
+        );
+    }
 }
 
 /**

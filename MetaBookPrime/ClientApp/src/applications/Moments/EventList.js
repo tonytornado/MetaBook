@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Banner, Loader } from '../components/Layout';
 import { dateFormatter } from './Event';
+import { Banner, Loader } from '../../components/Layout';
 /**
  * Renders an event list component in a table.
  */

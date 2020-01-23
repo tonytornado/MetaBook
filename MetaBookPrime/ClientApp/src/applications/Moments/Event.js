@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { Component } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import { Link } from 'react-router-dom';
-import { Banner, Loader } from '../components/Layout';
+import { Banner, Loader } from '../../components/Layout';
 
 /**
  * Formats the date returned.

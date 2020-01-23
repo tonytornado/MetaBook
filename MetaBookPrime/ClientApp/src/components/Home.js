@@ -1,8 +1,8 @@
 ﻿import React, { Component } from 'react';
-import { Banner } from './Layout';
 import { LoremIpsum } from 'react-lorem-ipsum';
+import { Banner } from './Layout';
 
-export class Home extends Component {
+export default class Home extends Component {
     static displayName = Home.name;
 
     render() {

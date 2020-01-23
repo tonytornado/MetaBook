@@ -43,7 +43,7 @@ namespace MetaBookDataResource.DataLoaders
             };
 
             // Make yourself.
-            Person book = new Person { FirstName = "Tony", LastName = "Thigpen", Email = "tonyt@gmail.com", Website = "https://www.tonythigpen.com"};
+            Person book = new Person { FirstName = "Tony", LastName = "Thigpen", Email = "tonyt@gmail.com", Website = "https://www.tonythigpen.com" };
 
             book.Addresses.Add(addys);
             context.SaveChanges();
@@ -78,6 +78,28 @@ namespace MetaBookDataResource.DataLoaders
                 item.Participants.Add(book);
                 context.Events.Add(item);
 
+            }
+            context.SaveChanges();
+
+            // Add the todo list items.
+            var todolist = new Todo[]
+            {
+                new Todo(){
+                    Title = "Work on the thing",
+                    Description = "There's a thing that needs to be worked on. You should be working on it.",
+                    CreatedDate = DateTime.Now,
+                    DueDate = new DateTime(2021,9,11,12,0,0)
+                },
+                new Todo(){
+                    Title = "Improve the other thing",
+                    Description = "Something needs an improvement",
+                    CreatedDate = DateTime.Now,
+                    DueDate = new DateTime(2021,10,11,12,0,0)
+                },
+            };
+            foreach (var item in todolist)
+            {
+                context.Tasks.Add(item);
             }
             context.SaveChanges();
         }

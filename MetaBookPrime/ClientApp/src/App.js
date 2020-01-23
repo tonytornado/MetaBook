@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router';
 import { Layout } from './components/Layout';
-import { Home } from './components/Home';
+import Home from './components/Home';
 import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
 import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
 import { ApplicationPaths } from './components/api-authorization/ApiAuthorizationConstants';
@@ -9,8 +9,11 @@ import { ContactForm } from './forms/ContactForm';
 import { EventCreator } from './forms/EventForm';
 import Contact from './applications/Contacts/Contact';
 import ContactList from './applications/Contacts/ContactList';
-import EventList from './applications/Events/EventList';
-import Event from './applications/Events/Event';
+import EventList from './applications/Moments/EventList';
+import Event from './applications/Moments/Event';
+import TodoList from './applications/Tasks/TodoList';
+import TodoItem from './applications/Tasks/TodoItem';
+
 import './custom.css'
 
 export default class App extends Component {
@@ -20,6 +23,8 @@ export default class App extends Component {
     return (
       <Layout>
         <Route exact path='/' component={Home} />
+        <Route exact path='/tasks' component={TodoList} />
+        <Route exact path='/tasks/:id' component={TodoItem} />
         <Route exact path='/events' component={EventList} />
         <Route exact path='/events/:id' component={Event} />
         <AuthorizeRoute exact path='/event_add' component={EventCreator} />

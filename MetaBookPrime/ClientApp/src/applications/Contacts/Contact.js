@@ -23,20 +23,22 @@ export default class Contact extends Component {
 
     componentDidMount() {
         const { match: { params } } = this.props;
+        
+        this.getPersonalDetails(params);
+        this.getPersonalEvents(params.id);
+    }
 
+    getPersonalDetails(params) {
         fetch(`api/People/Details/${params.id}`)
             .then(response => response.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        contact: result,
-                        loading: false
-                    });
-                    if (result.length < 1) this.setState({ missingData: true, });
-                }
-            )
-
-        this.getPersonalEvents(params.id);
+            .then((result) => {
+                this.setState({
+                    contact: result,
+                    loading: false
+                });
+                if (result.length < 1)
+                    this.setState({ missingData: true, });
+            });
     }
 
     /**

@@ -27,26 +27,27 @@ export default class ContactList extends Component {
      * @param {array} contacts  The Contacts Listing
      */
     static renderContactList(contacts) {
-        return (<div>
-            <Banner title="Contacts" subtitle={`${contacts.length} ${contacts.length > 1 ? "contacts" : "contact"}.`} />
-            <table className="table table-striped">
-                <thead className="thead-dark">
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {contacts.map(contact => <tr key={contact.id}>
-                        <td><a href={"contact/" + contact.id}>{contact.firstName} {contact.lastName}</a></td>
-                        <td>{contact.email}</td>
-                    </tr>)}
-                </tbody>
-            </table>
+        return (
             <div>
-                <Link to="/add" className="btn btn-sm btn-primary">Add Contact</Link>
-            </div>
-        </div>);
+                <Banner title="Contacts" subtitle={`${contacts.length} ${contacts.length > 1 ? "contacts" : "contact"}.`} />
+                <table className="table table-striped">
+                    <thead className="thead-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {contacts.map(contact => <tr key={contact.id}>
+                            <td><a href={"contact/" + contact.id}>{contact.firstName} {contact.lastName}</a></td>
+                            <td>{contact.email}</td>
+                        </tr>)}
+                    </tbody>
+                </table>
+                <div>
+                    <Link to="/add" className="btn btn-sm btn-primary">Add Contact</Link>
+                </div>
+            </div>);
     }
 
     /**
@@ -85,7 +86,7 @@ export default class ContactList extends Component {
         });
         await this.populateContactData(data);
     }
-    
+
     render() {
         let contents = this.state.loading
             ? <div><Loader /></div>
