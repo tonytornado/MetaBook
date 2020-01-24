@@ -43,6 +43,7 @@ export default class TodoList extends Component {
                         {items.map(item => item ? ListItem(item) : "No items found.")}
                     </tbody>
                 </table>
+                <Link to="/tasks/add/" className="btn btn-primary btn-block">Add Task</Link>
             </section>
         )
     }

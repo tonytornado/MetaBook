@@ -45,7 +45,7 @@ export default class ContactList extends Component {
                     </tbody>
                 </table>
                 <div>
-                    <Link to="/add" className="btn btn-sm btn-primary">Add Contact</Link>
+                    <Link to="/contact/add/" className="btn btn-sm btn-primary">Add Contact</Link>
                 </div>
             </div>);
     }
@@ -93,7 +93,7 @@ export default class ContactList extends Component {
             : this.state.contacts.length
                 ? ContactList.renderContactList(this.state.contacts)
                 : <div><p>There are no contacts.</p>
-                    <div><Link to="/add" className="btn btn-sm btn-primary">Add Contact</Link></div>
+                    <div><Link to="contact/add/" className="btn btn-sm btn-primary">Add Contact</Link></div>
                 </div>;
         return (<div>
             {contents}

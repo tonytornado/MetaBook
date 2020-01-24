@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MetaBookDataSource.Data;
 using MetaBookDataSource.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MetaBookPrime.Controllers
 {
@@ -44,6 +45,7 @@ namespace MetaBookPrime.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutTodo(int id, Todo todo)
         {
             if (id != todo.Id)
@@ -76,6 +78,7 @@ namespace MetaBookPrime.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Todo>> PostTodo(Todo todo)
         {
             _context.Tasks.Add(todo);

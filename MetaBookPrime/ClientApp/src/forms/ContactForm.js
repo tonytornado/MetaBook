@@ -199,8 +199,8 @@ export class ContactForm extends Component {
                         this.setState({ contactData: data })
                     }.bind(this), 1000)
                 });
-            this.state.contactData.addresses.length > 0 ?? this.handleAddressChange();
-            this.state.contactData.phones.length > 0 ?? this.handlePhoneChange();
+            this.state.contactData.addresses.length > 0 && this.handleAddressChange();
+            this.state.contactData.phones.length > 0 && this.handlePhoneChange();
         }
     }
 
@@ -227,7 +227,7 @@ export class ContactForm extends Component {
                 }).catch(e => {
                     console.log("error: " + e);
                 });
-        }else if(col === 0) {
+        } else if (col === 0) {
             await fetch('api/People',
                 {
                     headers: {
@@ -265,7 +265,7 @@ export class ContactForm extends Component {
 
         return (
             <main>
-                <form onSubmit={this.handleSubmit} className="border p-3 rounded">
+                <form onSubmit={this.handleSubmit} className="border p-3 rounded shadow-sm">
                     <input type="hidden" name="id" defaultValue={this.state.contactData.id} />
                     <input type="hidden" name="substring" defaultValue={this.state.userData.sub} />
                     <MainForm data={dataBits} />
