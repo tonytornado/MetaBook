@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Banner } from '../../components/Layout';
+import { Banner, Loader } from '../../components/Layout';
 import { dateFormatter } from "../Moments/Event";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 
 export default class TodoList extends Component {
@@ -11,6 +13,7 @@ export default class TodoList extends Component {
             loading: true,
             items: []
         };
+        this.removeItem = this.removeItem.bind(this);
     }
 
     componentDidMount() {
@@ -19,6 +22,10 @@ export default class TodoList extends Component {
 
     render() {
         const items = this.state.items;
+
+        if (this.state.loading == true) {
+            return <Loader />
+        }
 
         if (items.length === 0) {
             return <div>
@@ -33,6 +40,7 @@ export default class TodoList extends Component {
                 <table className="table table-striped">
                     <thead className="thead-dark">
                         <tr>
+                            <th></th>
                             <th>Title</th>
                             <th>Description</th>
                             <th>Due Date</th>
@@ -46,6 +54,30 @@ export default class TodoList extends Component {
                 <Link to="/tasks/add/" className="btn btn-primary btn-block">Add Task</Link>
             </section>
         )
+    }
+
+    async removeItem(id) {
+        const token = await authService.getAccessToken();
+        fetch(`api/Tasks/${id}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            })
+            .then((res) => {
+                if (res.ok) {
+                    this.setState({
+                        loading: true,
+                    });
+                    console.log("Task Deleted!");
+                    this.getItems();
+                } else {
+                    console.error("Could not delete: " + res.status);
+                }
+            }).catch(error => {
+                console.error(error)
+            });
     }
 
     /**
@@ -75,11 +107,36 @@ export default class TodoList extends Component {
 function ListItem(item) {
     return (
         <tr key={item.id}>
+            <td>
+                {ButtonGroupMenu(item)}
+            </td>
             <td><Link to={`/tasks/${item.id}`}>{item.title}</Link></td>
             <td>{item.description}</td>
             <td>{item.dueDate ? dateFormatter(item.dueDate) : "None"}</td>
             {/* <td>{item.completedDate ?? dateFormatter(item.completedDate)}</td> */}
-        </tr>
+        </tr >
     )
+}
+
+function ButtonGroupMenu(item) {
+    let widget;
+
+    if (item.completed === false) {
+        widget = (
+            <>
+                <Link className="btn btn-primary" to={`/tasks/edit/${item.id}`} id={`editToggle${item.id}`}><FontAwesomeIcon icon={faEdit} /></Link>
+                <Link className="btn btn-success" to={`/tasks/${item.id}`} id={`completeToggle${item.id}`}><FontAwesomeIcon icon={faCheck} /></Link>
+            </>
+        );
+    } else {
+        widget = <></>;
+    }
+
+    return <div className="btn-group btn-group-sm">
+        {widget}
+        <button className="btn btn-danger" type="button" onClick={() => TodoList.removeItem(item.id)} id={`removeToggle${item.id}`} title="This will delete this task.">
+            <FontAwesomeIcon icon={faTimes} />
+        </button>
+    </div>;
 }
 

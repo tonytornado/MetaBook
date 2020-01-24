@@ -88,13 +88,15 @@ namespace MetaBookDataResource.DataLoaders
                     Title = "Work on the thing",
                     Description = "There's a thing that needs to be worked on. You should be working on it.",
                     CreatedDate = DateTime.Now,
-                    DueDate = new DateTime(2021,9,11,12,0,0)
+                    DueDate = new DateTime(2021,9,11,12,0,0),
+                    Completed = false,
                 },
                 new Todo(){
                     Title = "Improve the other thing",
                     Description = "Something needs an improvement",
                     CreatedDate = DateTime.Now,
-                    DueDate = new DateTime(2021,10,11,12,0,0)
+                    DueDate = new DateTime(2021,10,11,12,0,0),
+                    Completed = false,
                 },
             };
             foreach (var item in todolist)

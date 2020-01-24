@@ -27,6 +27,16 @@ export default class ContactList extends Component {
      * @param {array} contacts  The Contacts Listing
      */
     static renderContactList(contacts) {
+        if (contacts === false) {
+            return (
+                <div>
+                    <Banner title="Contacts" subtitle="Uh... where are they?" />
+                    <p className="text-center">There are no contacts.</p>
+                    <Link to="contacts/add/" className="btn btn-sm btn-primary btn-block">Add Contact</Link>
+                </div>
+            );
+        }
+
         return (
             <div>
                 <Banner title="Contacts" subtitle={`${contacts.length} ${contacts.length > 1 ? "contacts" : "contact"}.`} />
@@ -45,15 +55,15 @@ export default class ContactList extends Component {
                     </tbody>
                 </table>
                 <div>
-                    <Link to="/contact/add/" className="btn btn-sm btn-primary">Add Contact</Link>
+                    <Link to="/contacts/add/" className="btn btn-sm btn-primary">Add Contact</Link>
                 </div>
             </div>);
     }
 
     /**
      * Populates the contact data for a section
-     * @param {array} clump UserData in a clump
-     */
+* @param {array} clump UserData in a clump
+            */
     async populateContactData(clump) {
         const token = await authService.getAccessToken();
         const merk = clump.sub;
@@ -92,9 +102,7 @@ export default class ContactList extends Component {
             ? <div><Loader /></div>
             : this.state.contacts.length
                 ? ContactList.renderContactList(this.state.contacts)
-                : <div><p>There are no contacts.</p>
-                    <div><Link to="contact/add/" className="btn btn-sm btn-primary">Add Contact</Link></div>
-                </div>;
+                : ContactList.renderContactList(false);
         return (<div>
             {contents}
         </div>);

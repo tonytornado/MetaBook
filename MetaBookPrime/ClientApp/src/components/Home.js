@@ -8,7 +8,7 @@ export default class Home extends Component {
     render() {
         return (
             <div>
-                <Banner title="The MetaBook" subtitle="This is a simple little project, man." />
+                <Banner title="The MetaBook" subtitle="This is a simple little project, mate." />
                 <div>
                     <LoremIpsum p={3} />
                 </div>

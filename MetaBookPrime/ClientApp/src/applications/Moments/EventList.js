@@ -71,7 +71,7 @@ export default class EventList extends Component {
                         </tr>)}
                     </tbody>
                 </table>
-                <Link to="/events/add/" className="btn btn-primary">Add Event</Link>
+                <Link to="/events/add/" className="btn btn-primary btn-block">Add Event</Link>
             </section>);
         }
     }

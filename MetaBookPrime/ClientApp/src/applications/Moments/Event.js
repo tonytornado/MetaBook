@@ -1,4 +1,4 @@
-﻿import { faClipboardList, faClock, faLocationArrow, faUserAlt } from '@fortawesome/free-solid-svg-icons';
+﻿import { faClipboardList, faClock, faLocationArrow, faUserAlt, faUserClock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { Component } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
@@ -66,18 +66,21 @@ export default class Event extends Component {
             return (
                 <div>
                     <Banner title={event.name} subtitle={event.location} />
-                    <article>
-                        <ul className="list-group list-group-vertical">
-                            <li className="list-group-item"><FontAwesomeIcon icon={faClock} /> {dateFormatter(event.startTime)} - {dateFormatter(event.endTime)} </li>
-                            <li className="list-group-item"><FontAwesomeIcon icon={faLocationArrow} /> {event.location}</li>
-                        </ul>
-                        <div className="jumbotron">
-                            <FontAwesomeIcon icon={faClipboardList} />
-                            <p className="lead">
-                                {event.description}
-                            </p>
+                    <article className="row">
+                        <div className="col-sm">
+                            <ul className="list-group list-group-vertical">
+                                <li className="list-group-item"><FontAwesomeIcon icon={faUserClock} /> {dateFormatter(event.startTime)} <br /> <FontAwesomeIcon icon={faUserClock} />{dateFormatter(event.endTime)} </li>
+                                <li className="list-group-item"><FontAwesomeIcon icon={faLocationArrow} /> {event.location}</li>
+                            </ul>
+                            <div className="jumbotron">
+                                <p className="lead">
+                                    {event.description}
+                                </p>
+                            </div>
                         </div>
-                        <Participants people={event.participants} />
+                        <div className="col-sm">
+                            <Participants people={event.participants} />
+                        </div>
                     </article>
                 </div>
             );

@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
-import authService from '../components/api-authorization/AuthorizeService';
-import { Banner, Loader } from '../components/Layout';
+import authService from '../../components/api-authorization/AuthorizeService';
+import { Banner, Loader } from '../../components/Layout';
 
 /**
  * Form for todo lists
@@ -17,6 +17,7 @@ export default class TodoForm extends Component {
     }
 
     async handleSubmit(e) {
+        e.preventDefault();
         const data = new FormData(e.target);
         const token = await authService.getAccessToken();
         let col = this.state.item.id;

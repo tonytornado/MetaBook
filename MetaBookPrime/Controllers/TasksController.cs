@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using MetaBookDataSource.Data;
 using MetaBookDataSource.Models;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace MetaBookPrime.Controllers
 {
@@ -79,8 +80,9 @@ namespace MetaBookPrime.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Todo>> PostTodo(Todo todo)
+        public async Task<ActionResult<Todo>> PostTodo([FromForm]Todo todo)
         {
+            todo.CreatedDate = DateTime.Now;
             _context.Tasks.Add(todo);
             await _context.SaveChangesAsync();
 
@@ -97,10 +99,41 @@ namespace MetaBookPrime.Controllers
                 return NotFound();
             }
 
-            _context.Tasks.Remove(todo);
-            await _context.SaveChangesAsync();
-
+            try
+            {
+                _context.Tasks.Remove(todo);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+            
             return todo;
+        }
+
+        [HttpPut("{id}")]
+        [Route("Completed/{id}/{status}")]
+        [Authorize]
+        public async Task<ActionResult<Todo>> MarkComplete(int id, bool status)
+        {
+            var todo = await _context.Tasks.SingleOrDefaultAsync(e => e.Id == id);
+            if(todo == null){
+                return NotFound();
+            }
+
+            try
+            {
+                todo.Completed = status;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+            
+
+            return Ok();
         }
 
         private bool TodoExists(int id)
