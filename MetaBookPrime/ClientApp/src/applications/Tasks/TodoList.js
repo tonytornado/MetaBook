@@ -12,7 +12,8 @@ export default class TodoList extends Component {
         super(props);
         this.state = {
             loading: true,
-            items: []
+            items: [],
+            deleteSetting: false
         };
 
         this.removeItem = this.removeItem.bind(this);

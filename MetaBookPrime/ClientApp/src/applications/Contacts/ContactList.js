@@ -14,6 +14,7 @@ export default class ContactList extends Component {
             userData: [],
             loading: true,
             missingData: false,
+            deleteSetting: false
         };
     }
 
