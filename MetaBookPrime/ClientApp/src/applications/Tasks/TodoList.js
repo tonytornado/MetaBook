@@ -31,8 +31,9 @@ export default class TodoList extends Component {
 
         if (items.length === 0) {
             return <div>
-                <h3>There are no tasks available.</h3>
-                <Link tag={Link} className="btn btn-primary btn-block" to="/tasks/add/" >Add Task</Link>
+                <Banner title="Tasks" subtitle="Uh... where are they?" />
+                <p className="text-center">There are no tasks available.</p>
+                <Link to="tasks/add/" className="btn btn-sm btn-primary btn-block">Add Task</Link>
             </div>
         }
 
@@ -50,7 +51,9 @@ export default class TodoList extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {items.map(item => item ? ListItem(item) : "No items found.")}
+                        {items.map(item => item
+                            ? this.ListItem(item)
+                            : "No items found.")}
                     </tbody>
                 </table>
                 <Link to="/tasks/add/" className="btn btn-primary btn-block">Add Task</Link>
@@ -58,6 +61,43 @@ export default class TodoList extends Component {
         )
     }
 
+    /**
+     * Renders an item object in the row.
+     * 
+     * @param {Array} item Item array
+     */
+    ListItem(item) {
+        let widget;
+
+        if (!item.completed) {
+            widget = <>
+                <Link className="btn btn-primary" to={`/tasks/edit/${item.id}`} id={`editToggle${item.id}`}><FontAwesomeIcon icon={faEdit} /></Link>
+                <Link className="btn btn-success" to={`/tasks/${item.id}`} id={`completeToggle${item.id}`}><FontAwesomeIcon icon={faCheck} /></Link>
+            </>
+        }
+
+        return (
+            <tr key={item.id}>
+                <td>
+                    <div className="btn-group btn-group-sm">
+                        {widget}
+                        <button className="btn btn-danger" type="button" onClick={() => this.removeItem(item.id)} id={`removeToggle${item.id}`} title="This will delete this task.">
+                            <FontAwesomeIcon icon={faTimes} />
+                        </button>
+                    </div>
+                </td>
+                <td><Link to={`/tasks/${item.id}`}>{item.title}</Link></td>
+                <td>{item.description}</td>
+                <td>{item.dueDate ? dateFormatter(item.dueDate) : "None"}</td>
+            </tr>
+        );
+    }
+
+    /**
+     * Removes an item from the DB
+     * 
+     * @param {int} id Id of the task to remove
+     */
     async removeItem(id) {
         const token = await authService.getAccessToken();
         fetch(`api/Tasks/${id}`,
@@ -69,11 +109,11 @@ export default class TodoList extends Component {
             })
             .then((res) => {
                 if (res.ok) {
-                    TodoList.setState({
+                    this.setState({
                         loading: true,
                     });
                     console.log("Task Deleted!");
-                    TodoList.getItems();
+                    this.getItems();
                 } else {
                     console.error("Could not delete: " + res.status);
                 }
@@ -99,41 +139,4 @@ export default class TodoList extends Component {
                 console.error(error)
             )
     }
-}
-
-/**
- * Renders a row of the Todo List with an item and all its information.
- * 
- * @param {Array} item A todoList item
- */
-function ListItem(item) {
-    let widget;
-
-    if (item.completed === false) {
-        widget = (
-            <>
-                <Link className="btn btn-primary" to={`/tasks/edit/${item.id}`} id={`editToggle${item.id}`}><FontAwesomeIcon icon={faEdit} /></Link>
-                <Link className="btn btn-success" to={`/tasks/${item.id}`} id={`completeToggle${item.id}`}><FontAwesomeIcon icon={faCheck} /></Link>
-            </>
-        );
-    } else {
-        widget = <></>;
-    }
-
-    return (
-        <tr key={item.id}>
-            <td>
-                <div className="btn-group btn-group-sm">
-                    {widget}
-                    <button className="btn btn-danger" type="button" onClick={()=>TodoList.removeItem(`${item.id}`)} id={`removeToggle${item.id}`} title="This will delete this task.">
-                        <FontAwesomeIcon icon={faTimes} />
-                    </button>
-                </div>
-            </td>
-            <td><Link to={`/tasks/${item.id}`}>{item.title}</Link></td>
-            <td>{item.description}</td>
-            <td>{item.dueDate ? dateFormatter(item.dueDate) : "None"}</td>
-            {/* <td>{item.completedDate ?? dateFormatter(item.completedDate)}</td> */}
-        </tr >
-    )
 }

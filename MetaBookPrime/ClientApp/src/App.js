@@ -35,7 +35,6 @@ export default class App extends Component {
                 <AuthorizeRoute exact strict path='/contacts/:id' component={Contact} />
                 <AuthorizeRoute exact strict path='/contacts/add/' component={ContactForm} />
                 <AuthorizeRoute exact strict path='/contacts/edit/:id' component={ContactForm} />
-                <AuthorizeRoute exact strict path='/contacts/edit/:id' component={ContactForm} />
                 <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
             </Layout>
         );
