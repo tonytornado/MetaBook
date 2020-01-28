@@ -1,4 +1,4 @@
-﻿import { faClipboardList, faClock, faLocationArrow, faUserAlt, faUserClock } from '@fortawesome/free-solid-svg-icons';
+﻿import { faLocationArrow, faUserAlt, faUserClock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { Component } from 'react';
 import "react-datepicker/dist/react-datepicker.css";

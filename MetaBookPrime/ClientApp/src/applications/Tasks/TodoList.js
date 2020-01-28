@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import authService from "../../components/api-authorization/AuthorizeService";
 import { Link } from 'react-router-dom';
 import { Banner, Loader } from '../../components/Layout';
 import { dateFormatter } from "../Moments/Event";
@@ -13,6 +14,7 @@ export default class TodoList extends Component {
             loading: true,
             items: []
         };
+
         this.removeItem = this.removeItem.bind(this);
     }
 
@@ -23,14 +25,14 @@ export default class TodoList extends Component {
     render() {
         const items = this.state.items;
 
-        if (this.state.loading == true) {
+        if (this.state.loading === true) {
             return <Loader />
         }
 
         if (items.length === 0) {
             return <div>
                 <h3>There are no tasks available.</h3>
-                <Link tag={Link} className="btn btn-primary disabled" to="" >Add Task</Link>
+                <Link tag={Link} className="btn btn-primary btn-block" to="/tasks/add/" >Add Task</Link>
             </div>
         }
 
@@ -67,11 +69,11 @@ export default class TodoList extends Component {
             })
             .then((res) => {
                 if (res.ok) {
-                    this.setState({
+                    TodoList.setState({
                         loading: true,
                     });
                     console.log("Task Deleted!");
-                    this.getItems();
+                    TodoList.getItems();
                 } else {
                     console.error("Could not delete: " + res.status);
                 }
@@ -105,20 +107,6 @@ export default class TodoList extends Component {
  * @param {Array} item A todoList item
  */
 function ListItem(item) {
-    return (
-        <tr key={item.id}>
-            <td>
-                {ButtonGroupMenu(item)}
-            </td>
-            <td><Link to={`/tasks/${item.id}`}>{item.title}</Link></td>
-            <td>{item.description}</td>
-            <td>{item.dueDate ? dateFormatter(item.dueDate) : "None"}</td>
-            {/* <td>{item.completedDate ?? dateFormatter(item.completedDate)}</td> */}
-        </tr >
-    )
-}
-
-function ButtonGroupMenu(item) {
     let widget;
 
     if (item.completed === false) {
@@ -132,11 +120,20 @@ function ButtonGroupMenu(item) {
         widget = <></>;
     }
 
-    return <div className="btn-group btn-group-sm">
-        {widget}
-        <button className="btn btn-danger" type="button" onClick={() => TodoList.removeItem(item.id)} id={`removeToggle${item.id}`} title="This will delete this task.">
-            <FontAwesomeIcon icon={faTimes} />
-        </button>
-    </div>;
+    return (
+        <tr key={item.id}>
+            <td>
+                <div className="btn-group btn-group-sm">
+                    {widget}
+                    <button className="btn btn-danger" type="button" onClick={()=>TodoList.removeItem(`${item.id}`)} id={`removeToggle${item.id}`} title="This will delete this task.">
+                        <FontAwesomeIcon icon={faTimes} />
+                    </button>
+                </div>
+            </td>
+            <td><Link to={`/tasks/${item.id}`}>{item.title}</Link></td>
+            <td>{item.description}</td>
+            <td>{item.dueDate ? dateFormatter(item.dueDate) : "None"}</td>
+            {/* <td>{item.completedDate ?? dateFormatter(item.completedDate)}</td> */}
+        </tr >
+    )
 }
-

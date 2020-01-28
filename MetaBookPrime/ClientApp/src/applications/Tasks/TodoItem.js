@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { dateFormatter } from '../Moments/Event';
 import { Loader } from '../../components/Layout';
 import authService from '../../components/api-authorization/AuthorizeService';
-import { Button } from 'reactstrap';
 
 /**
  * Renders a ToDo item

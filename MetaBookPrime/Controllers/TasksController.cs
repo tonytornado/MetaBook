@@ -91,6 +91,7 @@ namespace MetaBookPrime.Controllers
 
         // DELETE: api/Tasks/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<Todo>> DeleteTodo(int id)
         {
             var todo = await _context.Tasks.FindAsync(id);
