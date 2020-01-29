@@ -27,7 +27,7 @@ export function VersatileModal(props) {
                     {modalText}
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="primary" onClick={() => toggleAction}>{modalConfirmText}</Button>{' '}
+                    <Button color="primary" onClick={toggleAction}>{modalConfirmText}</Button>{' '}
                     <Button color="secondary" onClick={toggle}>Cancel</Button>
                 </ModalFooter>
             </Modal>

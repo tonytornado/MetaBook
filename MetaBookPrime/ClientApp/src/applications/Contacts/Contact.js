@@ -82,7 +82,7 @@ export default class Contact extends Component {
                     <PersonalEvents eventData={events}/>
                 </div>
                 <br/>
-                <Link to={`/edit/${contacts.id}`} className="btn btn-primary">Edit Contact</Link>
+                <Link to={`edit/${contacts.id}`} className="btn btn-primary">Edit Contact</Link>
             </section>
         );
     }

@@ -91,7 +91,7 @@ export default class TodoList extends Component {
                             modalTitle={`Remove Task "${item.title}"`} 
                             modalText={"Are you sure you want to delete this item? This cannot be undone."}
                             modalConfirmText={"Confirm Deletion"}
-                            modalAction={this.removeItem(item.id)}
+                            modalAction={() => this.removeItem(item.id)}
                         />
                     </div>
                 </td>

@@ -53,7 +53,7 @@ export default class ContactList extends Component {
                     </thead>
                     <tbody>
                     {contacts.map(contact => <tr key={contact.id}>
-                        <td><a href={"contact/" + contact.id}>{contact.firstName} {contact.lastName}</a></td>
+                        <td><a href={"contacts/" + contact.id}>{contact.firstName} {contact.lastName}</a></td>
                         <td>{contact.email}</td>
                     </tr>)}
                     </tbody>

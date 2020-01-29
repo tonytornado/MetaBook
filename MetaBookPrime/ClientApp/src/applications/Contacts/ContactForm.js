@@ -18,7 +18,7 @@ export class ContactForm extends Component {
             addPhone: false,
             contactData: new ContactData(),
             userData: []
-        }
+        };
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAddressChange = this.handleAddressChange.bind(this);
@@ -26,7 +26,9 @@ export class ContactForm extends Component {
     }
 
     componentDidMount() {
+        // Get user data
         this.populateUserData();
+        
         const {match: {params}} = this.props;
         const contact_id = params.id;
 
@@ -64,9 +66,6 @@ export class ContactForm extends Component {
      */
     checkForUserData(id) {
         if (id > 0) {
-            // document.getElementById('phoneCheck').checked = true;
-            // document.getElementById("addressCheck").checked = true;
-
             fetch(`api/People/details/${id}`)
                 .then(response => response.json())
                 .then(data => {

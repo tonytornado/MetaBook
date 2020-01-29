@@ -63,12 +63,12 @@ export default class TodoForm extends Component {
     }
 
     componentDidMount() {
-        const {match: {params}} = this.props;
-        var task_id = params.id;
-
         // Get user data
         this.populateUserData();
-
+        
+        const {match: {params}} = this.props;
+        const task_id = params.id;
+        
         // Check for editable data
         this.checkForItemData(task_id);
     }
@@ -102,6 +102,8 @@ export default class TodoForm extends Component {
     }
 
     render() {
+        const mainFormData = this.state.item;
+        
         if (this.state.loading === true) {
             return <Loader/>;
         } else {
@@ -112,15 +114,15 @@ export default class TodoForm extends Component {
                         <input type="hidden" name="id" defaultValue={this.state.item.id}/>
                         <div>
                             <div className="form-group">
-                                <input type="text" placeholder="Add Task" name="title" className="form-control"/>
+                                <input type="text" placeholder="Add Task" name="title" className="form-control" defaultValue={mainFormData.title}/>
                             </div>
                             <div className="form-group">
-                                <textarea placeholder="Description" name="description" className="form-control"/>
+                                <textarea placeholder="Description" name="description" className="form-control" defaultValue={mainFormData.description}/>
                             </div>
                         </div>
                         <div className="form-group">
                             <label htmlFor="dueDate">Due Date</label>
-                            <input type="date" className="form-control" name="dueDate"/>
+                            <input type="date" className="form-control" name="dueDate" defaultValue={mainFormData.dueDate}/>
                         </div>
                         <input type="submit" className="btn btn-primary btn-block" name="task-act" value="Add Task"/>
                     </form>
