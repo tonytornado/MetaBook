@@ -10,6 +10,7 @@
     <StartupObject>MetaBookPrime.Program</StartupObject>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

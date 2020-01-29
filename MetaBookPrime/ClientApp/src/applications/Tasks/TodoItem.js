@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { dateFormatter } from '../Moments/Event';
-import { Loader } from '../../components/Layout';
+import React, {Component} from 'react';
+import {dateFormatter} from '../Moments/Event';
+import {Loader} from '../../components/Layout';
 import authService from '../../components/api-authorization/AuthorizeService';
 
 /**
- * Renders a ToDo item
+ * Renders a Task item
  */
 export default class TodoItem extends Component {
     static displayName = TodoItem.name;
@@ -15,12 +15,12 @@ export default class TodoItem extends Component {
             item: [],
             userData: [],
             loading: true
-        }
+        };
         this.markComplete = this.markComplete.bind(this);
     }
 
     componentDidMount() {
-        const { match: { params } } = this.props;
+        const {match: {params}} = this.props;
 
         this.populateUserData();
         this.getItem(params.id);
@@ -28,9 +28,9 @@ export default class TodoItem extends Component {
 
     /**
      * Marks a task completed
-     * 
-     * @param {int} id The id of the todo item
-     * @param {bool} status True/False for completion
+     *
+     * @param {Int} id The id of the task item
+     * @param {Boolean} status True/False for completion
      */
     async markComplete(id, status) {
         const token = await authService.getAccessToken();
@@ -52,8 +52,8 @@ export default class TodoItem extends Component {
                     console.error("Could not mark complete: " + res.status);
                 }
             }).catch(error => {
-                console.error(error)
-            });
+            console.error(error)
+        });
     }
 
     getItem(id) {
@@ -67,15 +67,15 @@ export default class TodoItem extends Component {
                     loading: false,
                 });
             }).catch(error => {
-                console.error(error)
-            });
+            console.error(error)
+        });
     }
 
     render() {
         let thing = this.state.item;
 
         if (this.state.loading === true) {
-            return <Loader />;
+            return <Loader/>;
         }
 
         return (
@@ -93,22 +93,30 @@ export default class TodoItem extends Component {
         );
     }
 
+    /**
+     * Marks a task as completed or incomplete.
+     *
+     * @param {Boolean} complete
+     * @param {Int}    id
+     * @returns {*}
+     */
     completeButton(complete, id) {
         if (complete === false) {
-            return <button onClick={() => this.markComplete(id, true)} type="button" className="btn btn-block btn-primary">Mark Completed</button>
-        }
-        else {
-            return <button onClick={() => this.markComplete(id, true)} type="button" className="btn btn-block btn-primary">Mark Incompleted</button>
+            return <button onClick={() => this.markComplete(id, true)} type="button"
+                           className="btn btn-block btn-primary">Mark Completed</button>
+        } else {
+            return <button onClick={() => this.markComplete(id, true)} type="button"
+                           className="btn btn-block btn-primary">Mark Incompleted</button>
         }
     }
 
-    async populateUserData() {
+    populateUserData = async () => {
         const token = await authService.getAccessToken();
         const response = await fetch('connect/userinfo', {
-            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+            headers: !token ? {} : {'Authorization': `Bearer ${token}`}
         });
         const data = await response.json();
-        this.setState({ userData: data });
-    }
+        this.setState({userData: data});
+    };
 }
 

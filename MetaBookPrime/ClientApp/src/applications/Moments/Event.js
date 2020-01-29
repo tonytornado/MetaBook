@@ -1,18 +1,18 @@
-﻿import { faLocationArrow, faUserAlt, faUserClock } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { Component } from 'react';
+﻿import {faLocationArrow, faUserAlt, faUserClock} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import React, {Component} from 'react';
 import "react-datepicker/dist/react-datepicker.css";
-import { Link } from 'react-router-dom';
-import { Banner, Loader } from '../../components/Layout';
+import {Link} from 'react-router-dom';
+import {Banner, Loader} from '../../components/Layout';
 
 /**
  * Formats the date returned.
- * 
- * @param {datetime} date The formatted date.
+ *
+ * @param {Date} date The formatted date.
  */
 export function dateFormatter(date) {
-    var event = new Date(date);
-    var options = {
+    const event = new Date(date);
+    const options = {
         weekday: "long",
         year: "numeric",
         month: "long",
@@ -40,7 +40,7 @@ export default class Event extends Component {
     }
 
     componentDidMount() {
-        const { match: { params } } = this.props;
+        const {match: {params}} = this.props;
 
         fetch(`api/Events/${params.id}`)
             .then(response => response.json())
@@ -61,16 +61,19 @@ export default class Event extends Component {
         let event = this.state.event;
 
         if (this.state.loading === true) {
-            return <Loader />;
+            return <Loader/>;
         } else {
             return (
                 <div>
-                    <Banner title={event.name} subtitle={event.location} />
+                    <Banner title={event.name} subtitle={event.location}/>
                     <article className="row">
                         <div className="col-sm">
                             <ul className="list-group list-group-vertical">
-                                <li className="list-group-item"><FontAwesomeIcon icon={faUserClock} /> {dateFormatter(event.startTime)} <br /> <FontAwesomeIcon icon={faUserClock} />{dateFormatter(event.endTime)} </li>
-                                <li className="list-group-item"><FontAwesomeIcon icon={faLocationArrow} /> {event.location}</li>
+                                <li className="list-group-item"><FontAwesomeIcon
+                                    icon={faUserClock}/> {dateFormatter(event.startTime)} <br/> <FontAwesomeIcon
+                                    icon={faUserClock}/>{dateFormatter(event.endTime)} </li>
+                                <li className="list-group-item"><FontAwesomeIcon
+                                    icon={faLocationArrow}/> {event.location}</li>
                             </ul>
                             <div className="jumbotron">
                                 <p className="lead">
@@ -79,7 +82,7 @@ export default class Event extends Component {
                             </div>
                         </div>
                         <div className="col-sm">
-                            <Participants people={event.participants} />
+                            <Participants people={event.participants}/>
                         </div>
                     </article>
                 </div>
@@ -96,21 +99,24 @@ function Participants(props) {
     let invitees = props.people;
 
     return (invitees === undefined || invitees.length < 1)
-        ? <h3 className="text-center alert alert-warning">Nobody's at it. <br /> Maybe invite some people?</h3>
+        ? <h3 className="text-center alert alert-warning">Nobody's at it. <br/> Maybe invite some people?</h3>
         :
         <table className="table table-striped rounded">
             <thead className="thead-dark">
-                <tr><th>Participants</th></tr>
+            <tr>
+                <th>Participants</th>
+            </tr>
             </thead>
             <tbody>
-                {invitees.map(i =>
-                    <tr key={i.id}>
-                        <td>
-                            {i.photo ? <img src={i.photo} alt={i.name} /> : <FontAwesomeIcon icon={faUserAlt} size="1x" />}
-                            <Link to={`/contact/${i.id}`}> {i.name} ({i.email})</Link>
-                        </td>
-                    </tr>
-                )}
+            {invitees.map(i =>
+                <tr key={i.id}>
+                    <td>
+                        {i.photo ? <img src={i.photo} alt={i.name}/> :
+                            <FontAwesomeIcon icon={faUserAlt} size="1x"/>}
+                        <Link to={`/contact/${i.id}`}> {i.name} ({i.email})</Link>
+                    </td>
+                </tr>
+            )}
             </tbody>
         </table>
 }

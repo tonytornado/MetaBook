@@ -2,22 +2,20 @@
 
 /**
  * Shows a warning modal.
- * @param {Mixed} props 
+ * @param {} props 
  */
 export function CautionModal(props) {
-    if (props.operationType) {
-        return;
-    }
-
-    return (
-        <div>
-            <p>Are you sure you want to {props.operationType} this {props.itemType}</p>
+    if (!props.operationType) {
+        return (
             <div>
-                <button>Yes</button>
-                <button>No</button>
+                <p>Are you sure you want to {props.operationType} this {props.itemType}</p>
+                <div>
+                    <button>Yes</button>
+                    <button>No</button>
+                </div>
             </div>
-        </div>
-    );
+        );
+    } 
 }
 
 /**
@@ -25,17 +23,17 @@ export function CautionModal(props) {
  * @param {string} props 
  */
 export function WarningModal(props) {
-    if (props.text) {
-        return;
-    }
-
-    return (
-        <div>
-            <p>Something bad happened.</p>
-            <p>{props.text}</p>
+    const {text} = props;
+    
+    if (!text) {
+        return (
             <div>
-                <button className="btn btn-secondary">Continue</button>
+                <p>Something bad happened.</p>
+                <p>{text}</p>
+                <div className="border rounded shadow-lg p-3">
+                    <button className="btn btn-secondary">Continue</button>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 }

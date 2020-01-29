@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import authService from "../../components/api-authorization/AuthorizeService";
-import { Link } from 'react-router-dom';
-import { Banner, Loader } from '../../components/Layout';
-import { dateFormatter } from "../Moments/Event";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
+import {Link} from 'react-router-dom';
+import {Banner, Loader} from '../../components/Layout';
+import {dateFormatter} from "../Moments/Event";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCheck, faEdit, faTimes} from '@fortawesome/free-solid-svg-icons';
 
 
 export default class TodoList extends Component {
@@ -27,12 +27,12 @@ export default class TodoList extends Component {
         const items = this.state.items;
 
         if (this.state.loading === true) {
-            return <Loader />
+            return <Loader/>
         }
 
         if (items.length === 0) {
             return <div>
-                <Banner title="Tasks" subtitle="Uh... where are they?" />
+                <Banner title="Tasks" subtitle="Uh... where are they?"/>
                 <p className="text-center">There are no tasks available.</p>
                 <Link to="tasks/add/" className="btn btn-sm btn-primary btn-block">Add Task</Link>
             </div>
@@ -40,21 +40,21 @@ export default class TodoList extends Component {
 
         return (
             <section className="container-fluid">
-                <Banner title="Tasks" subtitle={`${items.length} ${items.length > 1 ? "tasks" : "task"}`} />
+                <Banner title="Tasks" subtitle={`${items.length} ${items.length > 1 ? "tasks" : "task"}`}/>
                 <table className="table table-striped">
                     <thead className="thead-dark">
-                        <tr>
-                            <th></th>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Due Date</th>
-                            {/* <th>Completion Date</th> */}
-                        </tr>
+                    <tr>
+                        <th/>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Due Date</th>
+                        {/* <th>Completion Date</th> */}
+                    </tr>
                     </thead>
                     <tbody>
-                        {items.map(item => item
-                            ? this.ListItem(item)
-                            : "No items found.")}
+                    {items.map(item => item
+                        ? this.ListItem(item)
+                        : "No items found.")}
                     </tbody>
                 </table>
                 <Link to="/tasks/add/" className="btn btn-primary btn-block">Add Task</Link>
@@ -64,7 +64,7 @@ export default class TodoList extends Component {
 
     /**
      * Renders an item object in the row.
-     * 
+     *
      * @param {Array} item Item array
      */
     ListItem(item) {
@@ -72,8 +72,10 @@ export default class TodoList extends Component {
 
         if (!item.completed) {
             widget = <>
-                <Link className="btn btn-primary" to={`/tasks/edit/${item.id}`} id={`editToggle${item.id}`}><FontAwesomeIcon icon={faEdit} /></Link>
-                <Link className="btn btn-success" to={`/tasks/${item.id}`} id={`completeToggle${item.id}`}><FontAwesomeIcon icon={faCheck} /></Link>
+                <Link className="btn btn-primary" to={`/tasks/edit/${item.id}`}
+                      id={`editToggle${item.id}`}><FontAwesomeIcon icon={faEdit}/></Link>
+                <Link className="btn btn-success" to={`/tasks/${item.id}`}
+                      id={`completeToggle${item.id}`}><FontAwesomeIcon icon={faCheck}/></Link>
             </>
         }
 
@@ -82,8 +84,9 @@ export default class TodoList extends Component {
                 <td>
                     <div className="btn-group btn-group-sm">
                         {widget}
-                        <button className="btn btn-danger" type="button" onClick={() => this.removeItem(item.id)} id={`removeToggle${item.id}`} title="This will delete this task.">
-                            <FontAwesomeIcon icon={faTimes} />
+                        <button className="btn btn-danger" type="button" onClick={() => this.removeItem(item.id)}
+                                id={`removeToggle${item.id}`} title="This will delete this task.">
+                            <FontAwesomeIcon icon={faTimes}/>
                         </button>
                     </div>
                 </td>
@@ -96,7 +99,7 @@ export default class TodoList extends Component {
 
     /**
      * Removes an item from the DB
-     * 
+     *
      * @param {int} id Id of the task to remove
      */
     async removeItem(id) {
@@ -119,8 +122,8 @@ export default class TodoList extends Component {
                     console.error("Could not delete: " + res.status);
                 }
             }).catch(error => {
-                console.error(error)
-            });
+            console.error(error)
+        });
     }
 
     /**
@@ -137,7 +140,7 @@ export default class TodoList extends Component {
                     });
                 }
             ).catch(error =>
-                console.error(error)
-            )
+            console.error(error)
+        )
     }
 }

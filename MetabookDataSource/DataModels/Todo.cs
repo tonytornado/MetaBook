@@ -45,14 +45,6 @@ namespace MetaBookDataSource.Data {
         public bool Completed { get; set; }
 
         //public string OwnerId { get; set; }
-        /// <summary>
-        /// Owner ID
-        /// </summary>
-        /// [ForeignKey("OwnerID")]
-        //public MetaUser Owner { get; set; }
-        /// <summary>
-        /// Assignee's Owner ID
-        /// </summary>
         //public MetaUser AssignedOwner { get; set; }
     }
 }

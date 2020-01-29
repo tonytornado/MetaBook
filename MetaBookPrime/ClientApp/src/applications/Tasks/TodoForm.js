@@ -1,6 +1,6 @@
-﻿import React, { Component } from 'react';
+﻿import React, {Component} from 'react';
 import authService from '../../components/api-authorization/AuthorizeService';
-import { Banner, Loader } from '../../components/Layout';
+import {Banner, Loader} from '../../components/Layout';
 
 /**
  * Form for todo lists
@@ -32,14 +32,14 @@ export default class TodoForm extends Component {
                         'user_id': this.state.userData.sub
                     },
                 }).then((res) => {
-                    if (res.ok) {
-                        console.log("Updated!");
-                        this.props.history.push('/tasks');
-                    } else
-                        console.error("Post error: " + res.status);
-                }).catch(e => {
-                    console.log("error: " + e);
-                });
+                if (res.ok) {
+                    console.log("Updated!");
+                    this.props.history.push('/tasks');
+                } else
+                    console.error("Post error: " + res.status);
+            }).catch(e => {
+                console.log("error: " + e);
+            });
         } else if (col === 0) {
             await fetch('api/Tasks',
                 {
@@ -50,20 +50,20 @@ export default class TodoForm extends Component {
                         'user_id': this.state.userData.sub
                     },
                 }).then((res) => {
-                    if (res.ok) {
-                        console.log("Perfect!");
-                        console.log(res.json());
-                        this.props.history.push('/tasks');
-                    } else
-                        console.error("Post error: " + res.status);
-                }).catch(e => {
-                    console.log("error: " + e);
-                });
+                if (res.ok) {
+                    console.log("Perfect!");
+                    console.log(res.json());
+                    this.props.history.push('/tasks');
+                } else
+                    console.error("Post error: " + res.status);
+            }).catch(e => {
+                console.log("error: " + e);
+            });
         }
     }
 
     componentDidMount() {
-        const { match: { params } } = this.props;
+        const {match: {params}} = this.props;
         var task_id = params.id;
 
         // Get user data
@@ -81,12 +81,12 @@ export default class TodoForm extends Component {
             }
         });
         const data = await response.json();
-        this.setState({ userData: data, loading: false });
+        this.setState({userData: data, loading: false});
     }
 
     /**
      * Checks for any editable task data
-     * 
+     *
      * @param {int} id  The id of the editable task
      */
     checkForItemData(id) {
@@ -95,7 +95,7 @@ export default class TodoForm extends Component {
                 .then(response => response.json())
                 .then(data => {
                     setTimeout(function () {
-                        this.setState({ item: data })
+                        this.setState({item: data})
                     }.bind(this), 1000)
                 });
         }
@@ -103,26 +103,26 @@ export default class TodoForm extends Component {
 
     render() {
         if (this.state.loading === true) {
-            return <Loader />;
+            return <Loader/>;
         } else {
             return (
                 <div>
-                    <Banner title="Add Task" subtitle="What do you want to do?" />
+                    <Banner title="Add Task" subtitle="What do you want to do?"/>
                     <form onSubmit={this.handleSubmit} className="border rounded p-3 shadow-sm">
-                        <input type="hidden" name="id" defaultValue={this.state.item.id} />
+                        <input type="hidden" name="id" defaultValue={this.state.item.id}/>
                         <div>
                             <div className="form-group">
-                                <input type="text" placeholder="Add Task" name="title" className="form-control" />
+                                <input type="text" placeholder="Add Task" name="title" className="form-control"/>
                             </div>
                             <div className="form-group">
-                                <textarea placeholder="Description" name="description" className="form-control" />
+                                <textarea placeholder="Description" name="description" className="form-control"/>
                             </div>
                         </div>
                         <div className="form-group">
                             <label htmlFor="dueDate">Due Date</label>
-                            <input type="date" className="form-control" name="dueDate" />
+                            <input type="date" className="form-control" name="dueDate"/>
                         </div>
-                        <input type="submit" className="btn btn-primary btn-block" name="task-act" value="Add Task" />
+                        <input type="submit" className="btn btn-primary btn-block" name="task-act" value="Add Task"/>
                     </form>
                 </div>
             );
@@ -130,7 +130,9 @@ export default class TodoForm extends Component {
     }
 }
 
-
+/**
+ * Item class
+ */
 class ItemData {
     id = 0;
     title = "";

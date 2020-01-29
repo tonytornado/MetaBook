@@ -10,7 +10,7 @@ namespace MetaBookDataSource.Data
     /// </summary>
     public class Contact
     {
-        public Contact()
+        protected Contact()
         {
         }
 
@@ -23,7 +23,7 @@ namespace MetaBookDataSource.Data
         }
 
         [Key]
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Email Address")]
@@ -65,8 +65,7 @@ namespace MetaBookDataSource.Data
         public string LastName { get; set; }
         public string Website { get; set; }
 
-        [NotMapped]
-        public string Name => $"{FirstName} {LastName}";
+        [NotMapped] private string Name => $"{FirstName} {LastName}";
         [NotMapped]
         public string FullTitle => $"{Name} ({Email})";
     }

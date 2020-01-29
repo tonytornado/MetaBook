@@ -10,8 +10,6 @@ export const ToDoRoutes = {
     TaskAdd: '/add/:id',
     TaskEdit: '/edit/:id',
     TaskDelete: '/delete/:id'
-}
+};
 
-export const EventRoutes = {
-
-}
+export const EventRoutes = {};

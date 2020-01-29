@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MetaBookDataResource.Enums
 {
@@ -7,17 +8,13 @@ namespace MetaBookDataResource.Enums
     {
         public static List<EnumValue> GetValues<T>()
         {
-            List<EnumValue> values = new List<EnumValue>();
-            foreach (var itemType in Enum.GetValues(typeof(T)))
-            {
-                //For each value of this enumeration, add a new EnumValue instance
-                values.Add(new EnumValue()
+            return (from object itemType in Enum.GetValues(typeof(T))
+                select new EnumValue()
                 {
-                    Name = Enum.GetName(typeof(T), itemType),
-                    Value = (int)itemType
-                });
-            }
-            return values;
+                    Name = Enum.GetName(typeof(T),
+                        itemType),
+                    Value = (int) itemType
+                }).ToList();
         }
     }
 

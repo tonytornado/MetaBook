@@ -44,7 +44,7 @@ namespace MetaBookPrime.Controllers
         [HttpGet("itinerary/{id}")]
         public async Task<ActionResult<ICollection<Moment>>> GetPersonalEvents(int id)
         {
-            Person person = await _context.People.FindAsync(id);
+            await _context.People.FindAsync(id);
 
             var oink = await _context.Events.Include(e => e.Participants)
                                             .Where(x => x.Participants.Any(i => i.Id == id)).ToListAsync();

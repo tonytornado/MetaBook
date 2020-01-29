@@ -1,7 +1,7 @@
-﻿import React, { Component, useState } from 'react';
+﻿import React, {Component, useState} from 'react';
 import DatePicker from 'react-datepicker';
-import { Banner } from '../../components/Layout';
-import { WarningModal } from '../../components/Modals';
+import {Banner} from '../../components/Layout';
+import {WarningModal} from '../../components/Modals';
 import ContactScroll from '../../components/contactScroller';
 
 
@@ -16,7 +16,7 @@ function DatesAndTimes() {
         <section className="row">
             <div className="form-group col-sm mx-auto">
                 <label className="label" htmlFor="startTime">Start</label>
-                <br />
+                <br/>
                 <DatePicker
                     name="startTime"
                     className="form-control form-control-sm"
@@ -34,7 +34,7 @@ function DatesAndTimes() {
             </div>
             <div className="form-group col-sm mx-auto">
                 <label className="label" htmlFor="endTime">End</label>
-                <br />
+                <br/>
                 <DatePicker
                     name="endTime"
                     className="form-control form-control-sm"
@@ -64,14 +64,14 @@ export class EventCreator extends Component {
         super(props);
         this.state = {
             loading: false,
-        }
+        };
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     /**
      * Handles the filling of the start date.
-     * @param {DateTime} sdate 
+     * @param {Date} sdate
      */
     handleChangeStartDate(sdate) {
         this.setState({
@@ -81,7 +81,7 @@ export class EventCreator extends Component {
 
     /**
      * Handles the filling of the end date.
-     * @param {DateTime} edate 
+     * @param {Date} edate
      */
     handleChangeEndDate(edate) {
         this.setState({
@@ -91,7 +91,7 @@ export class EventCreator extends Component {
 
     /**
      * Form submission handler.
-     * @param {Mixed} e 
+     * @param {Event} e
      */
     handleSubmit(e) {
         e.preventDefault();
@@ -102,22 +102,22 @@ export class EventCreator extends Component {
                 method: 'POST',
                 body: data,
             }).then((res) => {
-                if (res.ok) {
-                    console.log("Perfect!");
-                    console.log(res.json());
-                    this.props.history.push('/events/');
-                } else
-                    this.showWarningModal(res.status);
-                console.error("Post error: " + res.status);
-            }).catch(e => {
-                console.log("error: " + e);
-            });;
+            if (res.ok) {
+                console.log("Perfect!");
+                console.log(res.json());
+                this.props.history.push('/events/');
+            } else
+                this.showWarningModal(res.status);
+            console.error("Post error: " + res.status);
+        }).catch(e => {
+            console.log("error: " + e);
+        });
+        ;
     }
 
     static showWarningModal(status) {
-        return <WarningModal text={status} />;
+        return <WarningModal text={status}/>;
     }
-
 
 
     /**
@@ -125,28 +125,30 @@ export class EventCreator extends Component {
      */
     formRender() {
         return (
-            <form encType="multipart/form-data" onSubmit={this.handleSubmit} className="border rounded shadow p-3 row mx-auto">
+            <form encType="multipart/form-data" onSubmit={this.handleSubmit}
+                  className="border rounded shadow p-3 row mx-auto">
                 <div className="col-md">
                     <div className="form-group">
                         <label className="label"><h5>Event Name</h5></label>
                         <input
-                            type="text" name="name" placeholder="What?" className="form-control form-control-lg" />
+                            type="text" name="name" placeholder="What?" className="form-control form-control-lg"/>
                     </div>
                     <div className="form-group">
                         <label><h5>Location</h5></label>
                         <input
-                            type="text" name="location" placeholder="Where?" className="form-control form-control-lg" />
+                            type="text" name="location" placeholder="Where?" className="form-control form-control-lg"/>
                     </div>
                     <div className="form-group">
                         <label className="label"><h5>Description</h5></label>
-                        <textarea name="description" placeholder="Why?"
-                            rows="7"
-                            className="form-control form-control-lg"></textarea>
+                        <textarea name="description" 
+                                  placeholder="Why?"
+                                  rows="7"
+                                  className="form-control form-control-lg"/>
                     </div>
-                    <DatesAndTimes />
+                    <DatesAndTimes/>
                 </div>
-                <ContactScroll />
-                <input type="submit" className="btn btn-primary btn-block" value="Submit" />
+                <ContactScroll/>
+                <input type="submit" className="btn btn-primary btn-block" value="Submit"/>
             </form>
         );
     }
@@ -155,7 +157,7 @@ export class EventCreator extends Component {
         let clamp = this.formRender();
 
         return <section>
-            <Banner title="Add Event" subtitle="Create something." />
+            <Banner title="Add Event" subtitle="Create something."/>
             {clamp}
         </section>
     }

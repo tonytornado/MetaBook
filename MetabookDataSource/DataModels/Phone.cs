@@ -27,7 +27,7 @@ namespace MetaBookDataSource.Data
         Home,
         Work,
         Mobile,
-        VoIP
+        VoIp
     }
 
 }

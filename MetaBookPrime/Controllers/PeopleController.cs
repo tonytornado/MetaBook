@@ -159,7 +159,7 @@ namespace MetaBookPrime.Controllers
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(
             [FromForm]string substring,
-            [FromForm]bool AddressCheck,
+            [FromForm]bool addressCheck,
             [FromForm]bool phoneCheck,
             [FromForm]Person peep,
             [FromForm]Address address,
@@ -175,7 +175,7 @@ namespace MetaBookPrime.Controllers
             Person person = peep;
 
             // Check for an address
-            if (AddressCheck)
+            if (addressCheck)
             {
                 Address addy = address;
                 person.Addresses.Add(addy);

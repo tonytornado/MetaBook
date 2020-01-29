@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MetaBookDataSource.Data;
 using MetaBookDataSource.Models;
 using Microsoft.AspNetCore.Authorization;
-using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MetaBookPrime.Controllers
 {
@@ -66,10 +66,8 @@ namespace MetaBookPrime.Controllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
 
             return NoContent();
@@ -100,16 +98,9 @@ namespace MetaBookPrime.Controllers
                 return NotFound();
             }
 
-            try
-            {
-                _context.Tasks.Remove(todo);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                throw;
-            }
-            
+            _context.Tasks.Remove(todo);
+            await _context.SaveChangesAsync();
+
             return todo;
         }
 
@@ -123,16 +114,9 @@ namespace MetaBookPrime.Controllers
                 return NotFound();
             }
 
-            try
-            {
-                todo.Completed = status;
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                throw;
-            }
-            
+            todo.Completed = status;
+            await _context.SaveChangesAsync();
+
 
             return Ok();
         }
