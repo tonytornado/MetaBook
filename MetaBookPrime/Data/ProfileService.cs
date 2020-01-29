@@ -1,19 +1,16 @@
-﻿using IdentityServer4.Models;
-using IdentityServer4.Services;
-
-using MetaBookDataSource.Data;
-
-using Microsoft.AspNetCore.Identity;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using IdentityServer4.Models;
+using IdentityServer4.Services;
+using MetaBookDataSource.Data;
+using Microsoft.AspNetCore.Identity;
 
-namespace MetaBookPrime
+namespace MetaBookPrime.Data
 {
     public class ProfileService : IProfileService
     {
-        protected UserManager<MetaUser> _userManager;
+        private UserManager<MetaUser> _userManager;
 
         public ProfileService(UserManager<MetaUser> userManager)
         {

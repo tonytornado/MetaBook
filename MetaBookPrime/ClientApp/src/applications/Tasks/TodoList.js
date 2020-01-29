@@ -5,6 +5,7 @@ import {Banner, Loader} from '../../components/Layout';
 import {dateFormatter} from "../Moments/Event";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck, faEdit, faTimes} from '@fortawesome/free-solid-svg-icons';
+import {VersatileModal} from "../../components/modals/VersatileModal";
 
 
 export default class TodoList extends Component {
@@ -13,7 +14,7 @@ export default class TodoList extends Component {
         this.state = {
             loading: true,
             items: [],
-            deleteSetting: false
+            showModal: false
         };
 
         this.removeItem = this.removeItem.bind(this);
@@ -84,10 +85,14 @@ export default class TodoList extends Component {
                 <td>
                     <div className="btn-group btn-group-sm">
                         {widget}
-                        <button className="btn btn-danger" type="button" onClick={() => this.removeItem(item.id)}
-                                id={`removeToggle${item.id}`} title="This will delete this task.">
-                            <FontAwesomeIcon icon={faTimes}/>
-                        </button>
+                        <VersatileModal
+                            buttonClass={"danger"}
+                            buttonLabel={<FontAwesomeIcon icon={faTimes}/>}
+                            modalTitle={`Remove Task "${item.title}"`} 
+                            modalText={"Are you sure you want to delete this item? This cannot be undone."}
+                            modalConfirmText={"Confirm Deletion"}
+                            modalAction={this.removeItem(item.id)}
+                        />
                     </div>
                 </td>
                 <td><Link to={`/tasks/${item.id}`}>{item.title}</Link></td>

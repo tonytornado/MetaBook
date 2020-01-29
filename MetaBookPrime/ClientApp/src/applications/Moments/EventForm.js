@@ -1,7 +1,6 @@
 ﻿import React, {Component, useState} from 'react';
 import DatePicker from 'react-datepicker';
 import {Banner} from '../../components/Layout';
-import {WarningModal} from '../../components/Modals';
 import ContactScroll from '../../components/contactScroller';
 
 
@@ -112,11 +111,6 @@ export class EventCreator extends Component {
         }).catch(e => {
             console.log("error: " + e);
         });
-        ;
-    }
-
-    static showWarningModal(status) {
-        return <WarningModal text={status}/>;
     }
 
 

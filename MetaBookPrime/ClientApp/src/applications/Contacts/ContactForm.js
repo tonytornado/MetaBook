@@ -136,8 +136,20 @@ export class ContactForm extends Component {
     }
 
     render() {
-        const dataBits = this.state.contactData;
-
+        let dataBits = this.state.contactData;
+        let classNamePhone = "btn btn-secondary";
+        let classNameAddress = "btn btn-secondary";
+        let addressText = this.state.addAddress ? "Remove Address" : "Add Address";
+        let phoneText = this.state.addPhone ? "Remove Phone" : "Add Phone";
+        
+        if (this.state.addPhone) {
+            classNamePhone += 'active';
+        }
+        
+        if (this.state.addAddress) {
+            classNameAddress += 'active';
+        }
+        
         return (
             <main className="">
                 <Banner title="Add Contact" subtitle="You might remember them later."/>
@@ -147,19 +159,19 @@ export class ContactForm extends Component {
                     <MainForm data={dataBits}/>
                     <hr/>
                     <div className="btn-group-toggle btn-group btn-block" data-toggle="buttons">
-                        <label htmlFor="phoneCheck" className="btn btn-secondary">
+                        <label htmlFor="phoneCheck" className={classNamePhone}>
                             <input type="checkbox"
                                    id="phoneCheck"
                                    onChange={this.handlePhoneChange}
                                    name="phoneCheck" value="true"/>
-                            Add Phone
+                            {phoneText}
                         </label>
-                        <label htmlFor="addressCheck" className="btn btn-secondary">
+                        <label htmlFor="addressCheck" className={classNameAddress}>
                             <input type="checkbox"
                                    id="addressCheck"
                                    onChange={this.handleAddressChange}
                                    name="addressCheck" value="true"/>
-                            Add Address
+                            {addressText}
                         </label>
                     </div>
                     <br/>
@@ -196,38 +208,39 @@ export class ContactForm extends Component {
  * @return {null}
  */
 function PhoneForm(props) {
-    if (!props.visible) {
+    if (props.visible) {
+        let caller = props.data ? props.data : new PhoneData();
+        const phoneTypes = props.phoneTypes;
+        let phones = phoneTypes.map(c =>
+            <option key={c.value} value={c.name}>{c.name}</option>
+        );
+        return (
+            <div className="py-2">
+                <div className="form-group">
+                    <label className="label" htmlFor="phoneNumber">Phone Number</label>
+                    <input
+                        name="phoneNumber" placeholder="Phone Number (10 digits only)" className="form-control"
+                        defaultValue={caller.phoneNumber}/>
+                </div>
+                <div className="form-group">
+                    <label className="label" htmlFor="">Phone Type</label>
+                    <select name="CallerType" className="form-control" defaultValue={caller.callerType}>
+                        <option/>
+                        {phones}
+                    </select>
+                </div>
+
+            </div>
+        );
+    } else {
         return null;
     }
-    let caller = props.data ? props.data : new PhoneData();
-    const phoneTypes = props.phoneTypes;
-    let phones = phoneTypes.map(c =>
-        <option key={c.value} value={c.name}>{c.name}</option>
-    );
-
-    return (
-        <div className="py-2">
-            <div className="form-group">
-                <label className="label" htmlFor="phoneNumber">Phone Number</label>
-                <input
-                    name="phoneNumber" placeholder="Phone Number (10 digits only)" className="form-control"
-                    defaultValue={caller.phoneNumber}/>
-            </div>
-            <div className="form-group">
-                <label className="label" htmlFor="">Phone Type</label>
-                <select name="CallerType" className="form-control" defaultValue={caller.callerType}>
-                    <option/>
-                    {phones}
-                </select>
-            </div>
-
-        </div>
-    );
 }
 
 /**
  * An Address Field that renders if needed.
  * @param {any} props
+ * @return {null}
  */
 function AddressForm(props) {
     if (props.visible) {
@@ -264,7 +277,7 @@ function AddressForm(props) {
                     <div className="form-group col-sm">
                         <label>State</label>
                         <select name="StateName" className="form-control" defaultValue={addy.stateName}>
-                            <option></option>
+                            <option/>
                             {states}
                         </select>
                     </div>
@@ -277,7 +290,9 @@ function AddressForm(props) {
                 </div>
             </div>
         );
-    } 
+    } else {
+        return null;
+    }
 }
 
 /**
