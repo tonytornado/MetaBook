@@ -14,12 +14,14 @@ namespace MetaBookDataSource.Data {
         {
             if (string.IsNullOrEmpty(title))
             {
-                throw new ArgumentException("message", nameof(title));
+                string Message = "You need a title.";
+                throw new ArgumentException(Message, nameof(title));
             }
 
             if (string.IsNullOrEmpty(description))
             {
-                throw new ArgumentException("message", nameof(description));
+                string Message = "You need a description.";
+                throw new ArgumentException(Message, nameof(description));
             }
 
             Title = title;

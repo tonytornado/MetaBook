@@ -1,7 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import authService from "../../components/api-authorization/AuthorizeService";
-import {Banner, Loader} from '../../components/Layout';
-import {Link} from 'react-router-dom';
+import { Banner, Loader } from '../../components/Layout';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faPhone } from '@fortawesome/free-solid-svg-icons';
 
 /**
  * Shows the contact list
@@ -33,7 +35,7 @@ export default class ContactList extends Component {
         if (contacts === false) {
             return (
                 <div>
-                    <Banner title="Contacts" subtitle="Uh... where are they?"/>
+                    <Banner title="Contacts" subtitle="Uh... where are they?" />
                     <p className="text-center">There are no contacts.</p>
                     <Link to="contacts/add/" className="btn btn-sm btn-primary btn-block">Add Contact</Link>
                 </div>
@@ -43,23 +45,27 @@ export default class ContactList extends Component {
         return (
             <div>
                 <Banner title="Contacts"
-                        subtitle={`${contacts.length} ${contacts.length > 1 ? "contacts" : "contact"}.`}/>
+                    subtitle={`${contacts.length} ${contacts.length > 1 ? "contacts" : "contact"}.`} />
                 <table className="table table-striped">
                     <thead className="thead-dark">
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                    </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Phone</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {contacts.map(contact => <tr key={contact.id}>
-                        <td><a href={"contacts/" + contact.id}>{contact.firstName} {contact.lastName}</a></td>
-                        <td>{contact.email}</td>
-                    </tr>)}
+                        {contacts.map(contact => <tr key={contact.id}>
+                            <td><a href={"contacts/" + contact.id}>{contact.firstName} {contact.lastName}</a></td>
+                            <td>{contact.email}</td>
+                            <td>{contact.addresses.length !== 0 && <FontAwesomeIcon icon={faHome} className="text-center" />}</td>
+                            <td>{contact.phones.length !== 0 && <FontAwesomeIcon icon={faPhone} className="text-center"/>}</td>
+                        </tr>)}
                     </tbody>
                 </table>
                 <div>
-                    <Link to="/contacts/add/" className="btn btn-sm btn-primary">Add Contact</Link>
+                    <Link to="/contacts/add/" className="btn btn-block btn-primary">Add Contact</Link>
                 </div>
             </div>);
     }
@@ -82,7 +88,7 @@ export default class ContactList extends Component {
                     loading: false
                 });
                 if (result.length < 1)
-                    this.setState({missingData: true,});
+                    this.setState({ missingData: true, });
             });
     }
 
@@ -92,7 +98,7 @@ export default class ContactList extends Component {
     async populateUserData() {
         const token = await authService.getAccessToken();
         const response = await fetch('/connect/userinfo', {
-            headers: !token ? {} : {'Authorization': `Bearer ${token}`}
+            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
         this.setState({
@@ -103,7 +109,7 @@ export default class ContactList extends Component {
 
     render() {
         let contents = this.state.loading
-            ? <div><Loader/></div>
+            ? <div><Loader /></div>
             : this.state.contacts.length
                 ? ContactList.renderContactList(this.state.contacts)
                 : ContactList.renderContactList(false);

@@ -1,92 +1,24 @@
-﻿import React, {Component, useState} from 'react';
-import DatePicker from 'react-datepicker';
-import {Banner} from '../../components/Layout';
-import ContactScroll from '../../components/contactScroller';
+﻿import React, { Component } from 'react';
+import { Banner } from '../../components/Layout';
+import ContactScroll from '../../components/helpers/contactScroller';
+import DatesAndTimes from '../../components/helpers/DatesAndTimes';
 
 
 /**
- * Renders a React datepicker.
- * */
-function DatesAndTimes() {
-    const [startDate, setStartDate] = useState(new Date(Date.now()));
-    const [endDate, setEndDate] = useState(new Date(Date.now() + 1));
-
-    return (
-        <section className="row">
-            <div className="form-group col-sm mx-auto">
-                <label className="label" htmlFor="startTime">Start</label>
-                <br/>
-                <DatePicker
-                    name="startTime"
-                    className="form-control form-control-sm"
-                    selected={startDate}
-                    onChange={date => setStartDate(date)}
-                    showTimeSelect
-                    timeFormat="p"
-                    timeIntervals={15}
-                    selectsStart
-                    startDate={startDate}
-                    endDate={endDate}
-                    isClearable
-                    dateFormat="MMM d, yyyy h:mm aa"
-                />
-            </div>
-            <div className="form-group col-sm mx-auto">
-                <label className="label" htmlFor="endTime">End</label>
-                <br/>
-                <DatePicker
-                    name="endTime"
-                    className="form-control form-control-sm"
-                    selected={endDate}
-                    onChange={date => setEndDate(date)}
-                    showTimeSelect
-                    timeFormat="p"
-                    timeIntervals={15}
-                    selectsEnd
-                    endDate={endDate}
-                    minDate={startDate}
-                    isClearable
-                    dateFormat="MMM d, yyyy h:mm aa"
-                />
-            </div>
-        </section>
-    );
-}
-
-/**
- * Event creator form.
+ * Event form.
  */
-export class EventCreator extends Component {
-    static displayName = EventCreator.name;
+export default class EventForm extends Component {
+    static displayName = EventForm.name;
 
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
+            event: new EventData()
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-
-    /**
-     * Handles the filling of the start date.
-     * @param {Date} sdate
-     */
-    handleChangeStartDate(sdate) {
-        this.setState({
-            startDate: sdate
-        });
-    };
-
-    /**
-     * Handles the filling of the end date.
-     * @param {Date} edate
-     */
-    handleChangeEndDate(edate) {
-        this.setState({
-            endDate: edate
-        });
-    };
 
     /**
      * Form submission handler.
@@ -101,16 +33,16 @@ export class EventCreator extends Component {
                 method: 'POST',
                 body: data,
             }).then((res) => {
-            if (res.ok) {
-                console.log("Perfect!");
-                console.log(res.json());
-                this.props.history.push('/events/');
-            } else
-                this.showWarningModal(res.status);
-            console.error("Post error: " + res.status);
-        }).catch(e => {
-            console.log("error: " + e);
-        });
+                if (res.ok) {
+                    console.log("Perfect!");
+                    console.log(res.json());
+                    this.props.history.push('/events/');
+                } else
+                    this.showWarningModal(res.status);
+                console.error("Post error: " + res.status);
+            }).catch(e => {
+                console.log("error: " + e);
+            });
     }
 
 
@@ -118,31 +50,35 @@ export class EventCreator extends Component {
      * Renders the form for the page.
      */
     formRender() {
+        let event = this.state.event;
+
         return (
             <form encType="multipart/form-data" onSubmit={this.handleSubmit}
-                  className="border rounded shadow p-3 row mx-auto">
+                className="border rounded shadow p-3 row mx-auto">
+                <input type="hidden" name="id" defaultValue={this.state.event.id} />
                 <div className="col-md">
                     <div className="form-group">
                         <label className="label"><h5>Event Name</h5></label>
                         <input
-                            type="text" name="name" placeholder="What?" className="form-control form-control-lg"/>
+                            type="text" name="name" placeholder="What?" className="form-control form-control-lg" defaultValue={event.name} />
                     </div>
                     <div className="form-group">
                         <label><h5>Location</h5></label>
                         <input
-                            type="text" name="location" placeholder="Where?" className="form-control form-control-lg"/>
+                            type="text" name="location" placeholder="Where?" className="form-control form-control-lg" defaultValue={event.location} />
                     </div>
                     <div className="form-group">
                         <label className="label"><h5>Description</h5></label>
-                        <textarea name="description" 
-                                  placeholder="Why?"
-                                  rows="7"
-                                  className="form-control form-control-lg"/>
+                        <textarea name="description"
+                            placeholder="Why?"
+                            rows="7"
+                            className="form-control form-control-lg"
+                            defaultValue={event.description} />
                     </div>
-                    <DatesAndTimes/>
+                    <DatesAndTimes />
                 </div>
-                <ContactScroll/>
-                <input type="submit" className="btn btn-primary btn-block" value="Submit"/>
+                <ContactScroll />
+                <input type="submit" className="btn btn-primary btn-block" value="Submit" />
             </form>
         );
     }
@@ -151,8 +87,36 @@ export class EventCreator extends Component {
         let clamp = this.formRender();
 
         return <section>
-            <Banner title="Add Event" subtitle="Create something."/>
+            <Banner title="Event!" subtitle="Make something happen." />
             {clamp}
         </section>
     }
+
+    /**
+     * Gets information about the event and changes things around for the event's data
+     *
+     * @param {int} id Id for the event
+     */
+    checkForEventData(id) {
+        if (id > 0) {
+            fetch(`api/Event/details/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    setTimeout(function () {
+                        this.setState({ event: data })
+                    }.bind(this), 1000)
+                });
+        }
+    }
+}
+
+class EventData {
+    id = 0;
+    name = "";
+    startTime = new Date();
+    endTime = new Date();
+    location = "";
+    description = "";
+    participants = [];
+    color = "None";
 }

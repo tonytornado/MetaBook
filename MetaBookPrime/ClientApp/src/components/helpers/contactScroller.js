@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import authService from "./api-authorization/AuthorizeService";
+import authService from "../api-authorization/AuthorizeService";
 
 /**
  * Creates a scrolling contact list
@@ -23,8 +23,8 @@ export default class ContactScroll extends Component {
      */
     async populateContactData(clump) {
         const token = await authService.getAccessToken();
-        const merk = clump.sub;
-        await fetch(`api/People/phonebook/${merk}`, {
+        const id = clump.sub;
+        await fetch(`api/People/phonebook/${id}`, {
             headers: !token ? {} : {
                 'Authorization': `Bearer ${token}`,
             }

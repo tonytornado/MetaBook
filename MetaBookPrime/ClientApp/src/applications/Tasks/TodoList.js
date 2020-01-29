@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import authService from "../../components/api-authorization/AuthorizeService";
-import {Link} from 'react-router-dom';
-import {Banner, Loader} from '../../components/Layout';
-import {dateFormatter} from "../Moments/Event";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck, faEdit, faTimes} from '@fortawesome/free-solid-svg-icons';
-import {VersatileModal} from "../../components/modals/VersatileModal";
+import { Link } from 'react-router-dom';
+import { Banner, Loader } from '../../components/Layout';
+import { dateFormatter } from "../Moments/Event";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { VersatileModal } from "../../components/modals/VersatileModal";
 
 
 export default class TodoList extends Component {
@@ -24,16 +24,24 @@ export default class TodoList extends Component {
         this.getItems();
     }
 
+    componentDidUpdate(){
+        this.getItems();
+    }
+
+    componentWillUnmount() {
+
+    }
+
     render() {
         const items = this.state.items;
 
         if (this.state.loading === true) {
-            return <Loader/>
+            return <Loader />
         }
 
         if (items.length === 0) {
             return <div>
-                <Banner title="Tasks" subtitle="Uh... where are they?"/>
+                <Banner title="Tasks" subtitle="Uh... where are they?" />
                 <p className="text-center">There are no tasks available.</p>
                 <Link to="tasks/add/" className="btn btn-sm btn-primary btn-block">Add Task</Link>
             </div>
@@ -41,21 +49,21 @@ export default class TodoList extends Component {
 
         return (
             <section className="container-fluid">
-                <Banner title="Tasks" subtitle={`${items.length} ${items.length > 1 ? "tasks" : "task"}`}/>
+                <Banner title="Tasks" subtitle={`${items.length} ${items.length > 1 ? "tasks" : "task"}`} />
                 <table className="table table-striped">
                     <thead className="thead-dark">
-                    <tr>
-                        <th/>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Due Date</th>
-                        {/* <th>Completion Date</th> */}
-                    </tr>
+                        <tr>
+                            <th />
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Due Date</th>
+                            {/* <th>Completion Date</th> */}
+                        </tr>
                     </thead>
                     <tbody>
-                    {items.map(item => item
-                        ? this.ListItem(item)
-                        : "No items found.")}
+                        {items.map(item => item
+                            ? this.ListItem(item)
+                            : "No items found.")}
                     </tbody>
                 </table>
                 <Link to="/tasks/add/" className="btn btn-primary btn-block">Add Task</Link>
@@ -73,10 +81,8 @@ export default class TodoList extends Component {
 
         if (!item.completed) {
             widget = <>
-                <Link className="btn btn-primary" to={`/tasks/edit/${item.id}`}
-                      id={`editToggle${item.id}`}><FontAwesomeIcon icon={faEdit}/></Link>
-                <Link className="btn btn-success" to={`/tasks/${item.id}`}
-                      id={`completeToggle${item.id}`}><FontAwesomeIcon icon={faCheck}/></Link>
+                <Link className="btn btn-primary" to={`/tasks/edit/${item.id}`} id={`editToggle${item.id}`}><FontAwesomeIcon icon={faEdit} /></Link>
+                <Link className="btn btn-success" to={`/tasks/${item.id}`} id={`completeToggle${item.id}`}><FontAwesomeIcon icon={faCheck} /></Link>
             </>
         }
 
@@ -87,8 +93,8 @@ export default class TodoList extends Component {
                         {widget}
                         <VersatileModal
                             buttonClass={"danger"}
-                            buttonLabel={<FontAwesomeIcon icon={faTimes}/>}
-                            modalTitle={`Remove Task "${item.title}"`} 
+                            buttonLabel={<FontAwesomeIcon icon={faTimes} />}
+                            modalTitle={`Remove Task "${item.title}"`}
                             modalText={"Are you sure you want to delete this item? This cannot be undone."}
                             modalConfirmText={"Confirm Deletion"}
                             modalAction={() => this.removeItem(item.id)}
@@ -118,17 +124,13 @@ export default class TodoList extends Component {
             })
             .then((res) => {
                 if (res.ok) {
-                    this.setState({
-                        loading: true,
-                    });
                     console.log("Task Deleted!");
-                    this.getItems();
                 } else {
                     console.error("Could not delete: " + res.status);
                 }
             }).catch(error => {
-            console.error(error)
-        });
+                console.error(error)
+            });
     }
 
     /**
@@ -145,7 +147,7 @@ export default class TodoList extends Component {
                     });
                 }
             ).catch(error =>
-            console.error(error)
-        )
+                console.error(error)
+            )
     }
 }

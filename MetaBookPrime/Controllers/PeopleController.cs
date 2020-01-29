@@ -111,45 +111,39 @@ namespace MetaBookPrime.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [Authorize]
-        [HttpPut("{id}")]
+        [HttpPut("{slug}")]
         public async Task<IActionResult> PutPerson(
-            [FromForm]int id,
+            int slug,
             [FromForm]string substring,
             [FromForm]Person person)
         {
             MetaUser user = await _userManager.FindByIdAsync(substring);
 
-            if (user is null)
+            if (!(user is null) && slug == person.Id)
             {
-                return BadRequest();
-            }
+                _context.Entry(person).State = EntityState.Modified;
 
-            if (id != person.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(person).State = EntityState.Modified;
-
-            try
-            {
-                person.OwnerId = substring;
-                user.UserContacts.Add(person);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PersonExists(id))
+                try
                 {
-                    return NotFound();
+                    person.OwnerId = substring;
+                    user.UserContacts.Add(person);
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!PersonExists(slug))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
-            }
 
-            return NoContent();
+                return NoContent();
+            }
+            return BadRequest();
         }
 
         // POST: api/People

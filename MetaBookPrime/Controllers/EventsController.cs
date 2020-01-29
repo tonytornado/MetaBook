@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MetaBookDataSource.Data;
 using MetaBookDataSource.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MetaBookPrime.Controllers
 {
@@ -56,6 +57,7 @@ namespace MetaBookPrime.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutMoment(int id, Moment moment)
         {
             if (id != moment.Id)
@@ -88,6 +90,7 @@ namespace MetaBookPrime.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Moment>> PostMoment([FromForm]Moment moment, [FromForm]int[] participants)
         {
             // Add people to the event
@@ -105,6 +108,7 @@ namespace MetaBookPrime.Controllers
 
         // DELETE: api/Events/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<Moment>> DeleteMoment(int id)
         {
             var moment = await _context.Events.FindAsync(id);

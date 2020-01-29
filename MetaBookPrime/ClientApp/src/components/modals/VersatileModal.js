@@ -1,7 +1,12 @@
-﻿import React, {useState} from 'react';
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
+﻿import React, { useState } from 'react';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
-
+/**
+ * Creates a modal that drops down with a backdrop. 
+ * Properties can be set from the component.
+ * 
+ * @param {Array} props Properties from component
+ */
 export function VersatileModal(props) {
     const {
         buttonLabel,
@@ -16,10 +21,10 @@ export function VersatileModal(props) {
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
     const toggleAction = modalAction;
-    const externalCloseBtn = <button className="close" style={{position: 'absolute', top: '15px', right: '15px'}}
-                                     onClick={toggle}>&times;</button>;
+    const externalCloseBtn = <button className="close" style={{ position: 'absolute', top: '15px', right: '15px' }}
+        onClick={toggle}>&times;</button>;
     return (
-        <div>
+        <>
             <Button color={buttonClass} onClick={toggle}>{buttonLabel}</Button>
             <Modal isOpen={modal} toggle={toggle} className={className} external={externalCloseBtn}>
                 <ModalHeader>{modalTitle}</ModalHeader>
@@ -31,6 +36,6 @@ export function VersatileModal(props) {
                     <Button color="secondary" onClick={toggle}>Cancel</Button>
                 </ModalFooter>
             </Modal>
-        </div>
+        </>
     );
 }
