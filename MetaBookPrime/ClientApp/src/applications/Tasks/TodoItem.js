@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {dateFormatter} from '../Moments/Event';
+import { dateFormatter } from "../../components/helpers/dateFormatter";
 import {Loader} from '../../components/Layout';
 import authService from '../../components/api-authorization/AuthorizeService';
 

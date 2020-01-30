@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MetaBookDataSource.Data { 
 
@@ -9,6 +10,7 @@ namespace MetaBookDataSource.Data {
 
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "String is fine")]
         public Todo(
             string title, string description, DateTime? dueDate)
         {
@@ -46,7 +48,8 @@ namespace MetaBookDataSource.Data {
         public DateTime? CompletedDate { get; set; }
         public bool Completed { get; set; }
 
-        //public string OwnerId { get; set; }
-        //public MetaUser AssignedOwner { get; set; }
+        public string OwnerId { get; set; }
+        [ForeignKey("OwnerId")]
+        public MetaUser Owner { get; set; }
     }
 }

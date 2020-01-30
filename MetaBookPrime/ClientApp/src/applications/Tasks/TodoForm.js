@@ -109,9 +109,10 @@ export default class TodoForm extends Component {
         } else {
             return (
                 <div>
-                    <Banner title="Add Task" subtitle="What do you want to do?"/>
+                    <Banner title="Task!" subtitle="What do you want to do?"/>
                     <form onSubmit={this.handleSubmit} className="border rounded p-3 shadow-sm">
-                        <input type="hidden" name="id" defaultValue={this.state.item.id}/>
+                        <input type="hidden" name="id" defaultValue={this.state.item.id} />
+                        <input type="hidden" name="ownerId" defaultValue={this.state.userData.sub} />
                         <div>
                             <div className="form-group">
                                 <input type="text" placeholder="Add Task" name="title" className="form-control" defaultValue={mainFormData.title}/>

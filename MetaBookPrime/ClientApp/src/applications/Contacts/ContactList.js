@@ -24,6 +24,7 @@ export default class ContactList extends Component {
 
     componentDidMount() {
         this.populateUserData();
+        this.populateContactData(this.state.userData);
     }
 
     /**
@@ -104,7 +105,6 @@ export default class ContactList extends Component {
         this.setState({
             userData: data
         });
-        await this.populateContactData(data);
     }
 
     render() {

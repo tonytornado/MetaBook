@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import { NavItem, NavLink } from 'reactstrap';
+import { NavItem, NavLink, UncontrolledDropdown, DropdownItem, DropdownToggle, DropdownMenu } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import authService from './AuthorizeService';
 import { ApplicationPaths } from './ApiAuthorizationConstants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt, faSignInAlt, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faSignInAlt, faUserPlus, faUser } from '@fortawesome/free-solid-svg-icons';
 
 export class LoginMenu extends Component {
     constructor(props) {
@@ -12,8 +12,11 @@ export class LoginMenu extends Component {
 
         this.state = {
             isAuthenticated: false,
-            userName: null
+            userName: null,
+            isOpen: false
         };
+
+        this.setIsOpen = this.setIsOpen.bind(this);
     }
 
     componentDidMount() {
@@ -23,6 +26,12 @@ export class LoginMenu extends Component {
 
     componentWillUnmount() {
         authService.unsubscribe(this._subscription);
+    }
+
+    setIsOpen() {
+        this.setState(prevState => {
+            isOpen: !prevState
+        });
     }
 
     /**
@@ -59,14 +68,25 @@ export class LoginMenu extends Component {
      * @param {string} logoutPath The path to logOut
      */
     authenticatedView(userName, profilePath, logoutPath) {
-        return (<Fragment>
-            <NavItem>
-                <NavLink tag={Link} className="text-dark" to={profilePath}>{userName}</NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink tag={Link} className="text-dark" to={logoutPath}><FontAwesomeIcon icon={faSignOutAlt} size="1x" /></NavLink>
-            </NavItem>
-        </Fragment>);
+        return (
+            <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle nav caret>
+                    {userName}
+                </DropdownToggle>
+                <DropdownMenu>
+                    <DropdownItem>
+                        <NavItem>
+                            <NavLink tag={Link} className="text-dark" to={profilePath}><FontAwesomeIcon icon={faUser} /> | Profile</NavLink>
+                        </NavItem>
+                    </DropdownItem>
+                    <DropdownItem>
+                        <NavItem>
+                            <NavLink tag={Link} className="text-dark" to={logoutPath}><FontAwesomeIcon icon={faSignOutAlt} size="1x" /> | Logout</NavLink>
+                        </NavItem>
+                    </DropdownItem>
+                </DropdownMenu >
+            </UncontrolledDropdown >
+        );
 
     }
 
@@ -77,13 +97,14 @@ export class LoginMenu extends Component {
      * @param {string} loginPath The path to the Log In page
      */
     anonymousView(registerPath, loginPath) {
-        return (<Fragment>
-            <NavItem>
-                <NavLink tag={Link} className="text-dark" to={registerPath} alt="Register" title="Register here!"><FontAwesomeIcon icon={faUserPlus} size="1x" /></NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink tag={Link} className="text-dark" to={loginPath} alt="Sign In" title="Login"><FontAwesomeIcon icon={faSignInAlt} size="1x" /></NavLink>
-            </NavItem>
-        </Fragment>);
+        return (
+            <Fragment>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to={registerPath} alt="Register" title="Register here!"><FontAwesomeIcon icon={faUserPlus} size="1x" /></NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to={loginPath} alt="Sign In" title="Login"><FontAwesomeIcon icon={faSignInAlt} size="1x" /></NavLink>
+                </NavItem>
+            </Fragment>);
     }
 }

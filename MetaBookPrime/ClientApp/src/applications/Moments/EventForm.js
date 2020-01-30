@@ -15,7 +15,8 @@ export default class EventForm extends Component {
         super(props);
         this.state = {
             loading: false,
-            event: new EventData()
+            event: new EventData(),
+            userData: []
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -25,7 +26,8 @@ export default class EventForm extends Component {
         const { match: { params } } = this.props;
         const event_id = params.id;
 
-        this.checkForEventData(event_id)
+        this.populateUserData;
+        this.checkForEventData(event_id);
     }
 
     /**
@@ -57,6 +59,37 @@ export default class EventForm extends Component {
             });
     }
 
+    /**
+     * Checks for user data
+     */
+    async populateUserData() {
+        const token = await authService.getAccessToken();
+        const response = await fetch('connect/userinfo', {
+            headers: !token ? {} : {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+        this.setState({ userData: data, loading: false });
+    }
+
+    /**
+     * Gets information about the event and changes things around for the event's data
+     *
+     * @param {int} id Id for the event
+     */
+    checkForEventData(id) {
+        if (id > 0) {
+            fetch(`api/Events/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    setTimeout(function () {
+                        this.setState({ event: data })
+                    }.bind(this), 1000)
+                });
+        }
+    }
+
 
     /**
      * Renders the form for the page.
@@ -68,6 +101,7 @@ export default class EventForm extends Component {
             <form encType="multipart/form-data" onSubmit={this.handleSubmit}
                 className="border rounded shadow p-3 row mx-auto">
                 <input type="hidden" name="id" defaultValue={this.state.event.id} />
+                <input type="hidden" name="ownerId" defaultValue={this.state.userData.sub} />
                 <div className="col-md">
                     <div className="form-group">
                         <label className="label"><h5>Event Name</h5></label>
@@ -102,23 +136,6 @@ export default class EventForm extends Component {
             <Banner title="Event!" subtitle="Make something happen." />
             {clamp}
         </section>
-    }
-
-    /**
-     * Gets information about the event and changes things around for the event's data
-     *
-     * @param {int} id Id for the event
-     */
-    checkForEventData(id) {
-        if (id > 0) {
-            fetch(`api/Events/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    setTimeout(function () {
-                        this.setState({ event: data })
-                    }.bind(this), 1000)
-                });
-        }
     }
 }
 

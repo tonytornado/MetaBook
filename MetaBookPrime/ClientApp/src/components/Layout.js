@@ -43,7 +43,7 @@ Banner.displayName = Banner.name
 export function Footer() {
     return (
         <div className="text-center text-light bg-dark py-3">
-            <p>&copy; 2019</p>
+            <p>Tony T. &copy; 2019</p>
         </div>
     );
 }
@@ -56,7 +56,7 @@ Footer.displayName = Footer.name
 export function Loader() {
     return (
         <div className="text-center">
-            <FontAwesomeIcon icon={faSpinner} size="6x" spin/>
+            <FontAwesomeIcon icon={faSpinner} size="7x" spin/>
         </div>
     )
 }
@@ -67,7 +67,7 @@ export function Loader() {
 export function LoginLoader() {
     return (
         <div className="text-center">
-            <FontAwesomeIcon icon={faSync} size="6x" spin />
+            <FontAwesomeIcon icon={faSync} size="7x" spin />
         </div>
     )
 }

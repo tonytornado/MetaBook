@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { dateFormatter } from './Event';
+import { dateFormatter } from "../../components/helpers/dateFormatter";
 import { Banner, Loader } from '../../components/Layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faEdit } from '@fortawesome/free-solid-svg-icons';

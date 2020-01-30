@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import authService from "../../components/api-authorization/AuthorizeService";
 import { Link } from 'react-router-dom';
 import { Banner, Loader } from '../../components/Layout';
-import { dateFormatter } from "../Moments/Event";
+import { dateFormatter } from "../../components/helpers/dateFormatter";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { VersatileModal } from "../../components/modals/VersatileModal";

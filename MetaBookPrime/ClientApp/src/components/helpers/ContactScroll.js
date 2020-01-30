@@ -61,7 +61,7 @@ export default class ContactScroll extends Component {
             <label htmlFor="contactSelect"><h5>Available Contacts</h5></label>
             <select multiple={true} className="form-control form-control-lg" id="contactSelect" size="20" name="participants">
                 {contacts.map(c =>
-                    <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
+                    <option key={c.id} value={c.id}>{c.name}</option>
                 )}
             </select>
         </div>;

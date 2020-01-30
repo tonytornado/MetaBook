@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faGlobe, faPhone, faHome, faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 import { VersatileModal } from '../../components/modals/VersatileModal';
 import authService from '../../components/api-authorization/AuthorizeService';
+import { dateFormatter } from "../../components/helpers/dateFormatter";
 
 
 /**
@@ -16,6 +17,7 @@ export default class Contact extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            userData: [],
             contact: [],
             personalEvents: [],
             loading: true,
@@ -26,8 +28,10 @@ export default class Contact extends Component {
     componentDidMount() {
         const { match: { params } } = this.props;
 
-        this.getPersonalDetails(params);
+        this.populateUserData();
         this.getPersonalEvents(params.id);
+        this.getPersonalDetails(params);
+        
     }
 
     async removeThisPerson(id) {
@@ -60,7 +64,8 @@ export default class Contact extends Component {
             .then(response => response.json())
             .then((result) => {
                 this.setState({
-                    contact: result
+                    contact: result,
+                    loading: false,
                 });
                 if (result.length < 1)
                     this.setState({ missingData: true, });
@@ -77,11 +82,24 @@ export default class Contact extends Component {
             .then(
                 (result) => {
                     this.setState({
-                        personalEvents: result,
-                        loading: false,
+                        personalEvents: result
                     });
                 }
             )
+    }
+
+    /**
+     * Grabs user data from the server after verifying with token
+     */
+    async populateUserData() {
+        const token = await authService.getAccessToken();
+        const response = await fetch('/connect/userinfo', {
+            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        this.setState({
+            userData: data
+        });
     }
 
     /**
@@ -89,7 +107,18 @@ export default class Contact extends Component {
      * @param {array} contact
      * @param {array} events
      */
-    static renderContactInfo(contact, events) {
+    renderContactInfo(contact, events) {
+        let ButtonText;
+
+        if (this.state.userData.sub != contact.ownerId) {
+            ButtonText = "";
+        } else {
+            ButtonText = <div className="btn-group btn-block">
+                <Link to={`edit/${contact.id}`} className="btn btn-primary">Edit Contact</Link>
+                <VersatileModal buttonLabel={"Delete"} buttonClass={"danger"} modalTitle={`Delete ${contact.firstName}?`} modalText={"Are you sure you want to remove this contact? It cannot be undone"} modalConfirmText={"Confirm Delete"} modalAction={() => Contact.removeThisPerson(contact.id)} />
+            </div>;
+        }
+
         return <section>
             <div className="card p-3" id="contact-card">
                 {/* <div className="card-header">
@@ -98,26 +127,16 @@ export default class Contact extends Component {
                     </div> */}
                 <div className="card-body">
                     <p className="card-title"><FontAwesomeIcon
-                        icon={faEnvelope}/> {contact.email ? contact.email : "No E-Mail Available"}</p>
+                        icon={faEnvelope} /> {contact.email ? contact.email : "No E-Mail Available"}</p>
                     <p className="card-title"><FontAwesomeIcon
-                        icon={faGlobe}/> {contact.website ? contact.website : "No Website"} </p>
+                        icon={faGlobe} /> {contact.website ? contact.website : "No Website"} </p>
                 </div>
-                <PhoneData phones={contact.phones}/>
-                <AddressData addresses={contact.addresses}/>
-                <PersonalEvents eventData={events}/>
+                <PhoneData phones={contact.phones} />
+                <AddressData addresses={contact.addresses} />
+                <PersonalEvents eventData={events} />
             </div>
-            <br/>
-            <div className="btn-group btn-block">
-                <Link to={`edit/${contact.id}`} className="btn btn-primary">Edit Contact</Link>
-                <VersatileModal
-                    buttonLabel={"Delete"}
-                    buttonClass={"danger"}
-                    modalTitle={`Delete ${contact.firstName}?`}
-                    modalText={"Are you sure you want to remove this contact? It cannot be undone"}
-                    modalConfirmText={"Confirm Delete"}
-                    modalAction={() => Contact.removeThisPerson(contact.id)}
-                />
-            </div>
+            <br />
+            {ButtonText}
         </section>;
     }
 
@@ -125,9 +144,9 @@ export default class Contact extends Component {
         let contents;
         let contact = this.state.contact;
 
-        contents = this.state.loading 
-            ? <div><Loader /></div> 
-            : Contact.renderContactInfo(contact, this.state.personalEvents);
+        contents = this.state.loading
+            ? <div><Loader /></div>
+            : this.renderContactInfo(contact, this.state.personalEvents);
 
         return (
             <div>
@@ -157,7 +176,7 @@ function PhoneData(props) {
             </thead>
             <tbody>
                 {phones.map(phone =>
-                    <tr key={phone.id}>
+                    <tr key={phone.phoneId}>
                         <td width="20%"><h6>{phone.callerType}</h6></td>
                         <td>{phone.formattedNumber}</td>
                     </tr>
@@ -185,7 +204,7 @@ function AddressData(props) {
                 </thead>
                 <tbody>
                     {addresses.map(address =>
-                        <tr key={address.id}>
+                        <tr key={address.addressId}>
                             <td width="20%"><h6>{address.addressType}</h6></td>
                             <td>{address.streetName}<br />{address.cityName}, {address.stateName} {address.postalCode}</td>
                         </tr>
@@ -209,15 +228,16 @@ function PersonalEvents(props) {
 
     if (events && events.length > 0) {
         return (
-            <table className="table table-responsive-sm">
+            <table className="table table-bordered">
                 <thead className="thead-dark">
                     <tr>
-                        <th colSpan="1"><FontAwesomeIcon icon={faCalendarDay} /> Events</th>
+                        <th colSpan="2"><FontAwesomeIcon icon={faCalendarDay} /> Events</th>
                     </tr>
                 </thead>
                 <tbody>
                     {events.map(e =>
                         <tr key={e.id}>
+                            <td width="20%">{dateFormatter(e.startTime)}</td>
                             <td><Link to={`/events/${e.id}`}>{e.name}</Link></td>
                         </tr>
                     )}
