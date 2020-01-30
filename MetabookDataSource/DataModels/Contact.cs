@@ -23,7 +23,7 @@ namespace MetaBookDataSource.Data
         }
 
         [Key]
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Email Address")]

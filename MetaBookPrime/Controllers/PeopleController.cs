@@ -108,42 +108,51 @@ namespace MetaBookPrime.Controllers
         }
 
         // PUT: api/People/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [Authorize]
         [HttpPut("{slug}")]
         public async Task<IActionResult> PutPerson(
             int slug,
             [FromForm]string substring,
-            [FromForm]Person person)
+            [FromForm]Person person,
+            [FromForm]Address address,
+            [FromForm]Phone phone)
         {
+            if (person == null) throw new ArgumentNullException(nameof(person));
+            
             MetaUser user = await _userManager.FindByIdAsync(substring);
 
-            if (!(user is null) && slug == person.Id)
+            if (user is null || slug != person.Id) return BadRequest();
+            _context.Entry(person).State = EntityState.Modified;
+
+            try
             {
-                _context.Entry(person).State = EntityState.Modified;
-
-                try
+                person.OwnerId = substring;
+                if (address != null)
                 {
-                    person.OwnerId = substring;
-                    user.UserContacts.Add(person);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PersonExists(slug))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    person.Addresses.Add(address);
                 }
 
-                return NoContent();
+                if (phone != null)
+                {
+                    person.Phones.Add(phone);
+                }
+                
+                user.UserContacts.Add(person);
+                await _context.SaveChangesAsync();
             }
-            return BadRequest();
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PersonExists(slug))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         // POST: api/People

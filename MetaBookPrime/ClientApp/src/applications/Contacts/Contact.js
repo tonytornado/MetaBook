@@ -91,37 +91,35 @@ export default class Contact extends Component {
      * @param {array} events
      */
     static renderContactInfo(contact, events) {
-        return (
-            <section>
-                <div className="card p-3" id="contact-card">
-                    {/* <div className="card-header">
+        return <section>
+            <div className="card p-3" id="contact-card">
+                {/* <div className="card-header">
                         <h4 className="card-title"><FontAwesomeIcon
                             icon={faUser} /> {contact.firstName} {contact.lastName}</h4>
                     </div> */}
-                    <div className="card-body">
-                        <p className="card-title"><FontAwesomeIcon
-                            icon={faEnvelope} /> {contact.email ? contact.email : "No E-Mail Available"}</p>
-                        <p className="card-title"><FontAwesomeIcon
-                            icon={faGlobe} /> {contact.website ? contact.website : "No Website"} </p>
-                    </div>
-                    <PhoneData phones={contact.phones} />
-                    <AddressData addresses={contact.addresses} />
-                    <PersonalEvents eventData={events} />
+                <div className="card-body">
+                    <p className="card-title"><FontAwesomeIcon
+                        icon={faEnvelope}/> {contact.email ? contact.email : "No E-Mail Available"}</p>
+                    <p className="card-title"><FontAwesomeIcon
+                        icon={faGlobe}/> {contact.website ? contact.website : "No Website"} </p>
                 </div>
-                <br />
-                <div className="btn-group btn-block" >
-                    <Link to={`edit/${contact.id}`} className="btn btn-primary">Edit Contact</Link>
-                    <VersatileModal
-                        buttonLabel={"Delete"}
-                        buttonClass={"danger"}
-                        modalTitle={`Delete ${contact.firstName}?`}
-                        modalText={"Are you sure you want to remove this contact? It cannot be undone"}
-                        modalConfirmText={"Confirm Delete"}
-                        modalAction={() => Contact.removeThisPerson(contact.id)}
-                    />
-                </div>
-            </section>
-        );
+                <PhoneData phones={contact.phones}/>
+                <AddressData addresses={contact.addresses}/>
+                <PersonalEvents eventData={events}/>
+            </div>
+            <br/>
+            <div className="btn-group btn-block">
+                <Link to={`edit/${contact.id}`} className="btn btn-primary">Edit Contact</Link>
+                <VersatileModal
+                    buttonLabel={"Delete"}
+                    buttonClass={"danger"}
+                    modalTitle={`Delete ${contact.firstName}?`}
+                    modalText={"Are you sure you want to remove this contact? It cannot be undone"}
+                    modalConfirmText={"Confirm Delete"}
+                    modalAction={() => Contact.removeThisPerson(contact.id)}
+                />
+            </div>
+        </section>;
     }
 
     render() {

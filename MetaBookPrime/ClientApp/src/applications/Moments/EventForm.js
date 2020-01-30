@@ -2,6 +2,7 @@
 import { Banner } from '../../components/Layout';
 import ContactScroll from '../../components/helpers/contactScroller';
 import DatesAndTimes from '../../components/helpers/DatesAndTimes';
+import authService from "../../components/api-authorization/AuthorizeService";
 
 
 /**
@@ -24,12 +25,16 @@ export default class EventForm extends Component {
      * Form submission handler.
      * @param {Event} e
      */
-    handleSubmit(e) {
+    async handleSubmit(e) {
         e.preventDefault();
         const data = new FormData(e.target);
+        const token = await authService.getAccessToken();
 
         fetch('api/Events',
             {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
                 method: 'POST',
                 body: data,
             }).then((res) => {
@@ -38,7 +43,7 @@ export default class EventForm extends Component {
                     console.log(res.json());
                     this.props.history.push('/events/');
                 } else
-                    this.showWarningModal(res.status);
+                    console.log(res.status);
                 console.error("Post error: " + res.status);
             }).catch(e => {
                 console.log("error: " + e);
