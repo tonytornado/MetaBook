@@ -47,12 +47,11 @@ namespace MetaBookDataSource.Data
         {
         }
 
-        public Person(
-            string firstName,
-            string lastName,
-            string email,
-            string website,
-            MetaUser owner)
+        public Person(string firstName,
+                      string lastName,
+                      string email,
+                      string website,
+                      MetaUser owner)
         {
             FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));
             LastName = lastName ?? throw new ArgumentNullException(nameof(lastName));
@@ -65,9 +64,8 @@ namespace MetaBookDataSource.Data
         public string LastName { get; set; }
         public string Website { get; set; }
 
-        [NotMapped] private string Name => $"{FirstName} {LastName}";
-        [NotMapped]
-        public string FullTitle => $"{Name} ({Email})";
+        [NotMapped] public string Name => $"{FirstName} {LastName}";
+        [NotMapped] public string FullTitle => $"{Name} ({Email})";
     }
 
     /// <summary>

@@ -48,40 +48,12 @@ export default class EventList extends Component {
     }
 
     componentDidMount() {
-        this.getEvents();
         this.getPeople();
+        this.getEvents();
     }
 
     componentWillUnmount() {
 
-    }
-
-    render() {
-        let events = this.state.events;
-        if (this.state.loading === true) {
-            return (<div><Loader /></div>);
-        } else {
-            return (<section className="container-fluid">
-                <Banner title="Events"
-                    subtitle={`${events.length} ${events.length > 1 ? "events" : "event"}`} />
-
-                <table className="table table-responsive-sm table-striped">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th />
-                            <th>Name</th>
-                            <th>Start</th>
-                            <th>End</th>
-                            <th>Participants</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {events.map(e => this.EventItem(e))}
-                    </tbody>
-                </table>
-                <Link to="/events/add/" className="btn btn-primary btn-block">Add Event</Link>
-            </section>);
-        }
     }
 
     /**
@@ -132,5 +104,40 @@ export default class EventList extends Component {
             <td>{dateFormatter(event.endTime)}</td>
             {event.participants.length === 0 ? <td>None</td> : <td>{event.participants.length} participants</td>}
         </tr>;
+    }
+
+    render() {
+        let events = this.state.events;
+        if (this.state.loading === true) {
+            return (<div><Loader /></div>);
+        }
+
+        if (events.length === 0) {
+            return <>
+                <Banner title="Events" subtitle="There are no events." />
+                <Link to="/events/add/" className="btn btn-primary btn-block">Add Event</Link>
+            </>
+        }
+
+        return (<section className="container-fluid">
+            <Banner title="Events"
+                subtitle={`${events.length} ${events.length > 1 ? "events" : "event"}`} />
+
+            <table className="table table-responsive-sm table-striped">
+                <thead className="thead-dark">
+                    <tr>
+                        <th />
+                        <th>Name</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Participants</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {events.map(e => this.EventItem(e))}
+                </tbody>
+            </table>
+            <Link to="/events/add/" className="btn btn-primary btn-block">Add Event</Link>
+        </section>);
     }
 }

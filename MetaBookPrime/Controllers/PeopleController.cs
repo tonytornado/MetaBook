@@ -66,7 +66,7 @@ namespace MetaBookPrime.Controllers
         /// </summary>
         /// <returns>List of private contacts</returns>
         [Authorize]
-        [HttpGet("phonebook/{searchString}")]
+        [HttpGet("PersonalContacts/{searchString}")]
         public async Task<ActionResult<IEnumerable<Person>>> GetPeople(string searchString)
         {
             //MetaUser user = await _userManager.GetUserAsync(User);

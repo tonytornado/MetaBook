@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { Banner } from '../../components/Layout';
-import ContactScroll from '../../components/helpers/contactScroller';
+import ContactScroll from '../../components/helpers/ContactScroll';
 import DatesAndTimes from '../../components/helpers/DatesAndTimes';
 import authService from "../../components/api-authorization/AuthorizeService";
 
@@ -20,11 +20,11 @@ export default class EventForm extends Component {
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    
-    componentDidMount(props) {
-        const {match: {params}} = this.props;
+
+    componentDidMount() {
+        const { match: { params } } = this.props;
         const event_id = params.id;
-        
+
         this.checkForEventData(event_id)
     }
 

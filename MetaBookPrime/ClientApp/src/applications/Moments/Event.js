@@ -113,7 +113,7 @@ function Participants(props) {
                     <td>
                         {i.photo ? <img src={i.photo} alt={i.name}/> :
                             <FontAwesomeIcon icon={faUserAlt} size="1x"/>}
-                        <Link to={`/contact/${i.id}`}> {i.name} ({i.email})</Link>
+                        <Link to={`/contact/${i.id}`}> {i.firstName} {i.lastName} ({i.email})</Link>
                     </td>
                 </tr>
             )}

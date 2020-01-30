@@ -5,6 +5,7 @@ namespace MetaBookDataSource.Models
 {
     public class MetaBookAPIContext : DbContext
     {
+
         public MetaBookAPIContext(DbContextOptions<MetaBookAPIContext> options)
             : base(options)
         {
@@ -12,6 +13,16 @@ namespace MetaBookDataSource.Models
 
         public MetaBookAPIContext()
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Person> People { get; set; }

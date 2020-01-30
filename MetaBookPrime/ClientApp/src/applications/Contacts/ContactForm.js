@@ -139,6 +139,26 @@ export default class ContactForm extends Component {
         }));
     }
 
+    handleChangeForState(event){
+        this.setState({
+            chosenState: event.target.value
+        });
+    }
+
+    handleChangeForAddress(event){
+        this.setState({
+            chosenAddress: event.target.value
+        });
+    }
+
+    handleChangeForPhone(event){
+        this.setState({
+            chosenPhone: event.target.value
+        });
+    }
+
+    handleChangeFor
+
     render() {
         const dataBits = this.state.contactData;
         const userBits = this.state.userData;
@@ -156,7 +176,7 @@ export default class ContactForm extends Component {
         }
 
         return <main className="">
-            <Banner title="Add Contact" subtitle="You might remember them later."/>
+            <Banner title="Contact Form" subtitle="You might remember them later."/>
             <form onSubmit={this.handleSubmit} className="border p-3 rounded shadow-sm">
                 <input type="hidden" name="id" defaultValue={dataBits.id}/>
                 <input type="hidden" name="substring" defaultValue={userBits.sub}/>
@@ -219,7 +239,7 @@ function PhoneForm(props) {
 
     if (props.visible) {
         let phones = phoneTypes.map(c =>
-            <option key={c.value} value={c.name}>{c.name}</option>
+            <option key={c.value} value={c.name} selected={caller.callerType === c.name}>{c.name}</option>
         );
 
         return (
@@ -233,7 +253,7 @@ function PhoneForm(props) {
                 </div>
                 <div className="form-group">
                     <label className="label" htmlFor="">Phone Type</label>
-                    <select name="callerType" className="form-control" value={caller.callerType} onChange="">
+                    <select name="callerType" className="form-control" defaultValue={caller.callerType} >
                         <option/>
                         {phones}
                     </select>
@@ -260,18 +280,18 @@ function AddressForm(props) {
 
     if (props.visible) {
         let addresses = addressTypes.map(c =>
-            <option key={c.value} value={c.name}>{c.name}</option>
+            <option key={c.value} value={c.name} selected={addy.addressType === c.name}>{c.name}</option>
         );
         const stateNames = props.stateNames;
         let states = stateNames.map(c =>
-            <option key={c.value} value={c.name}>{c.name}</option>
+            <option key={c.value} value={c.name} selected={addy.stateName === c.name}>{c.name}</option>
         );
         return (
             <div className="py-2">
                 <input type="hidden" name="addressId" defaultValue={addy.addressId} />
                 <div className="form-group">
                     <label className="label">Address Type</label>
-                    <select name="addressType" className="form-control" value={addy.addressType}>
+                    <select name="addressType" className="form-control" defaultValue={addy.addressType} >
                         <option/>
                         {addresses}
                     </select>
@@ -291,7 +311,7 @@ function AddressForm(props) {
                     </div>
                     <div className="form-group col-sm">
                         <label>State</label>
-                        <select name="StateName" className="form-control" value={addy.stateName}>
+                        <select name="StateName" className="form-control" defaultValue={addy.stateName}> 
                             <option/>
                             {states}
                         </select>

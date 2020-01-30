@@ -103,7 +103,13 @@ namespace MetaBookPrime.Controllers
 
             return todo;
         }
-
+        
+        /// <summary>
+        /// Enables marking completion of a task in the DB
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         [Route("Completed/{id}/{status}")]
         [Authorize]
@@ -115,6 +121,7 @@ namespace MetaBookPrime.Controllers
             }
 
             todo.Completed = status;
+            todo.CompletedDate = DateTime.Now;
             await _context.SaveChangesAsync();
 
 

@@ -77,7 +77,7 @@ export default class ContactList extends Component {
     async populateContactData(clump) {
         const token = await authService.getAccessToken();
         const merk = clump.sub;
-        await fetch(`api/People/phonebook/${merk}`, {
+        await fetch(`api/People/PersonalContacts/${merk}`, {
             headers: !token ? {} : {
                 'Authorization': `Bearer ${token}`,
             }

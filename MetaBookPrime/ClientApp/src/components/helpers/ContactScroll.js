@@ -1,6 +1,6 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import authService from "../api-authorization/AuthorizeService";
-import {Loader} from "../Layout";
+import { Loader } from "../Layout";
 
 /**
  * Creates a scrolling contact list
@@ -25,7 +25,7 @@ export default class ContactScroll extends Component {
     async populateContactData(clump) {
         const token = await authService.getAccessToken();
         const id = clump.sub;
-        await fetch(`api/People/phonebook/${id}`, {
+        await fetch(`api/People/PersonalContacts/${id}`, {
             headers: !token ? {} : {
                 'Authorization': `Bearer ${token}`,
             }
@@ -36,7 +36,7 @@ export default class ContactScroll extends Component {
                         contacts: result,
                         loading: false
                     });
-                    if (result.length < 1) this.setState({missingData: true,});
+                    if (result.length < 1) this.setState({ missingData: true, });
                 }
             )
     }
@@ -47,7 +47,7 @@ export default class ContactScroll extends Component {
     async populateUserData() {
         const token = await authService.getAccessToken();
         const response = await fetch('/connect/userinfo', {
-            headers: !token ? {} : {'Authorization': `Bearer ${token}`}
+            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
         this.setState({
@@ -59,8 +59,10 @@ export default class ContactScroll extends Component {
     contactListSelector(contacts) {
         return <div className="form-group">
             <label htmlFor="contactSelect"><h5>Available Contacts</h5></label>
-            <select multiple className="form-control form-control-lg" id="contactSelect" size="20" name="participants">
-                {contacts.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            <select multiple={true} className="form-control form-control-lg" id="contactSelect" size="20" name="participants">
+                {contacts.map(c =>
+                    <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
+                )}
             </select>
         </div>;
     }
@@ -70,15 +72,15 @@ export default class ContactScroll extends Component {
         let widget;
 
         if (this.state.loading) {
-            return <div className="col-sm col-5-md py-auto"><Loader/></div>;
+            return <div className="col-sm col-5-md py-auto"><Loader /></div>;
         }
-        
+
         if (contacts.length > 0) {
             widget = this.contactListSelector(contacts);
         } else {
             widget = <div className="jumbotron border text-center shadow-sm">
                 <h3>No contacts to add.</h3>
-                <p className="lead">Please add contacts to your contacts list.</p></div>;
+                <p className="lead">Please add contacts to your contacts list first.</p></div>;
         }
         return <div className="col-sm col-5-md">{widget}</div>;
     }
