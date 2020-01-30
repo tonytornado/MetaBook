@@ -60,8 +60,7 @@ export default class Contact extends Component {
             .then(response => response.json())
             .then((result) => {
                 this.setState({
-                    contact: result,
-                    loading: false
+                    contact: result
                 });
                 if (result.length < 1)
                     this.setState({ missingData: true, });
@@ -126,8 +125,9 @@ export default class Contact extends Component {
         let contents;
         let contact = this.state.contact;
 
-        contents = this.state.loading ?
-            <Loader /> : Contact.renderContactInfo(contact, this.state.personalEvents);
+        contents = this.state.loading 
+            ? <div><Loader /></div> 
+            : Contact.renderContactInfo(contact, this.state.personalEvents);
 
         return (
             <div>

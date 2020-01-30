@@ -224,15 +224,16 @@ function PhoneForm(props) {
 
         return (
             <div className="py-2">
+                <input type="hidden" name="phoneId" value={caller.phoneId} />
                 <div className="form-group">
                     <label className="label" htmlFor="phoneNumber">Phone Number</label>
                     <input
                         name="phoneNumber" placeholder="Phone Number (10 digits only)" className="form-control"
-                        defaultValue={caller.phoneNumber}/>
+                        defaultValue={caller.phoneNumber} />
                 </div>
                 <div className="form-group">
                     <label className="label" htmlFor="">Phone Type</label>
-                    <select name="callerType" className="form-control" defaultValue={caller.callerType}>
+                    <select name="callerType" className="form-control" value={caller.callerType} onChange="">
                         <option/>
                         {phones}
                     </select>
@@ -267,9 +268,11 @@ function AddressForm(props) {
         );
         return (
             <div className="py-2">
+                <input type="hidden" name="addressId" defaultValue={addy.addressId} />
                 <div className="form-group">
                     <label className="label">Address Type</label>
-                    <select name="addressType" className="form-control" defaultValue={addy.AddressType}>
+                    <select name="addressType" className="form-control" value={addy.addressType}>
+                        <option/>
                         {addresses}
                     </select>
                 </div>
@@ -288,7 +291,7 @@ function AddressForm(props) {
                     </div>
                     <div className="form-group col-sm">
                         <label>State</label>
-                        <select name="StateName" className="form-control" defaultValue={addy.stateName}>
+                        <select name="StateName" className="form-control" value={addy.stateName}>
                             <option/>
                             {states}
                         </select>
@@ -358,16 +361,16 @@ class ContactData {
 }
 
 class PhoneData {
-    id = 0;
+    phoneId = 0;
     phoneNumber = "";
     callerType = "";
 }
 
 class AddressData {
-    id = 0;
+    addressId = 0;
     streetName = "";
     cityName = "";
     postalCode = "";
     stateName = "";
-    AddressType = "";
+    addressType = "";
 }

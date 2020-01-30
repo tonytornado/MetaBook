@@ -24,14 +24,6 @@ export default class TodoList extends Component {
         this.getItems();
     }
 
-    componentDidUpdate(){
-        this.getItems();
-    }
-
-    componentWillUnmount() {
-
-    }
-
     render() {
         const items = this.state.items;
 
@@ -131,6 +123,7 @@ export default class TodoList extends Component {
             }).catch(error => {
                 console.error(error)
             });
+        this.getItems();
     }
 
     /**

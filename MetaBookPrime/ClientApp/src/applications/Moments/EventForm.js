@@ -20,6 +20,13 @@ export default class EventForm extends Component {
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+    
+    componentDidMount(props) {
+        const {match: {params}} = this.props;
+        const event_id = params.id;
+        
+        this.checkForEventData(event_id)
+    }
 
     /**
      * Form submission handler.
@@ -82,7 +89,7 @@ export default class EventForm extends Component {
                     </div>
                     <DatesAndTimes />
                 </div>
-                <ContactScroll />
+                <ContactScroll data={event.participants} />
                 <input type="submit" className="btn btn-primary btn-block" value="Submit" />
             </form>
         );
@@ -104,7 +111,7 @@ export default class EventForm extends Component {
      */
     checkForEventData(id) {
         if (id > 0) {
-            fetch(`api/Event/details/${id}`)
+            fetch(`api/Events/${id}`)
                 .then(response => response.json())
                 .then(data => {
                     setTimeout(function () {

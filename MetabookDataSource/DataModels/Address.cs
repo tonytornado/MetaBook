@@ -5,7 +5,7 @@ namespace MetaBookDataSource.Data
 {
     public class Address
     {
-        public int Id { get; set; }
+        public int AddressId { get; set; }
         public string StreetName { get; set; }
         public string CityName { get; set; }
         public State StateName { get; set; }
@@ -24,8 +24,8 @@ namespace MetaBookDataSource.Data
     [JsonConverter(typeof(StringEnumConverter))]
     public enum State
     {
-        AK,
         AL,
+        AK,
         AR,
         AZ,
         CA,

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MetaBookDataSource.Data
 {
@@ -17,7 +18,10 @@ namespace MetaBookDataSource.Data
         public string Location { get; set; }
         public string Description { get; set; }
 
-        public ICollection<Person> Participants { get; } = new HashSet<Person>();
+        /// <summary>
+        /// A collection of people in the event
+        /// </summary>
+        public ICollection<Person> Participants { get; set; }
 
         public enum Color
         {
@@ -28,6 +32,7 @@ namespace MetaBookDataSource.Data
             Green
         }
 
+        [ForeignKey("OwnerId")]
         public MetaUser Owner { get; set; }
     }
 }

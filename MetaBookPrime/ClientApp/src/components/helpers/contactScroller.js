@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import authService from "../api-authorization/AuthorizeService";
+import {Loader} from "../Layout";
 
 /**
  * Creates a scrolling contact list
@@ -9,7 +10,7 @@ export default class ContactScroll extends Component {
         super(props);
         this.state = {
             loading: true,
-            contacts: []
+            contacts: props.data ? props.data : []
         }
     }
 
@@ -68,6 +69,10 @@ export default class ContactScroll extends Component {
         const contacts = this.state.contacts;
         let widget;
 
+        if (this.state.loading) {
+            return <div className="col-sm col-5-md py-auto"><Loader/></div>;
+        }
+        
         if (contacts.length > 0) {
             widget = this.contactListSelector(contacts);
         } else {
@@ -75,7 +80,6 @@ export default class ContactScroll extends Component {
                 <h3>No contacts to add.</h3>
                 <p className="lead">Please add contacts to your contacts list.</p></div>;
         }
-
         return <div className="col-sm col-5-md">{widget}</div>;
     }
 }

@@ -8,7 +8,7 @@ namespace MetaBookDataSource.Data
     public class Phone
     {
         [Key]
-        public int Id { get; set; }
+        public int PhoneId { get; set; }
 
         [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber, ErrorMessage = "This must have ten-digits.")]

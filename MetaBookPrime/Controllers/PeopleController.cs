@@ -72,7 +72,10 @@ namespace MetaBookPrime.Controllers
             //MetaUser user = await _userManager.GetUserAsync(User);
             MetaUser user = await _userManager.FindByIdAsync(searchString);
 
-            return await _context.People.Where(p => p.OwnerId == searchString).ToListAsync();
+            return await _context.People
+                .Include(p => p.Addresses)
+                .Include(p => p.Phones)
+                .Where(p => p.OwnerId == searchString).ToListAsync();
         }
 
         // GET: api/People
@@ -112,6 +115,8 @@ namespace MetaBookPrime.Controllers
         [HttpPut("{slug}")]
         public async Task<IActionResult> PutPerson(
             int slug,
+            [FromForm]bool addressCheck,
+            [FromForm]bool phoneCheck,
             [FromForm]string substring,
             [FromForm]Person person,
             [FromForm]Address address,
@@ -122,22 +127,16 @@ namespace MetaBookPrime.Controllers
             MetaUser user = await _userManager.FindByIdAsync(substring);
 
             if (user is null || slug != person.Id) return BadRequest();
+            if(addressCheck) _context.Entry(address).State = EntityState.Modified;;
+            if(phoneCheck) _context.Entry(phone).State = EntityState.Modified;;
             _context.Entry(person).State = EntityState.Modified;
+            
+            person.OwnerId = substring;
+            person.Addresses.Add(address);
+            person.Phones.Add(phone);
 
             try
             {
-                person.OwnerId = substring;
-                if (address != null)
-                {
-                    person.Addresses.Add(address);
-                }
-
-                if (phone != null)
-                {
-                    person.Phones.Add(phone);
-                }
-                
-                user.UserContacts.Add(person);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

@@ -29,7 +29,6 @@ export default class EventList extends Component {
             .then((result) => {
                 this.setState({
                     events: result,
-                    loading: false,
                 });
             });
     }
@@ -59,7 +58,7 @@ export default class EventList extends Component {
 
     render() {
         let events = this.state.events;
-        if (events === true) {
+        if (this.state.loading === true) {
             return (<div><Loader /></div>);
         } else {
             return (<section className="container-fluid">
