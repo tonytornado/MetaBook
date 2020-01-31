@@ -26,7 +26,7 @@ export default class EventForm extends Component {
         const { match: { params } } = this.props;
         const event_id = params.id;
 
-        this.populateUserData;
+        this.populateUserData();
         this.checkForEventData(event_id);
     }
 
@@ -83,10 +83,10 @@ export default class EventForm extends Component {
             fetch(`api/Events/${id}`)
                 .then(response => response.json())
                 .then(data => {
-                    setTimeout(function () {
-                        this.setState({ event: data })
-                    }.bind(this), 1000)
-                });
+                    this.setState({
+                        event: data
+                    })
+                })
         }
     }
 
@@ -123,18 +123,18 @@ export default class EventForm extends Component {
                     </div>
                     <DatesAndTimes />
                 </div>
-                <ContactScroll data={event.participants} />
+                <ContactScroll
+                // data={event.participants} 
+                />
                 <input type="submit" className="btn btn-primary btn-block" value="Submit" />
             </form>
         );
     }
 
     render() {
-        let clamp = this.formRender();
-
         return <section>
             <Banner title="Event!" subtitle="Make something happen." />
-            {clamp}
+            {this.formRender()}
         </section>
     }
 }

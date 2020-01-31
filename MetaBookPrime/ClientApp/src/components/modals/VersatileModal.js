@@ -39,3 +39,4 @@ export function VersatileModal(props) {
         </>
     );
 }
+

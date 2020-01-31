@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import authService from "../../components/api-authorization/AuthorizeService";
 import { Banner, Loader } from '../../components/Layout';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { FormModal } from '../../components/modals/FormModal';
+import ContactForm from './ContactForm';
 
 /**
  * Shows the contact list
@@ -17,58 +18,11 @@ export default class ContactList extends Component {
             contacts: [],
             userData: [],
             loading: true,
-            missingData: false,
-            deleteSetting: false
         };
     }
 
     componentDidMount() {
         this.populateUserData();
-        this.populateContactData(this.state.userData);
-    }
-
-    /**
-     * Renders the contact list full out.
-     *
-     * @param {Boolean/Array} contacts  The Contacts Listing
-     */
-    static renderContactList(contacts) {
-        if (contacts === false) {
-            return (
-                <div>
-                    <Banner title="Contacts" subtitle="Uh... where are they?" />
-                    <p className="text-center">There are no contacts.</p>
-                    <Link to="contacts/add/" className="btn btn-sm btn-primary btn-block">Add Contact</Link>
-                </div>
-            );
-        }
-
-        return (
-            <div>
-                <Banner title="Contacts"
-                    subtitle={`${contacts.length} ${contacts.length > 1 ? "contacts" : "contact"}.`} />
-                <table className="table table-striped">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Address</th>
-                            <th>Phone</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {contacts.map(contact => <tr key={contact.id}>
-                            <td><a href={"contacts/" + contact.id}>{contact.firstName} {contact.lastName}</a></td>
-                            <td>{contact.email}</td>
-                            <td>{contact.addresses.length !== 0 && <FontAwesomeIcon icon={faHome} className="text-center" />}</td>
-                            <td>{contact.phones.length !== 0 && <FontAwesomeIcon icon={faPhone} className="text-center"/>}</td>
-                        </tr>)}
-                    </tbody>
-                </table>
-                <div>
-                    <Link to="/contacts/add/" className="btn btn-block btn-primary">Add Contact</Link>
-                </div>
-            </div>);
     }
 
     /**
@@ -105,16 +59,74 @@ export default class ContactList extends Component {
         this.setState({
             userData: data
         });
+        this.populateContactData(this.state.userData);
     }
 
     render() {
-        let contents = this.state.loading
-            ? <div><Loader /></div>
-            : this.state.contacts.length
-                ? ContactList.renderContactList(this.state.contacts)
-                : ContactList.renderContactList(false);
-        return (<div>
-            {contents}
-        </div>);
+        let contacts = this.state.contacts;
+        if (this.state.loading) {
+            return <div><Loader /></div>;
+        }
+        if (contacts.length === 0) {
+            return <div>
+                <Banner title="Contacts" subtitle="Uh... where are they?" />
+                <p className="text-center">There are no contacts.</p>
+                {/* <Link to="contacts/add/" className="btn btn-sm btn-primary btn-block">Add Contact</Link> */}
+                <FormModal
+                    modalTitle={"Add Contact"}
+                    modalFormContent={
+                        <ContactForm
+                            userData={this.state.userData}
+                            onFormSubmit={this.toggle}
+                        />
+                    }
+                    buttonLabel={"Add contact"}
+                    modalAction={"Confirm Add"}
+                />
+            </div>
+        };
+
+        return (
+            <div>
+                <Banner
+                    title="Contacts"
+                    subtitle={`${contacts.length} ${contacts.length > 1 ? "contacts" : "contact"}.`} />
+                <table className="table table-striped">
+                    <thead className="thead-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {contacts.map(contact => contactRow(contact))}
+                    </tbody>
+                </table>
+                <div>
+                    <FormModal
+                        modalTitle={"Add Contact"}
+                        modalFormContent={
+                            <ContactForm
+                                // match={{ params: { id: 0, }, isExact: false, path: "contacts/add" }}
+                                data={this.state}/>
+                        }
+                        buttonLabel={"Add contact"}
+                        modalAction={"Confirm Add"}
+                    />
+                    {/* <Link to="/contacts/add/" className="btn btn-block btn-primary">Add Contact</Link> */}
+                </div>
+            </div>
+        );
     }
 }
+function contactRow(contact) {
+    return <tr key={contact.id}>
+        <td><a href={"contacts/" + contact.id}>{contact.firstName} {contact.lastName}</a></td>
+        <td>{contact.email}</td>
+        <td>{contact.addresses.length !== 0 && <FontAwesomeIcon icon={faHome} className="text-center" />}</td>
+        <td>{contact.phones.length !== 0 && <FontAwesomeIcon icon={faPhone} className="text-center" />}</td>
+    </tr>;
+}
+

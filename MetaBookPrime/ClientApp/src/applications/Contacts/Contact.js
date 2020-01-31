@@ -110,7 +110,7 @@ export default class Contact extends Component {
     renderContactInfo(contact, events) {
         let ButtonText;
 
-        if (this.state.userData.sub != contact.ownerId) {
+        if (this.state.userData.sub !== contact.ownerId) {
             ButtonText = "";
         } else {
             ButtonText = <div className="btn-group btn-block">

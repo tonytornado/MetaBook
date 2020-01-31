@@ -29,8 +29,8 @@ export class LoginMenu extends Component {
     }
 
     setIsOpen() {
-        this.setState(prevState => {
-            isOpen: !prevState
+        this.setState({
+            isOpen: !this.state.isOpen
         });
     }
 

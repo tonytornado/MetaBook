@@ -1,6 +1,6 @@
-﻿import React, {Component} from 'react';
+﻿import React, { Component } from 'react';
 import authService from "../../components/api-authorization/AuthorizeService";
-import {Banner} from '../../components/Layout';
+import { Banner } from '../../components/Layout';
 
 
 /**
@@ -26,17 +26,18 @@ export default class ContactForm extends Component {
     }
 
     componentDidMount() {
-        // Get user data
-        this.populateUserData();
+        const { match: { params } } = this.props;
+        const { props: { userData } } = this.props;
 
-        const {match: {params}} = this.props;
-        const contact_id = params.id;
+        this.setState({
+            userData: userData,
+        })
 
         // Get the menu types
         this.getContactFormMenus();
 
         // Check for editable data
-        this.checkForUserData(contact_id);
+        this.checkForUserData(params.id);
     }
 
     /**
@@ -45,17 +46,17 @@ export default class ContactForm extends Component {
     getContactFormMenus() {
         fetch("api/People/Phones").then(response => response.json())
             .then(data => {
-                this.setState({phone: data});
+                this.setState({ phone: data });
             });
         // Get the address types
         fetch("api/People/Addresses").then(response => response.json())
             .then(data => {
-                this.setState({address: data});
+                this.setState({ address: data });
             });
         // Get the address types
         fetch("api/People/States").then(response => response.json())
             .then(data => {
-                this.setState({states: data, loading: false});
+                this.setState({ states: data, loading: false });
             });
     }
 
@@ -78,7 +79,7 @@ export default class ContactForm extends Component {
                         addPhone: data.phones.length !== 0,
                         addAddress: data.addresses.length !== 0
                     });
-                    }
+                }
                 )
         }
     }
@@ -98,14 +99,14 @@ export default class ContactForm extends Component {
                         'Authorization': `Bearer ${token}`
                     },
                 }).then((res) => {
-                if (res.ok) {
-                    console.log("Updated!");
-                    this.props.history.push('/contacts');
-                } else
-                    console.error("Post error: " + res.status);
-            }).catch(e => {
-                console.log("error: " + e);
-            });
+                    if (res.ok) {
+                        console.log("Updated!");
+                        this.props.history.push('/contacts');
+                    } else
+                        console.error("Post error: " + res.status);
+                }).catch(e => {
+                    console.log("error: " + e);
+                });
         } else if (col === 0) {
             await fetch('api/People',
                 {
@@ -115,16 +116,18 @@ export default class ContactForm extends Component {
                     method: 'POST',
                     body: data
                 }).then((res) => {
-                if (res.ok) {
-                    console.log("Perfect!");
-                    console.log(res.json());
-                    this.props.history.push('/contacts');
-                } else
-                    console.error("Post error: " + res.status);
-            }).catch(e => {
-                console.log("error: " + e);
-            });
+                    if (res.ok) {
+                        console.log("Perfect!");
+                        console.log(res.json());
+                    } else
+                        console.error("Post error: " + res.status);
+                }).catch(e => {
+                    console.log("error: " + e);
+                });
         }
+
+        // Sends back to the modal to close (?)
+        // this.props.onFormSubmit(e.target.value);
     }
 
     handleAddressChange() {
@@ -132,32 +135,27 @@ export default class ContactForm extends Component {
             addAddress: !state.addAddress
         }));
     }
-
     handlePhoneChange() {
         this.setState(state => ({
             addPhone: !state.addPhone
         }));
     }
-
-    handleChangeForState(event){
+    handleChangeForState(event) {
         this.setState({
             chosenState: event.target.value
         });
     }
-
-    handleChangeForAddress(event){
+    handleChangeForAddress(event) {
         this.setState({
             chosenAddress: event.target.value
         });
     }
 
-    handleChangeForPhone(event){
+    handleChangeForPhone(event) {
         this.setState({
             chosenPhone: event.target.value
         });
     }
-
-    handleChangeFor
 
     render() {
         const dataBits = this.state.contactData;
@@ -176,29 +174,29 @@ export default class ContactForm extends Component {
         }
 
         return <main className="">
-            <Banner title="Contact Form" subtitle="You might remember them later."/>
+            <Banner title="Contact Form" subtitle="You might remember them later." />
             <form onSubmit={this.handleSubmit} className="border p-3 rounded shadow-sm">
-                <input type="hidden" name="id" defaultValue={dataBits.id}/>
-                <input type="hidden" name="substring" defaultValue={userBits.sub}/>
-                <MainForm data={dataBits}/>
-                <hr/>
+                <input type="hidden" name="id" defaultValue={dataBits.id} />
+                <input type="hidden" name="substring" defaultValue={userBits.sub} />
+                <MainForm data={dataBits} />
+                <hr />
                 <div className="btn-group-toggle btn-group btn-block" data-toggle="buttons">
                     <label htmlFor="phoneCheck" className={classNamePhone}>
                         <input type="checkbox"
-                               id="phoneCheck"
-                               onChange={this.handlePhoneChange}
-                               name="phoneCheck" value="true"/>
+                            id="phoneCheck"
+                            onChange={this.handlePhoneChange}
+                            name="phoneCheck" value="true" />
                         {phoneText}
                     </label>
                     <label htmlFor="addressCheck" className={classNameAddress}>
                         <input type="checkbox"
-                               id="addressCheck"
-                               onChange={this.handleAddressChange}
-                               name="addressCheck" value="true"/>
+                            id="addressCheck"
+                            onChange={this.handleAddressChange}
+                            name="addressCheck" value="true" />
                         {addressText}
                     </label>
                 </div>
-                <br/>
+                <br />
                 <PhoneForm
                     visible={this.state.addPhone}
                     phoneTypes={this.state.phone}
@@ -218,10 +216,10 @@ export default class ContactForm extends Component {
     async populateUserData() {
         const token = await authService.getAccessToken();
         const response = await fetch('connect/userinfo', {
-            headers: !token ? {} : {'Authorization': `Bearer ${token}`}
+            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
-        this.setState({userData: data, loading: false});
+        this.setState({ userData: data, loading: false });
     }
 }
 
@@ -231,9 +229,9 @@ export default class ContactForm extends Component {
  * @return {null}
  */
 function PhoneForm(props) {
-    let caller; 
+    let caller;
     props.data.length > 0
-        ? caller = props.data[0] 
+        ? caller = props.data[0]
         : caller = new PhoneData();
     const phoneTypes = props.phoneTypes;
 
@@ -254,7 +252,7 @@ function PhoneForm(props) {
                 <div className="form-group">
                     <label className="label" htmlFor="">Phone Type</label>
                     <select name="callerType" className="form-control" defaultValue={caller.callerType} >
-                        <option/>
+                        <option />
                         {phones}
                     </select>
                 </div>
@@ -274,7 +272,7 @@ function PhoneForm(props) {
 function AddressForm(props) {
     let addy;
     props.data.length > 0
-        ? addy = props.data[0] 
+        ? addy = props.data[0]
         : addy = new AddressData();
     const addressTypes = props.addressTypes;
 
@@ -292,7 +290,7 @@ function AddressForm(props) {
                 <div className="form-group">
                     <label className="label">Address Type</label>
                     <select name="addressType" className="form-control" defaultValue={addy.addressType} >
-                        <option/>
+                        <option />
                         {addresses}
                     </select>
                 </div>
@@ -300,19 +298,19 @@ function AddressForm(props) {
                     <label className="label">Street Name/Number</label>
                     <input
                         type="text" name="streetName" placeholder="House/Unit #, Street" className="form-control"
-                        defaultValue={addy.streetName}/>
+                        defaultValue={addy.streetName} />
                 </div>
                 <div className="form-row">
                     <div className="form-group col-sm">
                         <label>City</label>
                         <input
                             type="text" name="cityName" placeholder="City" className="form-control"
-                            defaultValue={addy.cityName}/>
+                            defaultValue={addy.cityName} />
                     </div>
                     <div className="form-group col-sm">
                         <label>State</label>
-                        <select name="StateName" className="form-control" defaultValue={addy.stateName}> 
-                            <option/>
+                        <select name="StateName" className="form-control" defaultValue={addy.stateName}>
+                            <option />
                             {states}
                         </select>
                     </div>
@@ -320,7 +318,7 @@ function AddressForm(props) {
                         <label>Postal Code</label>
                         <input
                             type="number" name="postalCode" placeholder="Zip" className="form-control"
-                            defaultValue={addy.postalCode}/>
+                            defaultValue={addy.postalCode} />
                     </div>
                 </div>
             </div>
@@ -379,13 +377,11 @@ class ContactData {
     addresses = [];
     phones = [];
 }
-
 class PhoneData {
     phoneId = 0;
     phoneNumber = "";
     callerType = "";
 }
-
 class AddressData {
     addressId = 0;
     streetName = "";
