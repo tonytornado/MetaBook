@@ -22,20 +22,20 @@ export default class App extends Component {
     render() {
         return (
             <Layout>
-                <Route exact path='/' component={Home} />
-                <AuthorizeRoute exact strict path='/tasks' component={TodoList} />
-                <AuthorizeRoute exact strict path='/tasks/:id' component={TodoItem} />
-                <AuthorizeRoute exact strict path='/tasks/add/' component={TodoForm} />
-                <AuthorizeRoute exact strict path='/tasks/edit/:id' component={TodoForm} />
-                <Route exact path='/events' component={EventList} />
-                <Route exact strict path='/events/:id' component={Event} />
-                <Route exact strict path='/events/edit/:id' component={EventForm} />
-                <AuthorizeRoute exact strict path='/events/add/' component={EventForm} />
-                <AuthorizeRoute exact path='/contacts' component={ContactList} />
-                <AuthorizeRoute exact strict path='/contacts/:id' component={Contact} />
-                <AuthorizeRoute exact strict path='/contacts/add/' component={ContactForm} />
-                <AuthorizeRoute exact strict path='/contacts/edit/:id' component={ContactForm} />
-                <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
+                <Route exact path='/' component={Home}/>
+                <AuthorizeRoute exact strict path='/tasks' component={TodoList}/>
+                <AuthorizeRoute exact strict path='/tasks/:id' component={TodoItem}/>
+                <AuthorizeRoute exact strict path='/tasks/add/' component={TodoForm}/>
+                <AuthorizeRoute exact strict path='/tasks/edit/:id' component={TodoForm}/>
+                <Route exact path='/events' component={EventList}/>
+                <Route exact strict path='/events/:id' component={Event}/>
+                <Route exact strict path='/events/edit/:id' component={EventForm}/>
+                <AuthorizeRoute exact strict path='/events/add/' component={EventForm}/>
+                <AuthorizeRoute exact path='/contacts' component={ContactList}/>
+                <AuthorizeRoute exact strict path='/contacts/:id' component={Contact}/>
+                <AuthorizeRoute exact strict path='/contacts/add/' component={ContactForm}/>
+                <AuthorizeRoute exact strict path='/contacts/edit/:id' component={ContactForm}/>
+                <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes}/>
             </Layout>
         );
     }

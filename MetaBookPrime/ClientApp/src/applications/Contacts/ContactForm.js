@@ -1,6 +1,6 @@
-﻿import React, { Component } from 'react';
+﻿import React, {Component} from 'react';
 import authService from "../../components/api-authorization/AuthorizeService";
-import { Banner } from '../../components/Layout';
+import {Banner} from '../../components/Layout';
 
 
 /**
@@ -16,28 +16,31 @@ export default class ContactForm extends Component {
             states: [],
             addAddress: false,
             addPhone: false,
-            contactData: new ContactData(),
-            userData: []
+            contactData: [],
+            userData: [],
+            completed: false
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAddressChange = this.handleAddressChange.bind(this);
         this.handlePhoneChange = this.handlePhoneChange.bind(this);
+        this.handleFormClose = this.handleFormClose.bind(this);
     }
 
     componentDidMount() {
-        const { match: { params } } = this.props;
-        const { props: { userData } } = this.props;
+        const userData = this.props.sub;
+        const contactData = this.props.id;
 
         this.setState({
-            userData: userData,
-        })
+            userData: userData ? userData : [],
+            contactData: contactData ? contactData : new ContactData()
+        });
 
         // Get the menu types
         this.getContactFormMenus();
 
         // Check for editable data
-        this.checkForUserData(params.id);
+        // this.checkForUserData(params.id);
     }
 
     /**
@@ -46,17 +49,17 @@ export default class ContactForm extends Component {
     getContactFormMenus() {
         fetch("api/People/Phones").then(response => response.json())
             .then(data => {
-                this.setState({ phone: data });
+                this.setState({phone: data});
             });
         // Get the address types
         fetch("api/People/Addresses").then(response => response.json())
             .then(data => {
-                this.setState({ address: data });
+                this.setState({address: data});
             });
         // Get the address types
         fetch("api/People/States").then(response => response.json())
             .then(data => {
-                this.setState({ states: data, loading: false });
+                this.setState({states: data, loading: false});
             });
     }
 
@@ -74,12 +77,12 @@ export default class ContactForm extends Component {
             fetch(`api/People/details/${id}`)
                 .then(response => response.json())
                 .then(data => {
-                    this.setState({
-                        contactData: data,
-                        addPhone: data.phones.length !== 0,
-                        addAddress: data.addresses.length !== 0
-                    });
-                }
+                        this.setState({
+                            contactData: data,
+                            addPhone: data.phones.length !== 0,
+                            addAddress: data.addresses.length !== 0
+                        });
+                    }
                 )
         }
     }
@@ -99,14 +102,14 @@ export default class ContactForm extends Component {
                         'Authorization': `Bearer ${token}`
                     },
                 }).then((res) => {
-                    if (res.ok) {
-                        console.log("Updated!");
-                        this.props.history.push('/contacts');
-                    } else
-                        console.error("Post error: " + res.status);
-                }).catch(e => {
-                    console.log("error: " + e);
-                });
+                if (res.ok) {
+                    console.log("Updated!");
+                    this.props.history.push('/contacts');
+                } else
+                    console.error("Post error: " + res.status);
+            }).catch(e => {
+                console.log("error: " + e);
+            });
         } else if (col === 0) {
             await fetch('api/People',
                 {
@@ -116,18 +119,25 @@ export default class ContactForm extends Component {
                     method: 'POST',
                     body: data
                 }).then((res) => {
-                    if (res.ok) {
-                        console.log("Perfect!");
-                        console.log(res.json());
-                    } else
-                        console.error("Post error: " + res.status);
-                }).catch(e => {
-                    console.log("error: " + e);
-                });
+                if (res.ok) {
+                    console.log("Perfect!");
+                    console.log(res.json());
+                } else
+                    console.error("Post error: " + res.status);
+            }).catch(e => {
+                console.log("error: " + e);
+            });
         }
-
-        // Sends back to the modal to close (?)
-        // this.props.onFormSubmit(e.target.value);
+        
+        this.handleFormClose();
+    }
+    
+    handleFormClose(){
+        console.log("Closing modal");
+        this.props.onSendFormClose();
+        this.setState({
+            completed: true
+        })
     }
 
     handleAddressChange() {
@@ -135,16 +145,19 @@ export default class ContactForm extends Component {
             addAddress: !state.addAddress
         }));
     }
+
     handlePhoneChange() {
         this.setState(state => ({
             addPhone: !state.addPhone
         }));
     }
+
     handleChangeForState(event) {
         this.setState({
             chosenState: event.target.value
         });
     }
+
     handleChangeForAddress(event) {
         this.setState({
             chosenAddress: event.target.value
@@ -157,70 +170,75 @@ export default class ContactForm extends Component {
         });
     }
 
-    render() {
-        const dataBits = this.state.contactData;
-        const userBits = this.state.userData;
-        let classNamePhone = "btn btn-secondary";
-        let classNameAddress = "btn btn-secondary";
-        let addressText = this.state.addAddress ? "Remove Address" : "Add Address";
-        let phoneText = this.state.addPhone ? "Remove Phone" : "Add Phone";
-
-        if (this.state.addPhone) {
-            classNamePhone += 'active';
-        }
-
-        if (this.state.addAddress) {
-            classNameAddress += 'active';
-        }
-
-        return <main className="">
-            <Banner title="Contact Form" subtitle="You might remember them later." />
-            <form onSubmit={this.handleSubmit} className="border p-3 rounded shadow-sm">
-                <input type="hidden" name="id" defaultValue={dataBits.id} />
-                <input type="hidden" name="substring" defaultValue={userBits.sub} />
-                <MainForm data={dataBits} />
-                <hr />
-                <div className="btn-group-toggle btn-group btn-block" data-toggle="buttons">
-                    <label htmlFor="phoneCheck" className={classNamePhone}>
-                        <input type="checkbox"
-                            id="phoneCheck"
-                            onChange={this.handlePhoneChange}
-                            name="phoneCheck" value="true" />
-                        {phoneText}
-                    </label>
-                    <label htmlFor="addressCheck" className={classNameAddress}>
-                        <input type="checkbox"
-                            id="addressCheck"
-                            onChange={this.handleAddressChange}
-                            name="addressCheck" value="true" />
-                        {addressText}
-                    </label>
-                </div>
-                <br />
-                <PhoneForm
-                    visible={this.state.addPhone}
-                    phoneTypes={this.state.phone}
-                    data={dataBits.phones}
-                />
-                <AddressForm
-                    visible={this.state.addAddress}
-                    addressTypes={this.state.address}
-                    stateNames={this.state.states}
-                    data={dataBits.addresses}
-                />
-                <button className="btn btn-primary btn-block my-3">Go!</button>
-            </form>
-        </main>;
-    }
-
     async populateUserData() {
         const token = await authService.getAccessToken();
         const response = await fetch('connect/userinfo', {
-            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+            headers: !token ? {} : {'Authorization': `Bearer ${token}`}
         });
         const data = await response.json();
-        this.setState({ userData: data, loading: false });
+        this.setState({userData: data, loading: false});
     }
+
+    render = () =>
+    {
+        if(this.state.completed){
+            return <h3 className="text-center">Submission successful. Please close this box.</h3>
+        } else {
+            const dataBits = this.props.contactData ? this.props.contactData : new ContactData();
+            const userBits = this.props.userData;
+            let classNamePhone = "btn btn-secondary";
+            let classNameAddress = "btn btn-secondary";
+            let addressText = this.state.addAddress ? "Remove Address" : "Add Address";
+            let phoneText = this.state.addPhone ? "Remove Phone" : "Add Phone";
+
+            if (this.state.addPhone) {
+                classNamePhone += 'active';
+            }
+
+            if (this.state.addAddress) {
+                classNameAddress += 'active';
+            }
+
+            return <main className="">
+                <Banner title="Contact Form" subtitle="You might remember them later."/>
+                <form onSubmit={this.handleSubmit} className="border p-3 rounded shadow-sm">
+                    <input type="hidden" name="id" defaultValue={dataBits.id}/>
+                    <input type="hidden" name="substring" defaultValue={userBits.sub}/>
+                    <MainForm data={dataBits}/>
+                    <hr/>
+                    <div className="btn-group-toggle btn-group btn-block" data-toggle="buttons">
+                        <label htmlFor="phoneCheck" className={classNamePhone}>
+                            <input type="checkbox"
+                                   id="phoneCheck"
+                                   onChange={this.handlePhoneChange}
+                                   name="phoneCheck" value="true"/>
+                            {phoneText}
+                        </label>
+                        <label htmlFor="addressCheck" className={classNameAddress}>
+                            <input type="checkbox"
+                                   id="addressCheck"
+                                   onChange={this.handleAddressChange}
+                                   name="addressCheck" value="true"/>
+                            {addressText}
+                        </label>
+                    </div>
+                    <br/>
+                    <PhoneForm
+                        visible={this.state.addPhone}
+                        phoneTypes={this.state.phone}
+                        data={dataBits.phones}
+                    />
+                    <AddressForm
+                        visible={this.state.addAddress}
+                        addressTypes={this.state.address}
+                        stateNames={this.state.states}
+                        data={dataBits.addresses}
+                    />
+                    <button className="btn btn-primary btn-block my-3">Go!</button>
+                </form>
+            </main>;
+        }
+    };
 }
 
 /**
@@ -390,3 +408,5 @@ class AddressData {
     stateName = "";
     addressType = "";
 }
+
+

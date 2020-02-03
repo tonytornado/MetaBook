@@ -97,38 +97,38 @@ export default class EventForm extends Component {
     formRender() {
         let event = this.state.event;
 
-        return (
-            <form encType="multipart/form-data" onSubmit={this.handleSubmit}
-                className="border rounded shadow p-3 row mx-auto">
-                <input type="hidden" name="id" defaultValue={this.state.event.id} />
-                <input type="hidden" name="ownerId" defaultValue={this.state.userData.sub} />
-                <div className="col-md">
-                    <div className="form-group">
-                        <label className="label"><h5>Event Name</h5></label>
-                        <input
-                            type="text" name="name" placeholder="What?" className="form-control form-control-lg" defaultValue={event.name} />
-                    </div>
-                    <div className="form-group">
-                        <label><h5>Location</h5></label>
-                        <input
-                            type="text" name="location" placeholder="Where?" className="form-control form-control-lg" defaultValue={event.location} />
-                    </div>
-                    <div className="form-group">
-                        <label className="label"><h5>Description</h5></label>
-                        <textarea name="description"
-                            placeholder="Why?"
-                            rows="7"
-                            className="form-control form-control-lg"
-                            defaultValue={event.description} />
-                    </div>
-                    <DatesAndTimes />
+        return <form encType="multipart/form-data" onSubmit={this.handleSubmit}
+                     className="border rounded shadow p-3 row mx-auto">
+            <input type="hidden" name="id" defaultValue={this.state.event.id}/>
+            <input type="hidden" name="ownerId" defaultValue={this.state.userData.sub}/>
+            <div className="col-md">
+                <div className="form-group">
+                    <label className="label"><h5>Event Name</h5></label>
+                    <input
+                        type="text" name="name" placeholder="What?" className="form-control form-control-lg"
+                        defaultValue={event.name}/>
                 </div>
-                <ContactScroll
+                <div className="form-group">
+                    <label><h5>Location</h5></label>
+                    <input
+                        type="text" name="location" placeholder="Where?" className="form-control form-control-lg"
+                        defaultValue={event.location}/>
+                </div>
+                <div className="form-group">
+                    <label className="label"><h5>Description</h5></label>
+                    <textarea name="description"
+                              placeholder="Why?"
+                              rows="7"
+                              className="form-control form-control-lg"
+                              defaultValue={event.description}/>
+                </div>
+                <DatesAndTimes/>
+            </div>
+            <ContactScroll
                 // data={event.participants} 
-                />
-                <input type="submit" className="btn btn-primary btn-block" value="Submit" />
-            </form>
-        );
+            />
+            <input type="submit" className="btn btn-primary btn-block" value="Submit"/>
+        </form>;
     }
 
     render() {

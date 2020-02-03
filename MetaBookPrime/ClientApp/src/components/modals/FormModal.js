@@ -1,36 +1,29 @@
-import React, { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import React, {useState} from 'react';
+import {Button, Modal, ModalBody, ModalHeader} from 'reactstrap';
 
-export function FormModal(props){
+export function FormModal(props) {
     const {
-      buttonLabel,
-      className,
-      modalFormContent,
-      modalTitle,
+        buttonLabel,
+        modalTitle,
+        showModal
     } = props;
-  
-    const [modal, setModal] = useState(false);
-    const [unmountOnClose] = useState(true);
-    // const [infoData, setInfoData] = useState([]);
-  
-    const toggle = () => setModal(!modal);
-    // const stateManage = (data) => setInfoData(data);
-    // const setUnmountOnClose;
 
-    // const handleModalToggle = (tag) => setModal(tag); 
-  
+    const [modal, setModal] = useState(false);
+    const toggle = () => {
+        setModal(!modal);
+    };
+
     return (
-        <div>
-            <Button color="danger" onClick={toggle} block>{buttonLabel}</Button>
-            <Modal isOpen={modal} toggle={toggle} className={className} unmountOnClose={unmountOnClose} size="xl">
+        <div className="container-fluid">
+            <Button color="danger" onClick={showModal} block>
+                {buttonLabel}
+            </Button>
+            <Modal isOpen={props.modalState}
+                   size="xl">
                 <ModalHeader toggle={toggle}>{modalTitle}</ModalHeader>
                 <ModalBody>
-                    {modalFormContent}
+                        {props.children}
                 </ModalBody>
-                <ModalFooter>
-                    {/* <Button color="primary" onClick={toggle} block>{modalAction}</Button>{' '} */}
-                    {/* <Button color="secondary" onClick={toggle}>Cancel</Button> */}
-                </ModalFooter>
             </Modal>
         </div>
     );
