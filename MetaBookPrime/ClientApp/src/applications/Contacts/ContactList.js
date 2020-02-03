@@ -5,6 +5,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faHome, faPhone} from '@fortawesome/free-solid-svg-icons';
 import {FormModal} from '../../components/modals/FormModal';
 import ContactForm from './ContactForm';
+import {DetailModal} from "../../components/modals/DetailModal";
+import Contact from "./Contact";
 
 /**
  * Shows the contact list
@@ -18,26 +20,34 @@ export default class ContactList extends Component {
             contacts: [],
             userData: [],
             loading: true,
-            modalState: false
+            formModalState: false,
+            detailModalState: false
         };
 
         this.populateUserData = this.populateUserData.bind(this);
         this.handleFormClose = this.handleFormClose.bind(this);
-        this.handleModalChange = this.handleModalChange.bind(this);
+        this.handleFormModalChange = this.handleFormModalChange.bind(this);
+        this.handleDetailModalChange = this.handleDetailModalChange.bind(this);
     }
 
     componentDidMount() {
         this.populateUserData();
     }
 
-    handleModalChange() {
+    handleDetailModalChange() {
         this.setState({
-            modalState: !this.state.modalState
+            detailModalState: !this.state.detailModalState
+        })
+    };
+
+    handleFormModalChange() {
+        this.setState({
+            formModalState: !this.state.formModalState
         });
     }
 
     handleFormClose() {
-        this.handleModalChange();
+        this.handleFormModalChange();
         this.populateUserData();
     }
 
@@ -84,8 +94,9 @@ export default class ContactList extends Component {
                 buttonLabel={"Add contact"}
                 modalAction={"toggle"}
                 modalTitle={"Add Contact"}
-                modalState={this.state.modalState}
-                showModal={this.handleModalChange} >
+                block={true}
+                modalState={this.state.formModalState}
+                showModal={this.handleFormModalChange}>
                 <ContactForm
                     userData={this.state.userData}
                     contactData={null}
@@ -94,32 +105,50 @@ export default class ContactList extends Component {
             </FormModal>;
 
         let contacts = this.state.contacts;
-        
+
         if (this.state.loading) {
             return <div><Loader/></div>;
         }
         if (contacts.length !== 0) {
-            return (
-                <div>
-                    <Banner
-                        title="Contacts"
-                        subtitle={`${contacts.length} ${contacts.length > 1 ? "contacts" : "contact"}.`}/>
-                    <table className="table table-striped">
-                        <thead className="thead-dark">
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Address</th>
-                            <th>Phone</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {contacts.map(contact => contactRow(contact))}
-                        </tbody>
-                    </table>
-                    {modalSpace}
-                </div>
-            );
+            return <div>
+                <Banner
+                    title="Contacts"
+                    subtitle={`${contacts.length} ${contacts.length > 1 ? "contacts" : "contact"}.`}/>
+                <table className="table table-striped">
+                    <thead className="thead-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {contacts.map(contact =>
+                        <tr key={contact.id}>
+                            <td>
+                                <DetailModal
+                                    linkLabel={`${contact.name}`}
+                                    showModal={this.handleDetailModalChange}
+                                    modalState={this.state.detailModalState}
+                                >
+                                    <Contact
+                                        id={contact.id}
+                                        userData={this.state.userData}
+                                        contact={contact}
+                                    />
+                                </DetailModal>
+                            </td>
+                            <td>{contact.email}</td>
+                            <td>{contact.addresses.length !== 0 &&
+                            <FontAwesomeIcon icon={faHome} className="text-center"/>}</td>
+                            <td>{contact.phones.length !== 0 &&
+                            <FontAwesomeIcon icon={faPhone} className="text-center"/>}</td>
+                        </tr>)}
+                    </tbody>
+                </table>
+                {modalSpace}
+            </div>;
         } else {
             return <div>
                 <Banner title="Contacts" subtitle="Uh... where are they?"/>
@@ -128,14 +157,5 @@ export default class ContactList extends Component {
             </div>
         }
     }
-}
-
-function contactRow(contact) {
-    return <tr key={contact.id}>
-        <td><a href={"contacts/" + contact.id}>{contact.firstName} {contact.lastName}</a></td>
-        <td>{contact.email}</td>
-        <td>{contact.addresses.length !== 0 && <FontAwesomeIcon icon={faHome} className="text-center"/>}</td>
-        <td>{contact.phones.length !== 0 && <FontAwesomeIcon icon={faPhone} className="text-center"/>}</td>
-    </tr>;
 }
 

@@ -39,9 +39,9 @@
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
     <Content Include="ClientApp\src\components\helpers\Toasty.js" />
+    <Content Include="ClientApp\src\components\modals\DetailModal.js" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-    <None Include="ClientApp\src\components\modals\ConfirmationConfirmationModal.js" />
   </ItemGroup>
 
   <ItemGroup>

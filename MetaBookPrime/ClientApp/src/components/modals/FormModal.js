@@ -1,30 +1,24 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Button, Modal, ModalBody, ModalHeader} from 'reactstrap';
 
 export function FormModal(props) {
     const {
         buttonLabel,
+        block,
         modalTitle,
         showModal
     } = props;
 
-    const [modal, setModal] = useState(false);
-    const toggle = () => {
-        setModal(!modal);
-    };
-
-    return (
-        <div className="container-fluid">
-            <Button color="danger" onClick={showModal} block>
-                {buttonLabel}
-            </Button>
-            <Modal isOpen={props.modalState}
-                   size="xl">
-                <ModalHeader toggle={toggle}>{modalTitle}</ModalHeader>
-                <ModalBody>
-                        {props.children}
-                </ModalBody>
-            </Modal>
-        </div>
-    );
+    return <>
+        <Button color="primary" onClick={showModal} block={block}>
+            {buttonLabel}
+        </Button>
+        <Modal isOpen={props.modalState}
+               size="xl">
+            <ModalHeader onClick={showModal}>{modalTitle}</ModalHeader>
+            <ModalBody>
+                {props.children}
+            </ModalBody>
+        </Modal>
+    </>;
 }

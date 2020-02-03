@@ -17,20 +17,18 @@ export default class Event extends Component {
         super(props);
         this.state = {
             loading: true,
-            event: [],
+            event: this.props.event,
             people: []
         };
     }
 
     componentDidMount() {
-        const { match: { params } } = this.props;
-
         this.populateUserData();
-        this.getEventDetails(params);
+        this.getEventDetails(this.props.id);
     }
 
-    getEventDetails(params) {
-        fetch(`api/Events/${params.id}`)
+    getEventDetails(id) {
+        fetch(`api/Events/${id}`)
             .then(response => response.json())
             .then((result) => {
                 this.setState({

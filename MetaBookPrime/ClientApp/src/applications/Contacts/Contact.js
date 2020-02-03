@@ -1,11 +1,11 @@
-﻿import React, { Component } from 'react';
-import { Banner, Loader } from '../../components/Layout';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope, faGlobe, faPhone, faHome, faCalendarDay } from '@fortawesome/free-solid-svg-icons';
-import { VersatileModal } from '../../components/modals/VersatileModal';
+﻿import React, {Component} from 'react';
+import {Banner, Loader} from '../../components/Layout';
+import {Link} from 'react-router-dom';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCalendarDay, faEnvelope, faGlobe, faHome, faPhone} from '@fortawesome/free-solid-svg-icons';
+import {VersatileModal} from '../../components/modals/VersatileModal';
 import authService from '../../components/api-authorization/AuthorizeService';
-import { dateFormatter } from "../../components/helpers/dateFormatter";
+import {dateFormatter} from "../../components/helpers/dateFormatter";
 
 
 /**
@@ -17,8 +17,8 @@ export default class Contact extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userData: [],
-            contact: [],
+            userData: this.props.userData,
+            contact: this.props.contact,
             personalEvents: [],
             loading: true,
             missingData: false
@@ -26,12 +26,8 @@ export default class Contact extends Component {
     }
 
     componentDidMount() {
-        const { match: { params } } = this.props;
-
-        this.populateUserData();
-        this.getPersonalEvents(params.id);
-        this.getPersonalDetails(params);
-        
+        this.getPersonalEvents(this.props.id);
+        this.getPersonalDetails(this.props.id);
     }
 
     async removeThisPerson(id) {
@@ -51,16 +47,16 @@ export default class Contact extends Component {
                     console.error("Could not delete: " + res.status);
                 }
             }).catch(error => {
-                console.error(error)
-            });
+            console.error(error)
+        });
     }
 
     /**
      * Retrieves all personal data relevant to the contact
-     * @param {Array} params Parameter array from route
+     * @param {int} id from route
      */
-    getPersonalDetails(params) {
-        fetch(`api/People/Details/${params.id}`)
+    getPersonalDetails(id) {
+        fetch(`api/People/Details/${id}`)
             .then(response => response.json())
             .then((result) => {
                 this.setState({
@@ -68,7 +64,7 @@ export default class Contact extends Component {
                     loading: false,
                 });
                 if (result.length < 1)
-                    this.setState({ missingData: true, });
+                    this.setState({missingData: true,});
             });
     }
 
@@ -88,19 +84,19 @@ export default class Contact extends Component {
             )
     }
 
-    /**
-     * Grabs user data from the server after verifying with token
-     */
-    async populateUserData() {
-        const token = await authService.getAccessToken();
-        const response = await fetch('/connect/userinfo', {
-            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await response.json();
-        this.setState({
-            userData: data
-        });
-    }
+    // /**
+    //  * Grabs user data from the server after verifying with token
+    //  */
+    // async populateUserData() {
+    //     const token = await authService.getAccessToken();
+    //     const response = await fetch('/connect/userinfo', {
+    //         headers: !token ? {} : {'Authorization': `Bearer ${token}`}
+    //     });
+    //     const data = await response.json();
+    //     this.setState({
+    //         userData: data
+    //     });
+    // }
 
     /**
      * Renders the table for the contact information
@@ -115,7 +111,11 @@ export default class Contact extends Component {
         } else {
             ButtonText = <div className="btn-group btn-block">
                 <Link to={`edit/${contact.id}`} className="btn btn-primary">Edit Contact</Link>
-                <VersatileModal buttonLabel={"Delete"} buttonClass={"danger"} modalTitle={`Delete ${contact.firstName}?`} modalText={"Are you sure you want to remove this contact? It cannot be undone"} modalConfirmText={"Confirm Delete"} modalAction={() => Contact.removeThisPerson(contact.id)} />
+                <VersatileModal buttonLabel={"Delete"} buttonClass={"danger"}
+                                modalTitle={`Delete ${contact.firstName}?`}
+                                modalText={"Are you sure you want to remove this contact? It cannot be undone"}
+                                modalConfirmText={"Confirm Delete"}
+                                modalAction={() => Contact.removeThisPerson(contact.id)}/>
             </div>;
         }
 
@@ -127,15 +127,15 @@ export default class Contact extends Component {
                     </div> */}
                 <div className="card-body">
                     <p className="card-title"><FontAwesomeIcon
-                        icon={faEnvelope} /> {contact.email ? contact.email : "No E-Mail Available"}</p>
+                        icon={faEnvelope}/> {contact.email ? contact.email : "No E-Mail Available"}</p>
                     <p className="card-title"><FontAwesomeIcon
-                        icon={faGlobe} /> {contact.website ? contact.website : "No Website"} </p>
+                        icon={faGlobe}/> {contact.website ? contact.website : "No Website"} </p>
                 </div>
-                <PhoneData phones={contact.phones} />
-                <AddressData addresses={contact.addresses} />
-                <PersonalEvents eventData={events} />
+                <PhoneData phones={contact.phones}/>
+                <AddressData addresses={contact.addresses}/>
+                <PersonalEvents eventData={events}/>
             </div>
-            <br />
+            <br/>
             {ButtonText}
         </section>;
     }
@@ -145,12 +145,12 @@ export default class Contact extends Component {
         let contact = this.state.contact;
 
         contents = this.state.loading
-            ? <div><Loader /></div>
+            ? <div><Loader/></div>
             : this.renderContactInfo(contact, this.state.personalEvents);
 
         return (
             <div>
-                <Banner title={contact.firstName} subtitle={contact.lastName} />
+                <Banner title={contact.firstName} subtitle={contact.lastName}/>
                 {contents}
             </div>
         );
@@ -170,17 +170,17 @@ function PhoneData(props) {
     return phones != null && phones.length > 0 ? (
         <table className="table table-bordered">
             <thead className="thead-dark">
-                <tr>
-                    <th colSpan="2"><FontAwesomeIcon icon={faPhone} /> Phones</th>
-                </tr>
+            <tr>
+                <th colSpan="2"><FontAwesomeIcon icon={faPhone}/> Phones</th>
+            </tr>
             </thead>
             <tbody>
-                {phones.map(phone =>
-                    <tr key={phone.phoneId}>
-                        <td width="20%"><h6>{phone.callerType}</h6></td>
-                        <td>{phone.formattedNumber}</td>
-                    </tr>
-                )}
+            {phones.map(phone =>
+                <tr key={phone.phoneId}>
+                    <td width="20%"><h6>{phone.callerType}</h6></td>
+                    <td>{phone.formattedNumber}</td>
+                </tr>
+            )}
             </tbody>
         </table>
     ) : null;
@@ -198,17 +198,17 @@ function AddressData(props) {
         return (
             <table className="table table-bordered">
                 <thead className="thead-dark">
-                    <tr>
-                        <th colSpan="2"><FontAwesomeIcon icon={faHome} /> Addresses</th>
-                    </tr>
+                <tr>
+                    <th colSpan="2"><FontAwesomeIcon icon={faHome}/> Addresses</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {addresses.map(address =>
-                        <tr key={address.addressId}>
-                            <td width="20%"><h6>{address.addressType}</h6></td>
-                            <td>{address.streetName}<br />{address.cityName}, {address.stateName} {address.postalCode}</td>
-                        </tr>
-                    )}
+                {addresses.map(address =>
+                    <tr key={address.addressId}>
+                        <td width="20%"><h6>{address.addressType}</h6></td>
+                        <td>{address.streetName}<br/>{address.cityName}, {address.stateName} {address.postalCode}</td>
+                    </tr>
+                )}
                 </tbody>
             </table>
         );
@@ -230,17 +230,17 @@ function PersonalEvents(props) {
         return (
             <table className="table table-bordered">
                 <thead className="thead-dark">
-                    <tr>
-                        <th colSpan="2"><FontAwesomeIcon icon={faCalendarDay} /> Events</th>
-                    </tr>
+                <tr>
+                    <th colSpan="2"><FontAwesomeIcon icon={faCalendarDay}/> Events</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {events.map(e =>
-                        <tr key={e.id}>
-                            <td width="20%">{dateFormatter(e.startTime)}</td>
-                            <td><Link to={`/events/${e.id}`}>{e.name}</Link></td>
-                        </tr>
-                    )}
+                {events.map(e =>
+                    <tr key={e.id}>
+                        <td width="20%">{dateFormatter(e.startTime)}</td>
+                        <td><Link to={`/events/${e.id}`}>{e.name}</Link></td>
+                    </tr>
+                )}
                 </tbody>
             </table>
         );

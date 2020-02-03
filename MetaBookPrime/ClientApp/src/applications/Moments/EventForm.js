@@ -1,5 +1,5 @@
-﻿import React, { Component } from 'react';
-import { Banner } from '../../components/Layout';
+﻿import React, {Component} from 'react';
+import {Banner} from '../../components/Layout';
 import ContactScroll from '../../components/helpers/ContactScroll';
 import DatesAndTimes from '../../components/helpers/DatesAndTimes';
 import authService from "../../components/api-authorization/AuthorizeService";
@@ -16,18 +16,15 @@ export default class EventForm extends Component {
         this.state = {
             loading: false,
             event: new EventData(),
-            userData: []
+            userData: this.props.userData
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
-        const { match: { params } } = this.props;
-        const event_id = params.id;
-
-        this.populateUserData();
-        this.checkForEventData(event_id);
+        // this.populateUserData();
+        this.checkForEventData(this.props.id);
     }
 
     /**
@@ -47,16 +44,18 @@ export default class EventForm extends Component {
                 method: 'POST',
                 body: data,
             }).then((res) => {
-                if (res.ok) {
-                    console.log("Perfect!");
-                    console.log(res.json());
-                    this.props.history.push('/events/');
-                } else
-                    console.log(res.status);
-                console.error("Post error: " + res.status);
-            }).catch(e => {
-                console.log("error: " + e);
-            });
+            if (res.ok) {
+                console.log("Perfect!");
+                console.log(res.json());
+                this.props.history.push('/events/');
+            } else
+                console.log(res.status);
+            console.error("Post error: " + res.status);
+        }).catch(e => {
+            console.log("error: " + e);
+        });
+
+        this.props.onCloseEditModal();
     }
 
     /**
@@ -70,7 +69,7 @@ export default class EventForm extends Component {
             }
         });
         const data = await response.json();
-        this.setState({ userData: data, loading: false });
+        this.setState({userData: data, loading: false});
     }
 
     /**
@@ -124,16 +123,14 @@ export default class EventForm extends Component {
                 </div>
                 <DatesAndTimes/>
             </div>
-            <ContactScroll
-                // data={event.participants} 
-            />
+            <ContactScroll />
             <input type="submit" className="btn btn-primary btn-block" value="Submit"/>
         </form>;
     }
 
     render() {
         return <section>
-            <Banner title="Event!" subtitle="Make something happen." />
+            <Banner title="Event!" subtitle="Make something happen."/>
             {this.formRender()}
         </section>
     }

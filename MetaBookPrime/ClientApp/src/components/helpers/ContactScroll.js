@@ -10,7 +10,7 @@ export default class ContactScroll extends Component {
         super(props);
         this.state = {
             loading: true,
-            contacts: props.data ? props.data : []
+            contacts: []
         }
     }
 
