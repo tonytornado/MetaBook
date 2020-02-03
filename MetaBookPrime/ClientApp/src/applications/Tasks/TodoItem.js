@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import { dateFormatter } from "../../components/helpers/dateFormatter";
-import {Loader} from '../../components/Layout';
+import {dateFormatter} from "../../components/helpers/dateFormatter";
 import authService from '../../components/api-authorization/AuthorizeService';
 
 /**
@@ -12,18 +11,13 @@ export default class TodoItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: [],
-            userData: [],
-            loading: true
+            item: this.props.item,
+            userData: this.props.userData
         };
         this.markComplete = this.markComplete.bind(this);
     }
 
     componentDidMount() {
-        const {match: {params}} = this.props;
-
-        this.populateUserData();
-        this.getItem(params.id);
     }
 
     /**
@@ -43,9 +37,6 @@ export default class TodoItem extends Component {
             })
             .then((res) => {
                 if (res.ok) {
-                    this.setState({
-                        loading: true,
-                    });
                     console.log("Change completed!");
                     this.getItem(id);
                 } else {
@@ -54,6 +45,8 @@ export default class TodoItem extends Component {
             }).catch(error => {
             console.error(error)
         });
+        
+        this.props.onCloseEditModal();
     }
 
     getItem(id) {
@@ -73,10 +66,6 @@ export default class TodoItem extends Component {
 
     render() {
         let thing = this.state.item;
-
-        if (this.state.loading === true) {
-            return <Loader/>;
-        }
 
         return (
             <div className="border rounded p-3 shadow-sm text-center" key={thing.id}>
@@ -105,18 +94,9 @@ export default class TodoItem extends Component {
             return <button onClick={() => this.markComplete(id, true)} type="button"
                            className="btn btn-block btn-primary">Mark Completed</button>
         } else {
-            return <button onClick={() => this.markComplete(id, true)} type="button"
+            return <button onClick={() => this.markComplete(id, false)} type="button"
                            className="btn btn-block btn-primary">Mark Incompleted</button>
         }
     }
-
-    populateUserData = async () => {
-        const token = await authService.getAccessToken();
-        const response = await fetch('connect/userinfo', {
-            headers: !token ? {} : {'Authorization': `Bearer ${token}`}
-        });
-        const data = await response.json();
-        this.setState({userData: data});
-    };
 }
 

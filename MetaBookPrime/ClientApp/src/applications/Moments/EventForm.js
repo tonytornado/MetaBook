@@ -47,29 +47,13 @@ export default class EventForm extends Component {
             if (res.ok) {
                 console.log("Perfect!");
                 console.log(res.json());
-                this.props.history.push('/events/');
             } else
                 console.log(res.status);
-            console.error("Post error: " + res.status);
         }).catch(e => {
             console.log("error: " + e);
         });
 
         this.props.onCloseEditModal();
-    }
-
-    /**
-     * Checks for user data
-     */
-    async populateUserData() {
-        const token = await authService.getAccessToken();
-        const response = await fetch('connect/userinfo', {
-            headers: !token ? {} : {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const data = await response.json();
-        this.setState({userData: data, loading: false});
     }
 
     /**
@@ -123,7 +107,7 @@ export default class EventForm extends Component {
                 </div>
                 <DatesAndTimes/>
             </div>
-            <ContactScroll />
+            <ContactScroll/>
             <input type="submit" className="btn btn-primary btn-block" value="Submit"/>
         </form>;
     }

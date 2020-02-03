@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
 import {dateFormatter} from "../../components/helpers/dateFormatter";
 import {Banner, Loader} from '../../components/Layout';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -60,26 +59,34 @@ export default class EventList extends Component {
     }
 
     componentDidMount() {
+        this.populateUserData();
+        this.getEverything();
+    }
+
+    getEverything(){
         this.getPeople();
         this.getEvents();
     }
-
+    
     handleDetailModalChange() {
         this.setState({
             detailModalState: !this.state.detailModalState
-        })
+        });
+        this.getEverything();
     };
 
     handleEditModalChange() {
         this.setState({
             editModalState: !this.state.editModalState
-        })
+        });
+        this.getEverything();
     };
 
     handleFormModalChange() {
         this.setState({
             formModalState: !this.state.formModalState
-        })
+        });
+        this.getEverything();
     };
 
     /**
@@ -105,6 +112,44 @@ export default class EventList extends Component {
             }).catch(error => {
             console.error(error)
         });
+        await this.getEverything();
+    }
+
+    /**
+     * Grabs user data from the server after verifying with token
+     */
+    async populateUserData() {
+        const token = await authService.getAccessToken();
+        const response = await fetch('/connect/userinfo', {
+            headers: !token ? {} : {'Authorization': `Bearer ${token}`}
+        });
+        const data = await response.json();
+        this.setState({
+            userData: data
+        });
+        this.populateContactData(this.state.userData);
+    }
+
+    /**
+     * Populates the contact data for a section
+     * @param {Array} clump UserData in a clump
+     */
+    async populateContactData(clump) {
+        const token = await authService.getAccessToken();
+        const sub = clump.sub;
+        await fetch(`api/People/PersonalContacts/${sub}`, {
+            headers: !token ? {} : {
+                'Authorization': `Bearer ${token}`,
+            }
+        }).then(response => response.json())
+            .then((result) => {
+                this.setState({
+                    contacts: result,
+                    loading: false
+                });
+                if (result.length < 1)
+                    this.setState({missingData: true,});
+            });
     }
 
     /**
@@ -168,7 +213,19 @@ export default class EventList extends Component {
         if (events.length === 0) {
             return <>
                 <Banner title="Events" subtitle="There are no events."/>
-                <Link to="/events/add/" className="btn btn-primary btn-block">Add Event</Link>
+                {/*<Link to="/events/add/" className="btn btn-primary btn-block">Add Event</Link>*/}
+                <FormModal
+                    buttonLabel={"Add Event"}
+                    modalTitle={"Add Event"}
+                    modalState={this.state.formModalState}
+                    block={true}
+                    showModal={this.handleFormModalChange}>
+                    <EventForm
+                        id={0}
+                        userData={this.state.userData}
+                        onCloseEditModal={this.handleFormModalChange}
+                    />
+                </FormModal>
             </>
         }
 

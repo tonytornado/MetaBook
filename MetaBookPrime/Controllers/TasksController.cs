@@ -47,6 +47,7 @@ namespace MetaBookPrime.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         [Authorize]
+        [Route("{id")]
         public async Task<IActionResult> PutTodo(int id, Todo todo)
         {
             if (id != todo.Id)
