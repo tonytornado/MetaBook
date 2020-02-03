@@ -93,7 +93,7 @@ namespace MetaBookPrime.Controllers
         [Authorize]
         public async Task<ActionResult<Todo>> DeleteTodo(int id)
         {
-            Todo todo = await _context.Tasks.FindAsync(id);
+            var todo = await _context.Tasks.FindAsync(id);
             if (todo == null)
             {
                 return NotFound();

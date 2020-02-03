@@ -4,7 +4,6 @@ import {Link} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCalendarDay, faEnvelope, faGlobe, faHome, faPhone} from '@fortawesome/free-solid-svg-icons';
 import {VersatileModal} from '../../components/modals/VersatileModal';
-import authService from '../../components/api-authorization/AuthorizeService';
 import {dateFormatter} from "../../components/helpers/dateFormatter";
 
 
@@ -28,28 +27,6 @@ export default class Contact extends Component {
     componentDidMount() {
         this.getPersonalEvents(this.props.id);
         this.getPersonalDetails(this.props.id);
-    }
-
-    async removeThisPerson(id) {
-        const token = await authService.getAccessToken();
-        fetch(`api/Tasks/${id}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            })
-            .then((res) => {
-                if (res.ok) {
-                    console.log("Contact Deleted!");
-                    this.props.history.push('/contacts/');
-                } else {
-                    console.error("Could not delete: " + res.status);
-                }
-            }).catch(error => {
-            console.error(error)
-            });
-        this.props.onSendFormClose();
     }
 
     /**
@@ -97,7 +74,6 @@ export default class Contact extends Component {
             ButtonText = "";
         } else {
             ButtonText = <div className="btn-group btn-block">
-                <Link to={`edit/${contact.id}`} className="btn btn-primary">Edit Contact</Link>
                 <VersatileModal buttonLabel={"Delete"} buttonClass={"danger"}
                                 modalTitle={`Delete ${contact.firstName}?`}
                                 modalText={"Are you sure you want to remove this contact? It cannot be undone"}

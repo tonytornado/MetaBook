@@ -20,7 +20,6 @@ export function VersatileModal(props) {
 
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
-
     const toggleAction = modalAction;
 
     const doubleAction = () => {

@@ -10,15 +10,14 @@ export default class ContactForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true,
+            // loading: true,
             address: [],
             phone: [],
             states: [],
             addAddress: false,
             addPhone: false,
-            contactData: [],
-            userData: [],
-            completed: false
+            contact: this.props.contact,
+            userData: this.props.userData
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,19 +27,8 @@ export default class ContactForm extends Component {
     }
 
     componentDidMount() {
-        const userData = this.props.sub;
-        const contactData = this.props.id;
-
-        this.setState({
-            userData: userData ? userData : [],
-            contactData: contactData ? contactData : new ContactData()
-        });
-
         // Get the menu types
         this.getContactFormMenus();
-
-        // Check for editable data
-        // this.checkForUserData(params.id);
     }
 
     /**
@@ -63,35 +51,11 @@ export default class ContactForm extends Component {
             });
     }
 
-    /**
-     * Gets information about the contact and changes things around for the contact's data
-     *
-     * @param {int} id Id for the contact
-     */
-    checkForUserData(id) {
-        if (id > 0) {
-            this.setState({
-                addPhone: true,
-                addAddress: true
-            });
-            fetch(`api/People/details/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                        this.setState({
-                            contactData: data,
-                            addPhone: data.phones.length !== 0,
-                            addAddress: data.addresses.length !== 0
-                        });
-                    }
-                )
-        }
-    }
-
     async handleSubmit(e) {
         e.preventDefault();
         const data = new FormData(e.target);
         const token = await authService.getAccessToken();
-        let col = this.state.contactData.id;
+        let col = this.state.contact.id;
 
         if (col !== 0) {
             await fetch(`api/People/${col}`,
@@ -135,9 +99,6 @@ export default class ContactForm extends Component {
     handleFormClose(){
         console.log("Closing modal");
         this.props.onSendFormClose();
-        this.setState({
-            completed: true
-        })
     }
 
     handleAddressChange() {
@@ -170,21 +131,12 @@ export default class ContactForm extends Component {
         });
     }
 
-    async populateUserData() {
-        const token = await authService.getAccessToken();
-        const response = await fetch('connect/userinfo', {
-            headers: !token ? {} : {'Authorization': `Bearer ${token}`}
-        });
-        const data = await response.json();
-        this.setState({userData: data, loading: false});
-    }
-
     render = () =>
     {
         if(this.state.completed){
             return <h3 className="text-center">Submission successful. Please close this box.</h3>
         } else {
-            const dataBits = this.props.contactData ? this.props.contactData : new ContactData();
+            const dataBits = this.props.contact ? this.props.contact : new ContactData();
             const userBits = this.props.userData;
             let classNamePhone = "btn btn-secondary";
             let classNameAddress = "btn btn-secondary";
@@ -384,7 +336,7 @@ function MainForm(props) {
 /**
  * Contact form data model class
  */
-class ContactData {
+export class ContactData {
     id = 0;
     firstName = "";
     lastName = "";
@@ -395,12 +347,12 @@ class ContactData {
     addresses = [];
     phones = [];
 }
-class PhoneData {
+export class PhoneData {
     phoneId = 0;
     phoneNumber = "";
     callerType = "";
 }
-class AddressData {
+export class AddressData {
     addressId = 0;
     streetName = "";
     cityName = "";

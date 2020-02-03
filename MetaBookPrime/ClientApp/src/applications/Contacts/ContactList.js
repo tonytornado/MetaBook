@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import authService from "../../components/api-authorization/AuthorizeService";
 import {Banner, Loader} from '../../components/Layout';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faHome, faPhone} from '@fortawesome/free-solid-svg-icons';
+import {faEdit, faHome, faPhone, faTimes} from '@fortawesome/free-solid-svg-icons';
 import {FormModal} from '../../components/modals/FormModal';
-import ContactForm from './ContactForm';
+import ContactForm, {ContactData} from './ContactForm';
 import {DetailModal} from "../../components/modals/DetailModal";
 import Contact from "./Contact";
+import {VersatileModal} from "../../components/modals/VersatileModal";
 
 /**
  * Shows the contact list
@@ -21,13 +22,15 @@ export default class ContactList extends Component {
             userData: [],
             loading: true,
             formModalState: false,
-            detailModalState: false
+            detailModalState: false,
+            editModalState: false,
         };
 
         this.populateUserData = this.populateUserData.bind(this);
         this.handleFormClose = this.handleFormClose.bind(this);
-        this.handleFormModalChange = this.handleFormModalChange.bind(this);
         this.handleDetailModalChange = this.handleDetailModalChange.bind(this);
+        this.handleEditModalChange = this.handleEditModalChange.bind(this);
+        this.handleFormModalChange = this.handleFormModalChange.bind(this);
     }
 
     componentDidMount() {
@@ -37,18 +40,25 @@ export default class ContactList extends Component {
     handleDetailModalChange() {
         this.setState({
             detailModalState: !this.state.detailModalState
-        })
+        });
+    };
+
+    handleEditModalChange() {
+        this.setState({
+            editModalState: !this.state.editModalState
+        });
     };
 
     handleFormModalChange() {
         this.setState({
             formModalState: !this.state.formModalState
         });
-    }
+        this.populateContactData(this.state.userData);
+    };
 
     handleFormClose() {
         this.handleFormModalChange();
-        this.populateUserData();
+        this.populateContactData(this.state.userData);
     }
 
     /**
@@ -88,18 +98,39 @@ export default class ContactList extends Component {
         this.populateContactData(this.state.userData);
     }
 
+    async removeThisPerson(id) {
+        const token = await authService.getAccessToken();
+        fetch(`api/Tasks/${id}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            })
+            .then((res) => {
+                if (res.ok) {
+                    console.log("Contact Deleted!");
+                } else {
+                    console.error("Could not delete: " + res.status);
+                }
+            }).catch(error => {
+            console.error(error)
+        });
+        this.populateContactData(this.state.userData);
+    }
+
     render() {
         const modalSpace =
             <FormModal
-                buttonLabel={"Add contact"}
+                buttonLabel={"Add Contact"}
                 modalAction={"toggle"}
-                modalTitle={"Add Contact"}
+                modalTitle={"Add A New Contact"}
                 block={true}
                 modalState={this.state.formModalState}
                 showModal={this.handleFormModalChange}>
                 <ContactForm
                     userData={this.state.userData}
-                    contactData={null}
+                    contact={new ContactData()}
                     onSendFormClose={this.handleFormClose}
                 />
             </FormModal>;
@@ -117,6 +148,7 @@ export default class ContactList extends Component {
                 <table className="table table-striped">
                     <thead className="thead-dark">
                     <tr>
+                        <th></th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Address</th>
@@ -127,6 +159,29 @@ export default class ContactList extends Component {
                     {contacts.map(contact =>
                         <tr key={contact.id}>
                             <td>
+                                <div className="btn-group btn-group-sm">
+                                    <FormModal
+                                        buttonLabel={<FontAwesomeIcon icon={faEdit}/>}
+                                        modalTitle={"Edit Contact"}
+                                        modalState={this.state.editModalState}
+                                        showModal={this.handleEditModalChange}
+                                        block={false}>
+                                        <ContactForm
+                                            id={contact.id}
+                                            contact={contact}
+                                            userData={this.state.userData}
+                                            onSendFormClose={this.handleEditModalChange}
+                                        />
+                                    </FormModal>
+                                    <VersatileModal buttonLabel={<FontAwesomeIcon icon={faTimes}/>}
+                                                    buttonClass={"danger"}
+                                                    modalTitle={`Delete ${contact.firstName}?`}
+                                                    modalText={"Are you sure you want to remove this contact? It cannot be undone"}
+                                                    modalConfirmText={"Confirm Delete"}
+                                                    modalAction={() => this.removeThisPerson(contact.id)}/>
+                                </div>
+                            </td>
+                            <td>
                                 <DetailModal
                                     linkLabel={`${contact.name}`}
                                     showModal={this.handleDetailModalChange}
@@ -136,7 +191,7 @@ export default class ContactList extends Component {
                                         id={contact.id}
                                         userData={this.state.userData}
                                         contact={contact}
-                                        onSendFormClose={this.handleFormClose}
+                                        onSendFormClose={this.handleDetailModalChange}
                                     />
                                 </DetailModal>
                             </td>
