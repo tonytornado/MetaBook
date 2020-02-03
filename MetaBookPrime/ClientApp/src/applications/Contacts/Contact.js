@@ -48,7 +48,8 @@ export default class Contact extends Component {
                 }
             }).catch(error => {
             console.error(error)
-        });
+            });
+        this.props.onSendFormClose();
     }
 
     /**
@@ -84,20 +85,6 @@ export default class Contact extends Component {
             )
     }
 
-    // /**
-    //  * Grabs user data from the server after verifying with token
-    //  */
-    // async populateUserData() {
-    //     const token = await authService.getAccessToken();
-    //     const response = await fetch('/connect/userinfo', {
-    //         headers: !token ? {} : {'Authorization': `Bearer ${token}`}
-    //     });
-    //     const data = await response.json();
-    //     this.setState({
-    //         userData: data
-    //     });
-    // }
-
     /**
      * Renders the table for the contact information
      * @param {array} contact
@@ -115,16 +102,12 @@ export default class Contact extends Component {
                                 modalTitle={`Delete ${contact.firstName}?`}
                                 modalText={"Are you sure you want to remove this contact? It cannot be undone"}
                                 modalConfirmText={"Confirm Delete"}
-                                modalAction={() => Contact.removeThisPerson(contact.id)}/>
+                                modalAction={() => this.removeThisPerson(contact.id)}/>
             </div>;
         }
 
         return <section>
             <div className="card p-3" id="contact-card">
-                {/* <div className="card-header">
-                        <h4 className="card-title"><FontAwesomeIcon
-                            icon={faUser} /> {contact.firstName} {contact.lastName}</h4>
-                    </div> */}
                 <div className="card-body">
                     <p className="card-title"><FontAwesomeIcon
                         icon={faEnvelope}/> {contact.email ? contact.email : "No E-Mail Available"}</p>

@@ -47,7 +47,7 @@ namespace MetaBookPrime.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         [Authorize]
-        [Route("{id")]
+        [Route("{id}")]
         public async Task<IActionResult> PutTodo(int id, Todo todo)
         {
             if (id != todo.Id)
@@ -93,7 +93,7 @@ namespace MetaBookPrime.Controllers
         [Authorize]
         public async Task<ActionResult<Todo>> DeleteTodo(int id)
         {
-            var todo = await _context.Tasks.FindAsync(id);
+            Todo todo = await _context.Tasks.FindAsync(id);
             if (todo == null)
             {
                 return NotFound();
@@ -111,7 +111,6 @@ namespace MetaBookPrime.Controllers
         /// <param name="id"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        [HttpPut("{id}")]
         [Route("Completed/{id}/{status}")]
         [Authorize]
         public async Task<ActionResult<Todo>> MarkComplete(int id, bool status)

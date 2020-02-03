@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import authService from "../../components/api-authorization/AuthorizeService";
-import {Banner, Loader} from '../../components/Layout';
-import {dateFormatter} from "../../components/helpers/dateFormatter";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck, faEdit, faTimes} from '@fortawesome/free-solid-svg-icons';
-import {VersatileModal} from "../../components/modals/VersatileModal";
-import TodoForm, {ItemData} from "./TodoForm";
+import { Banner, Loader } from '../../components/Layout';
+import { dateFormatter } from "../../components/helpers/dateFormatter";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { VersatileModal } from "../../components/modals/VersatileModal";
+import TodoForm, { ItemData } from "./TodoForm";
 import TodoItem from "./TodoItem";
-import {FormModal} from "../../components/modals/FormModal";
-import {DetailModal} from "../../components/modals/DetailModal";
+import { FormModal } from "../../components/modals/FormModal";
+import { DetailModal } from "../../components/modals/DetailModal";
 
 
 export default class TodoList extends Component {
@@ -30,6 +30,7 @@ export default class TodoList extends Component {
         this.handleFormModalChange = this.handleFormModalChange.bind(this);
         this.handleTaskModalChange = this.handleTaskModalChange.bind(this);
         this.removeItem = this.removeItem.bind(this);
+        this.getItems = this.getItems.bind(this);
     }
 
     componentDidMount() {
@@ -40,24 +41,25 @@ export default class TodoList extends Component {
     handleDetailModalChange() {
         this.setState({
             detailModalState: !this.state.detailModalState
-        })
+        });
+        this.getItems();
     };
 
-    handleEditModalChange(tasker) {
+    handleEditModalChange() {
         this.setState({
             editModalState: !this.state.editModalState
         });
         this.getItems();
     };
 
-    handleFormModalChange(tasker) {
+    handleFormModalChange() {
         this.setState({
             formModalState: !this.state.formModalState
         });
         this.getItems();
     };
 
-    handleTaskModalChange(tasker) {
+    handleTaskModalChange() {
         this.setState({
             taskModalState: !this.state.taskModalState
         });
@@ -70,7 +72,7 @@ export default class TodoList extends Component {
     async populateUserData() {
         const token = await authService.getAccessToken();
         const response = await fetch('/connect/userinfo', {
-            headers: !token ? {} : {'Authorization': `Bearer ${token}`}
+            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
         this.setState({
@@ -99,8 +101,8 @@ export default class TodoList extends Component {
                     console.error("Could not delete: " + res.status);
                 }
             }).catch(error => {
-            console.error(error)
-        });
+                console.error(error)
+            });
         this.getItems();
     }
 
@@ -118,8 +120,8 @@ export default class TodoList extends Component {
                     });
                 }
             ).catch(error =>
-            console.error(error)
-        )
+                console.error(error)
+            )
     }
 
     /**
@@ -133,10 +135,10 @@ export default class TodoList extends Component {
         if (!item.completed) {
             widget = <>
                 <FormModal showModal={this.handleEditModalChange}
-                           modalState={this.state.editModalState}
-                           modalTitle={"Edit Task"}
-                           buttonLabel={<FontAwesomeIcon icon={faEdit}/>}
-                           block={false}
+                    modalState={this.state.editModalState}
+                    modalTitle={"Edit Task"}
+                    buttonLabel={<FontAwesomeIcon icon={faEdit} />}
+                    block={false}
                 >
                     <TodoForm
                         userData={this.state.userData}
@@ -145,10 +147,10 @@ export default class TodoList extends Component {
                     />
                 </FormModal>
                 <FormModal showModal={this.handleTaskModalChange}
-                           modalState={this.state.taskModalState}
-                           modalTitle={"Edit Task"}
-                           buttonLabel={<FontAwesomeIcon icon={faCheck}/>}
-                           block={false}
+                    modalState={this.state.taskModalState}
+                    modalTitle={"Edit Task"}
+                    buttonLabel={<FontAwesomeIcon icon={faCheck} />}
+                    block={false}
                 >
                     <TodoItem
                         item={item}
@@ -169,7 +171,7 @@ export default class TodoList extends Component {
                         {widget}
                         <VersatileModal
                             buttonClass={"danger"}
-                            buttonLabel={<FontAwesomeIcon icon={faTimes}/>}
+                            buttonLabel={<FontAwesomeIcon icon={faTimes} />}
                             modalTitle={`Remove Task "${item.title}"`}
                             modalText={"Are you sure you want to delete this item? This cannot be undone."}
                             modalConfirmText={"Confirm Deletion"}
@@ -177,7 +179,6 @@ export default class TodoList extends Component {
                         />
                     </div>
                 </td>
-                {/*<td><Link to={`/tasks/${item.id}`}>{item.title}</Link></td>*/}
                 <td>
                     <DetailModal
                         linkLabel={item.title}
@@ -201,12 +202,12 @@ export default class TodoList extends Component {
         const items = this.state.items;
 
         if (this.state.loading === true) {
-            return <Loader/>
+            return <Loader />
         }
 
         if (items.length === 0) {
             return <div>
-                <Banner title="Tasks" subtitle="Uh... where are they?"/>
+                <Banner title="Tasks" subtitle="Uh... where are they?" />
                 <p className="text-center">There are no tasks available.</p>
                 <FormModal
                     buttonLabel={"Add Item"}
@@ -226,20 +227,20 @@ export default class TodoList extends Component {
 
         return (
             <section className="container-fluid">
-                <Banner title="Tasks" subtitle={`${items.length} ${items.length > 1 ? "tasks" : "task"}`}/>
+                <Banner title="Tasks" subtitle={`${items.length} ${items.length > 1 ? "tasks" : "task"}`} />
                 <table className="table table-striped">
                     <thead className="thead-dark">
-                    <tr>
-                        <th/>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Due Date</th>
-                    </tr>
+                        <tr>
+                            <th />
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Due Date</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {items.map(item => item
-                        ? this.ListItem(item)
-                        : "No items found.")}
+                        {items.map(item => item
+                            ? this.ListItem(item)
+                            : "No items found.")}
                     </tbody>
                 </table>
                 <FormModal

@@ -88,7 +88,7 @@ export default class TodoForm extends Component {
                     </div>
                     <div className="form-group">
                         <label htmlFor="dueDate">Due Date</label>
-                        <input type="date" className="form-control" name="dueDate" defaultValue={mainFormData.dueDate}/>
+                        <input type="date" className="form-control" name="dueDate" defaultValue={mainFormData.dueDate} />
                     </div>
                     <input type="submit" className="btn btn-primary btn-block" name="task-act" value="Add Task"/>
                 </form>

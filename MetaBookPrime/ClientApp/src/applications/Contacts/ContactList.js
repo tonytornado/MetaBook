@@ -136,6 +136,7 @@ export default class ContactList extends Component {
                                         id={contact.id}
                                         userData={this.state.userData}
                                         contact={contact}
+                                        onSendFormClose={this.handleFormClose}
                                     />
                                 </DetailModal>
                             </td>
