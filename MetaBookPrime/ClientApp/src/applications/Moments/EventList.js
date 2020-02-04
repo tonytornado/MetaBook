@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import {dateFormatter} from "../../components/helpers/dateFormatter";
 import {Banner, Loader} from '../../components/Layout';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faEdit, faTimes} from '@fortawesome/free-solid-svg-icons';
+import {faEdit, faPlusCircle, faTimes} from '@fortawesome/free-solid-svg-icons';
 import {VersatileModal} from '../../components/modals/VersatileModal';
 import authService from '../../components/api-authorization/AuthorizeService';
 import {DetailModal} from "../../components/modals/DetailModal";
 import Event from "./Event";
-import EventForm from "./EventForm";
+import EventForm, {EventData} from "./EventForm";
 import {FormModal} from "../../components/modals/FormModal";
 
 /**
@@ -21,14 +21,11 @@ export default class EventList extends Component {
             events: [],
             people: [],
             userData: [],
-            editModalState: false,
-            detailModalState: false,
-            formModalState: false
+            modal: null
         };
 
-        this.handleDetailModalChange = this.handleDetailModalChange.bind(this);
-        this.handleEditModalChange = this.handleEditModalChange.bind(this);
-        this.handleFormModalChange = this.handleFormModalChange.bind(this);
+        this.toggle = this.toggle.bind(this);
+        this.toggleReload = this.toggleReload.bind(this);
     }
 
     /**
@@ -40,6 +37,7 @@ export default class EventList extends Component {
             .then((result) => {
                 this.setState({
                     events: result,
+                    loading: false,
                 });
             });
     }
@@ -48,12 +46,11 @@ export default class EventList extends Component {
      * Returns people for all events
      */
     getPeople() {
-        fetch('api/People/')
+        fetch('api/People')
             .then(response => response.json())
             .then((result) => {
                 this.setState({
                     people: result,
-                    loading: false,
                 });
             });
     }
@@ -63,31 +60,45 @@ export default class EventList extends Component {
         this.getEverything();
     }
 
-    getEverything(){
+    /**
+     * Gets all information for the page.
+     */
+    getEverything() {
         this.getPeople();
         this.getEvents();
     }
-    
-    handleDetailModalChange() {
-        this.setState({
-            detailModalState: !this.state.detailModalState
-        });
-        this.getEverything();
-    };
 
-    handleEditModalChange() {
-        this.setState({
-            editModalState: !this.state.editModalState
-        });
-        this.getEverything();
-    };
+    /**
+     * Toggles the modals in this list
+     *
+     * @param {String} set      Form/Detail
+     * @param {Number} modal    Modal Id
+     */
+    toggle(set, modal) {
+        console.log(modal);
+        if (this.state.modal) {
+            this.setState({
+                modal: null
+            });
+        } else {
+            if (set === 'form') {
+                this.setState({
+                    modal: `form${modal.id}`
+                })
+            } else {
+                this.setState({
+                    modal: `detail${modal.id}`
+                })
+            }
+        }
+    }
 
-    handleFormModalChange() {
+    toggleReload() {
         this.setState({
-            formModalState: !this.state.formModalState
+            modal: null
         });
         this.getEverything();
-    };
+    }
 
     /**
      * Removes an event from the DB
@@ -157,20 +168,19 @@ export default class EventList extends Component {
      * @param {Array} event The Event Item
      */
     EventItem(event) {
-        let eventModal = this.state.detailModalState;
         let widget = <div className="btn-group btn-group-sm">
-            {/*<Link className="btn btn-primary" to={`/events/edit/${event.id}`} id={`editToggle${event.id}`}><FontAwesomeIcon icon={faEdit}/></Link>*/}
             <FormModal
+                opener={this.state.modal === `form${event.id}`}
+                toggler={this.toggle}
+                clicker={this.toggle.bind(this, `form`, event)}
+                block={false}
                 buttonLabel={<FontAwesomeIcon icon={faEdit}/>}
-                modalTitle={"Edit Event"}
-                modalState={this.state.editModalState}
-                showModal={this.handleEditModalChange}
-                block={false}>
+            >
                 <EventForm
                     id={event.id}
                     event={event}
                     userData={this.state.userData}
-                    onCloseEditModal={this.handleEditModalChange}
+                    onCloseEditModal={this.toggleReload}
                 />
             </FormModal>
             <VersatileModal
@@ -184,12 +194,13 @@ export default class EventList extends Component {
         </div>;
         return <tr key={event.id}>
             <td>{widget}</td>
-            {/*<td><Link to={`/events/${event.id}`}>{event.name}</Link></td>*/}
             <td>
                 <DetailModal
-                    linkLabel={event.name}
-                    showModal={this.handleDetailModalChange}
-                    modalState={eventModal}
+                    opener={this.state.modal === `detail${event.id}`}
+                    toggler={this.toggle}
+                    clicker={this.toggle.bind(this, `detail`, event)}
+                    block={false}
+                    buttonLabel={`${event.name}`}
                 >
                     <Event
                         userData={this.state.userData}
@@ -213,17 +224,17 @@ export default class EventList extends Component {
         if (events.length === 0) {
             return <>
                 <Banner title="Events" subtitle="There are no events."/>
-                {/*<Link to="/events/add/" className="btn btn-primary btn-block">Add Event</Link>*/}
                 <FormModal
-                    buttonLabel={"Add Event"}
-                    modalTitle={"Add Event"}
-                    modalState={this.state.formModalState}
+                    opener={this.state.modal === `form0`}
+                    toggler={this.toggle}
+                    clicker={this.toggle.bind(this, `form`, new EventData())}
                     block={true}
-                    showModal={this.handleFormModalChange}>
+                    buttonLabel={<FontAwesomeIcon icon={faPlusCircle}/>}
+                >
                     <EventForm
-                        id={0}
+                        event={new EventData()}
                         userData={this.state.userData}
-                        onCloseEditModal={this.handleFormModalChange}
+                        onCloseEditModal={this.toggleReload}
                     />
                 </FormModal>
             </>
@@ -247,17 +258,17 @@ export default class EventList extends Component {
                 {events.map(e => this.EventItem(e))}
                 </tbody>
             </table>
-            {/*<Link to="/events/add/" className="btn btn-primary btn-block">Add Event</Link>*/}
             <FormModal
-                buttonLabel={"Add Event"}
-                modalTitle={"Add Event"}
-                modalState={this.state.formModalState}
+                opener={this.state.modal === `form0`}
+                toggler={this.toggle}
+                clicker={this.toggle.bind(this, `form`, new EventData())}
                 block={true}
-                showModal={this.handleFormModalChange}>
+                buttonLabel={<FontAwesomeIcon icon={faPlusCircle}/>}
+            >
                 <EventForm
-                    id={0}
+                    event={new EventData()}
                     userData={this.state.userData}
-                    onCloseEditModal={this.handleFormModalChange}
+                    onCloseEditModal={this.toggleReload}
                 />
             </FormModal>
         </section>;

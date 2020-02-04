@@ -2,19 +2,14 @@ import React from 'react';
 import {Button, Modal, ModalBody, ModalHeader} from 'reactstrap';
 
 export function DetailModal(props) {
-    const {
-        linkLabel,
-        showModal,
-        modalState
-    } = props;
-
     return <div className="container-fluid">
-        <Button color="outline" onClick={showModal}>
-            {linkLabel}
+        <Button outline color="dark" onClick={props.clicker} block>
+            {props.buttonLabel}
         </Button>
-        <Modal isOpen={modalState}
+        <Modal isOpen={props.opener}
+               toggle={props.toggler}
                size="xl">
-            <ModalHeader onClick={showModal}>Details</ModalHeader>
+            <ModalHeader onClick={props.toggler}>Details</ModalHeader>
             <ModalBody>
                 {props.children}
             </ModalBody>

@@ -209,11 +209,7 @@ namespace MetaBookPrime.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Person>> DeletePerson(int id)
         {
-            var person = await _context.People.FindAsync(id);
-            if (person == null)
-            {
-                return NotFound();
-            }
+            var person = await _context.People.SingleOrDefaultAsync(i => i.Id == id);
 
             _context.People.Remove(person);
             await _context.SaveChangesAsync();

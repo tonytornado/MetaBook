@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import authService from "../../components/api-authorization/AuthorizeService";
 import {Banner, Loader} from '../../components/Layout';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faEdit, faHome, faPhone, faTimes} from '@fortawesome/free-solid-svg-icons';
+import {faEdit, faHome, faPhone, faPlusCircle, faTimes} from '@fortawesome/free-solid-svg-icons';
 import {FormModal} from '../../components/modals/FormModal';
 import ContactForm, {ContactData} from './ContactForm';
 import {DetailModal} from "../../components/modals/DetailModal";
@@ -21,44 +21,47 @@ export default class ContactList extends Component {
             contacts: [],
             userData: [],
             loading: true,
-            formModalState: false,
-            detailModalState: false,
-            editModalState: false,
+            modal: null
         };
 
-        this.populateUserData = this.populateUserData.bind(this);
-        this.handleFormClose = this.handleFormClose.bind(this);
-        this.handleDetailModalChange = this.handleDetailModalChange.bind(this);
-        this.handleEditModalChange = this.handleEditModalChange.bind(this);
-        this.handleFormModalChange = this.handleFormModalChange.bind(this);
+        this.toggle = this.toggle.bind(this);
+        this.removeThisPerson = this.removeThisPerson.bind(this);
     }
 
     componentDidMount() {
         this.populateUserData();
     }
 
-    handleDetailModalChange() {
-        this.setState({
-            detailModalState: !this.state.detailModalState
-        });
-    };
+    /**
+     * Toggles the modals in this list
+     * 
+     * @param {String} set      Form/Detail
+     * @param {Number} modal    Modal Id
+     */
+    toggle(set, modal) {
+        console.log(modal);
+        if (this.state.modal) {
+            this.setState({
+                modal: null
+            });
+        } else {
+            if (set === 'form') {
+                this.setState({
+                    modal: `form${modal.id}`
+                })
+            } else {
+                this.setState({
+                    modal: `detail${modal.id}`
+                })
+            }
+        }
+    }
 
-    handleEditModalChange() {
+    toggleReload(){
         this.setState({
-            editModalState: !this.state.editModalState
+            modal: null
         });
-    };
-
-    handleFormModalChange() {
-        this.setState({
-            formModalState: !this.state.formModalState
-        });
-        this.populateContactData(this.state.userData);
-    };
-
-    handleFormClose() {
-        this.handleFormModalChange();
-        this.populateContactData(this.state.userData);
+        this.populateUserData();
     }
 
     /**
@@ -78,8 +81,6 @@ export default class ContactList extends Component {
                     contacts: result,
                     loading: false
                 });
-                if (result.length < 1)
-                    this.setState({missingData: true,});
             });
     }
 
@@ -98,9 +99,14 @@ export default class ContactList extends Component {
         this.populateContactData(this.state.userData);
     }
 
+    /**
+     * Removes a contact from the system
+     * 
+     * @param {Number} id   Contact Id
+     */
     async removeThisPerson(id) {
         const token = await authService.getAccessToken();
-        fetch(`api/Tasks/${id}`,
+        fetch(`api/People/${id}`,
             {
                 method: 'DELETE',
                 headers: {
@@ -122,16 +128,16 @@ export default class ContactList extends Component {
     render() {
         const modalSpace =
             <FormModal
-                buttonLabel={"Add Contact"}
-                modalAction={"toggle"}
-                modalTitle={"Add A New Contact"}
+                opener={this.state.modal === `form0`}
+                toggler={this.toggle}
+                clicker={this.toggle.bind(this, `form`, new ContactData())}
                 block={true}
-                modalState={this.state.formModalState}
-                showModal={this.handleFormModalChange}>
+                buttonLabel={<FontAwesomeIcon icon={faPlusCircle}/>}
+            >
                 <ContactForm
                     userData={this.state.userData}
                     contact={new ContactData()}
-                    onSendFormClose={this.handleFormClose}
+                    onSendFormClose={this.toggle}
                 />
             </FormModal>;
 
@@ -160,19 +166,23 @@ export default class ContactList extends Component {
                         <tr key={contact.id}>
                             <td>
                                 <div className="btn-group btn-group-sm">
+                                    {/* Modal for editing */}
                                     <FormModal
+                                        opener={this.state.modal === `form${contact.id}`}
+                                        toggler={this.toggle}
+                                        clicker={this.toggle.bind(this, `form`, contact)}
+                                        block={false}
                                         buttonLabel={<FontAwesomeIcon icon={faEdit}/>}
-                                        modalTitle={"Edit Contact"}
-                                        modalState={this.state.editModalState}
-                                        showModal={this.handleEditModalChange}
-                                        block={false}>
+                                    >
                                         <ContactForm
                                             id={contact.id}
                                             contact={contact}
                                             userData={this.state.userData}
-                                            onSendFormClose={this.handleEditModalChange}
+                                            onSendFormClose={this.toggle}
                                         />
                                     </FormModal>
+
+                                    {/* modal for deleting */}
                                     <VersatileModal buttonLabel={<FontAwesomeIcon icon={faTimes}/>}
                                                     buttonClass={"danger"}
                                                     modalTitle={`Delete ${contact.firstName}?`}
@@ -182,16 +192,19 @@ export default class ContactList extends Component {
                                 </div>
                             </td>
                             <td>
+                                {/* modal for viewing details of contact */}
                                 <DetailModal
-                                    linkLabel={`${contact.name}`}
-                                    showModal={this.handleDetailModalChange}
-                                    modalState={this.state.detailModalState}
+                                    opener={this.state.modal === `detail${contact.id}`}
+                                    toggler={this.toggle}
+                                    clicker={this.toggle.bind(this, `detail`, contact)}
+                                    block={false}
+                                    buttonLabel={`${contact.name}`}
                                 >
                                     <Contact
                                         id={contact.id}
                                         userData={this.state.userData}
                                         contact={contact}
-                                        onSendFormClose={this.handleDetailModalChange}
+                                        onSendFormClose={this.toggle}
                                     />
                                 </DetailModal>
                             </td>

@@ -15,16 +15,14 @@ export default class EventForm extends Component {
         super(props);
         this.state = {
             loading: false,
-            event: new EventData(),
-            userData: this.props.userData
+            event: props.event,
+            userData: props.userData
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
-        // this.populateUserData();
-        this.checkForEventData(this.props.id);
     }
 
     /**
@@ -56,23 +54,6 @@ export default class EventForm extends Component {
         this.props.onCloseEditModal();
     }
 
-    /**
-     * Gets information about the event and changes things around for the event's data
-     *
-     * @param {int} id Id for the event
-     */
-    checkForEventData(id) {
-        if (id > 0) {
-            fetch(`api/Events/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    this.setState({
-                        event: data
-                    })
-                })
-        }
-    }
-
 
     /**
      * Renders the form for the page.
@@ -82,7 +63,7 @@ export default class EventForm extends Component {
 
         return <form encType="multipart/form-data" onSubmit={this.handleSubmit}
                      className="border rounded shadow p-3 row mx-auto">
-            <input type="hidden" name="id" defaultValue={this.state.event.id}/>
+            <input type="hidden" name="id" defaultValue={event.id}/>
             <input type="hidden" name="ownerId" defaultValue={this.state.userData.sub}/>
             <div className="col-md">
                 <div className="form-group">
@@ -120,7 +101,7 @@ export default class EventForm extends Component {
     }
 }
 
-class EventData {
+export class EventData {
     id = 0;
     name = "";
     startTime = new Date();

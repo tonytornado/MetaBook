@@ -1,6 +1,5 @@
 ﻿import React, {Component} from 'react';
 import {Banner, Loader} from '../../components/Layout';
-import {Link} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCalendarDay, faEnvelope, faGlobe, faHome, faPhone} from '@fortawesome/free-solid-svg-icons';
 import {VersatileModal} from '../../components/modals/VersatileModal';
@@ -197,7 +196,7 @@ function PersonalEvents(props) {
                 {events.map(e =>
                     <tr key={e.id}>
                         <td width="20%">{dateFormatter(e.startTime)}</td>
-                        <td><Link to={`/events/${e.id}`}>{e.name}</Link></td>
+                        <td>{e.name}</td>
                     </tr>
                 )}
                 </tbody>

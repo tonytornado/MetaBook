@@ -2,20 +2,17 @@ import React from 'react';
 import {Button, Modal, ModalBody, ModalHeader} from 'reactstrap';
 
 export function FormModal(props) {
-    const {
-        buttonLabel,
-        block,
-        modalTitle,
-        showModal
-    } = props;
+    // const [modal, setModal] = useState(false);
+    // const toggle = () => setModal(!modal);
 
     return <>
-        <Button color="primary" onClick={showModal} block={block}>
-            {buttonLabel}
+        <Button color="primary" onClick={props.clicker} block={props.block}>
+            {props.buttonLabel}
         </Button>
-        <Modal isOpen={props.modalState}
+        <Modal isOpen={props.opener}
+               toggle={props.toggler}
                size="xl">
-            <ModalHeader onClick={showModal}>{modalTitle}</ModalHeader>
+            <ModalHeader toggle={props.toggler}>{props.modalTitle}</ModalHeader>
             <ModalBody>
                 {props.children}
             </ModalBody>
