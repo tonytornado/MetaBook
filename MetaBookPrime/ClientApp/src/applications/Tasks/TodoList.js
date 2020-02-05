@@ -213,8 +213,7 @@ export default class TodoList extends Component {
 
         if (items.length === 0) {
             return <div>
-                <Banner title="Tasks" subtitle="Uh... where are they?"/>
-                <p className="text-center">There are no tasks available.</p>
+                <Banner title="Tasks" subtitle="Nothing to do?"/>
                 <FormModal
                     opener={this.state.modal === `form0`}
                     toggler={this.toggle}
