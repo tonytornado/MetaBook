@@ -25,6 +25,7 @@ export default class ContactList extends Component {
         };
 
         this.toggle = this.toggle.bind(this);
+        this.toggleReload = this.toggleReload.bind(this);
         this.removeThisPerson = this.removeThisPerson.bind(this);
     }
 
@@ -59,8 +60,10 @@ export default class ContactList extends Component {
 
     toggleReload(){
         this.setState({
-            modal: null
+            modal: null,
+            loading: true
         });
+        console.log("Modals closed.");
         this.populateUserData();
     }
 
@@ -122,7 +125,7 @@ export default class ContactList extends Component {
             }).catch(error => {
             console.error(error)
         });
-        this.populateContactData(this.state.userData);
+        this.populateUserData();
     }
 
     render() {
@@ -137,7 +140,7 @@ export default class ContactList extends Component {
                 <ContactForm
                     userData={this.state.userData}
                     contact={new ContactData()}
-                    onSendFormClose={this.toggle}
+                    onSendFormClose={this.toggleReload}
                 />
             </FormModal>;
 
@@ -178,7 +181,7 @@ export default class ContactList extends Component {
                                             id={contact.id}
                                             contact={contact}
                                             userData={this.state.userData}
-                                            onSendFormClose={this.toggle}
+                                            onSendFormClose={this.toggleReload}
                                         />
                                     </FormModal>
 
@@ -204,7 +207,7 @@ export default class ContactList extends Component {
                                         id={contact.id}
                                         userData={this.state.userData}
                                         contact={contact}
-                                        onSendFormClose={this.toggle}
+                                        onSendFormClose={this.toggleReload}
                                     />
                                 </DetailModal>
                             </td>

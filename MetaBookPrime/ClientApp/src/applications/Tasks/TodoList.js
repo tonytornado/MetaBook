@@ -63,10 +63,11 @@ export default class TodoList extends Component {
 
     toggleReload() {
         this.setState({
-            modal: null
+            modal: null,
+            loading: true
         });
+        console.log("Modals closed");
         this.populateUserData();
-        this.getItems();
     }
 
     /**
@@ -81,6 +82,7 @@ export default class TodoList extends Component {
         this.setState({
             userData: data
         });
+        await this.getItems();
     }
 
     /**
@@ -106,7 +108,7 @@ export default class TodoList extends Component {
             }).catch(error => {
             console.error(error)
         });
-        this.getItems();
+        this.populateUserData();
     }
 
     /**

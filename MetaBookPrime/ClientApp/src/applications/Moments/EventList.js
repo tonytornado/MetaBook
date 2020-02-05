@@ -57,15 +57,6 @@ export default class EventList extends Component {
 
     componentDidMount() {
         this.populateUserData();
-        this.getEverything();
-    }
-
-    /**
-     * Gets all information for the page.
-     */
-    getEverything() {
-        this.getPeople();
-        this.getEvents();
     }
 
     /**
@@ -95,9 +86,11 @@ export default class EventList extends Component {
 
     toggleReload() {
         this.setState({
-            modal: null
+            modal: null,
+            loading: true
         });
-        this.getEverything();
+        console.log("Modals closed");
+        this.populateUserData();
     }
 
     /**
@@ -123,7 +116,7 @@ export default class EventList extends Component {
             }).catch(error => {
             console.error(error)
         });
-        await this.getEverything();
+        await this.populateUserData();
     }
 
     /**
@@ -138,7 +131,9 @@ export default class EventList extends Component {
         this.setState({
             userData: data
         });
-        this.populateContactData(this.state.userData);
+        await this.populateContactData(this.state.userData);
+        await this.getPeople();
+        await this.getEvents();
     }
 
     /**
