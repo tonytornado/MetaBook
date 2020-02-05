@@ -127,13 +127,19 @@ namespace MetaBookPrime.Controllers
             MetaUser user = await _userManager.FindByIdAsync(substring);
 
             if (user is null || slug != person.Id) return BadRequest();
-            if(addressCheck) _context.Entry(address).State = EntityState.Modified;;
-            if(phoneCheck) _context.Entry(phone).State = EntityState.Modified;;
+            if (addressCheck)
+            {
+                _context.Entry(address).State = EntityState.Modified;
+                person.Addresses.Add(address);
+            }
+            if (phoneCheck)
+            {
+                _context.Entry(phone).State = EntityState.Modified;
+                person.Phones.Add(phone);
+            }
+
             _context.Entry(person).State = EntityState.Modified;
-            
             person.OwnerId = substring;
-            person.Addresses.Add(address);
-            person.Phones.Add(phone);
 
             try
             {

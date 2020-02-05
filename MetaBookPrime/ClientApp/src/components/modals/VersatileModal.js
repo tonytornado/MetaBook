@@ -27,13 +27,12 @@ export function VersatileModal(props) {
         toggle();
     };
 
-    const externalCloseBtn = <button className="close" style={{position: 'absolute', top: '15px', right: '15px'}}
-                                     onClick={toggle}>&times;</button>;
+    //const externalCloseBtn = <button className="close" style={{position: 'absolute', top: '15px', right: '15px'}} onClick={toggle}>&times;</button>;
     return (
         <>
             <Button color={buttonClass} onClick={toggle}>{buttonLabel}</Button>
-            <Modal isOpen={modal} toggle={toggle} className={className} external={externalCloseBtn}>
-                <ModalHeader>{modalTitle}</ModalHeader>
+            <Modal isOpen={modal} toggle={toggle} className={className}>
+                <ModalHeader toggle={props.toggler}>{modalTitle}</ModalHeader>
                 <ModalBody>
                     {modalText}
                 </ModalBody>

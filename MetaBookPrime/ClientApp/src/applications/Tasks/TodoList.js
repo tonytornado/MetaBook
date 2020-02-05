@@ -236,7 +236,7 @@ export default class TodoList extends Component {
             <section className="container-fluid">
                 <Banner title="Tasks" subtitle={`${items.length} ${items.length > 1 ? "tasks" : "task"}`}/>
                 <table className="table table-striped">
-                    <thead className="thead-dark">
+                    <thead className="thead-dark text-center">
                     <tr>
                         <th/>
                         <th>Title</th>

@@ -25,7 +25,6 @@ namespace MetaBookPrime.Data
             {
                 new Claim("FirstName", user.FirstName),
                 new Claim("LastName", user.LastName),
-//                new Claim("Id", user.Id),
             };
 
             context.IssuedClaims.AddRange(claims);

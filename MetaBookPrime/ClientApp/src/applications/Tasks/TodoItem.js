@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {dateFormatter} from "../../components/helpers/dateFormatter";
+import React, { Component } from 'react';
+import { dateFormatter } from "../../components/helpers/dateFormatter";
 import authService from '../../components/api-authorization/AuthorizeService';
 
 /**
@@ -43,9 +43,9 @@ export default class TodoItem extends Component {
                     console.error("Could not mark complete: " + res.status);
                 }
             }).catch(error => {
-            console.error(error)
-        });
-        
+                console.error(error)
+            });
+
         this.props.onCloseEditModal();
     }
 
@@ -60,25 +60,44 @@ export default class TodoItem extends Component {
                     loading: false,
                 });
             }).catch(error => {
-            console.error(error)
-        });
+                console.error(error)
+            });
     }
 
     render() {
         let thing = this.state.item;
 
         return (
-            <div className="border rounded p-3 shadow-sm text-center" key={thing.id}>
-                <div className="">
-                    <h3 className="border rounded p-1">{thing.title}</h3>
-                    <p>{thing.description}</p>
-                    <p>Created date: {dateFormatter(thing.createdDate)}</p>
-                    <p>Due Date: {thing.dueDate ? dateFormatter(thing.dueDate) : "Not Set"}</p>
+            <>
+                <div className="border rounded p-3 my-3 shadow-sm" key={thing.id}>
+                    <table className="table table-bordered">
+                        <thead className="thead-dark">
+                            <tr>
+                                <td colSpan="2">
+                                    <h3 className="text-center">{thing.title}</h3>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>Description</b></td>
+                                <td>{thing.description}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Created</b></td>
+                                <td>{dateFormatter(thing.createdDate)}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Due</b></td>
+                                <td>{thing.dueDate ? dateFormatter(thing.dueDate) : "Not Set"}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div>
                     {this.completeButton(thing.completed, thing.id)}
                 </div>
-            </div>
+            </>
         );
     }
 
@@ -92,10 +111,10 @@ export default class TodoItem extends Component {
     completeButton(complete, id) {
         if (complete === false) {
             return <button onClick={() => this.markComplete(id, true)} type="button"
-                           className="btn btn-block btn-primary">Mark Completed</button>
+                className="btn btn-block btn-primary">Mark Completed</button>
         } else {
             return <button onClick={() => this.markComplete(id, false)} type="button"
-                           className="btn btn-block btn-primary">Mark Incompleted</button>
+                className="btn btn-block btn-primary">Mark Incompleted</button>
         }
     }
 }

@@ -240,7 +240,7 @@ export default class EventList extends Component {
                     subtitle={`${events.length} ${events.length > 1 ? "events" : "event"}`}/>
 
             <table className="table table-responsive-sm table-striped">
-                <thead className="thead-dark">
+                <thead className="thead-dark text-center">
                 <tr>
                     <th/>
                     <th>Name</th>

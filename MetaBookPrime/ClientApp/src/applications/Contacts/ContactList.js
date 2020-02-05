@@ -155,7 +155,7 @@ export default class ContactList extends Component {
                     title="Contacts"
                     subtitle={`${contacts.length} ${contacts.length > 1 ? "contacts" : "contact"}.`}/>
                 <table className="table table-striped">
-                    <thead className="thead-dark">
+                    <thead className="thead-dark text-center">
                     <tr>
                         <th></th>
                         <th>Name</th>
@@ -224,7 +224,6 @@ export default class ContactList extends Component {
         } else {
             return <div>
                 <Banner title="Contacts" subtitle="Uh... where are they?"/>
-                <p className="text-center">There are no contacts.</p>
                 {modalSpace}
             </div>
         }

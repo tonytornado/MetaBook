@@ -42,7 +42,7 @@ export default class ContactScroll extends Component {
     }
 
     /**
-     * Grabs user data from the server after verifying with token
+     * Retrieves user data from the server after verifying with token
      */
     async populateUserData() {
         const token = await authService.getAccessToken();
@@ -56,6 +56,11 @@ export default class ContactScroll extends Component {
         await this.populateContactData(data);
     }
 
+    /**
+     * Shows the list of contacts available to the user for adding to events.
+     * 
+     * @param {Array} contacts 
+     */
     contactListSelector(contacts) {
         return <div className="form-group">
             <label htmlFor="contactSelect"><h5>Available Contacts</h5></label>

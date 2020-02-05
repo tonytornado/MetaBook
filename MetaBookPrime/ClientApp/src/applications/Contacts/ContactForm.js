@@ -1,6 +1,6 @@
-﻿import React, {Component} from 'react';
+﻿import React, { Component } from 'react';
 import authService from "../../components/api-authorization/AuthorizeService";
-import {Banner} from '../../components/Layout';
+import { Banner } from '../../components/Layout';
 
 
 /**
@@ -29,6 +29,18 @@ export default class ContactForm extends Component {
     componentDidMount() {
         // Get the menu types
         this.getContactFormMenus();
+
+        if (this.props.contact.phones.length > 0) {
+            this.setState({
+                addPhone: true
+            })
+        }
+
+        if (this.props.contact.addresses.length > 0) {
+            this.setState({
+                addAddress: true
+            })
+        }
     }
 
     /**
@@ -37,17 +49,17 @@ export default class ContactForm extends Component {
     getContactFormMenus() {
         fetch("api/People/Phones").then(response => response.json())
             .then(data => {
-                this.setState({phone: data});
+                this.setState({ phone: data });
             });
         // Get the address types
         fetch("api/People/Addresses").then(response => response.json())
             .then(data => {
-                this.setState({address: data});
+                this.setState({ address: data });
             });
         // Get the address types
         fetch("api/People/States").then(response => response.json())
             .then(data => {
-                this.setState({states: data, loading: false});
+                this.setState({ states: data, loading: false });
             });
     }
 
@@ -66,14 +78,14 @@ export default class ContactForm extends Component {
                         'Authorization': `Bearer ${token}`
                     },
                 }).then((res) => {
-                if (res.ok) {
-                    console.log("Updated!");
-                    this.props.history.push('/contacts');
-                } else
-                    console.error("Post error: " + res.status);
-            }).catch(e => {
-                console.log("error: " + e);
-            });
+                    if (res.ok) {
+                        console.log("Updated!");
+                        this.props.history.push('/contacts');
+                    } else
+                        console.error("Post error: " + res.status);
+                }).catch(e => {
+                    console.log("error: " + e);
+                });
         } else if (col === 0) {
             await fetch('api/People',
                 {
@@ -83,20 +95,20 @@ export default class ContactForm extends Component {
                     method: 'POST',
                     body: data
                 }).then((res) => {
-                if (res.ok) {
-                    console.log("Perfect!");
-                    console.log(res.json());
-                } else
-                    console.error("Post error: " + res.status);
-            }).catch(e => {
-                console.log("error: " + e);
-            });
+                    if (res.ok) {
+                        console.log("Perfect!");
+                        console.log(res.json());
+                    } else
+                        console.error("Post error: " + res.status);
+                }).catch(e => {
+                    console.log("error: " + e);
+                });
         }
-        
+
         this.handleFormClose();
     }
-    
-    handleFormClose(){
+
+    handleFormClose() {
         console.log("Closing modal");
         this.props.onSendFormClose();
     }
@@ -131,65 +143,60 @@ export default class ContactForm extends Component {
         });
     }
 
-    render = () =>
-    {
-        if(this.state.completed){
-            return <h3 className="text-center">Submission successful. Please close this box.</h3>
-        } else {
-            const dataBits = this.props.contact ? this.props.contact : new ContactData();
-            const userBits = this.props.userData;
-            let classNamePhone = "btn btn-secondary";
-            let classNameAddress = "btn btn-secondary";
-            let addressText = this.state.addAddress ? "Remove Address" : "Add Address";
-            let phoneText = this.state.addPhone ? "Remove Phone" : "Add Phone";
+    render = () => {
+        const dataBits = this.props.contact ? this.props.contact : new ContactData();
+        const userBits = this.props.userData;
+        let classNamePhone = "btn btn-secondary";
+        let classNameAddress = "btn btn-secondary";
+        let addressText = this.state.addAddress ? "Remove Address" : "Add Address";
+        let phoneText = this.state.addPhone ? "Remove Phone" : "Add Phone";
 
-            if (this.state.addPhone) {
-                classNamePhone += 'active';
-            }
-
-            if (this.state.addAddress) {
-                classNameAddress += 'active';
-            }
-
-            return <main className="">
-                <Banner title="Contact Form" subtitle="You might remember them later."/>
-                <form onSubmit={this.handleSubmit} className="border p-3 rounded shadow-sm">
-                    <input type="hidden" name="id" defaultValue={dataBits.id}/>
-                    <input type="hidden" name="substring" defaultValue={userBits.sub}/>
-                    <MainForm data={dataBits}/>
-                    <hr/>
-                    <div className="btn-group-toggle btn-group btn-block" data-toggle="buttons">
-                        <label htmlFor="phoneCheck" className={classNamePhone}>
-                            <input type="checkbox"
-                                   id="phoneCheck"
-                                   onChange={this.handlePhoneChange}
-                                   name="phoneCheck" value="true"/>
-                            {phoneText}
-                        </label>
-                        <label htmlFor="addressCheck" className={classNameAddress}>
-                            <input type="checkbox"
-                                   id="addressCheck"
-                                   onChange={this.handleAddressChange}
-                                   name="addressCheck" value="true"/>
-                            {addressText}
-                        </label>
-                    </div>
-                    <br/>
-                    <PhoneForm
-                        visible={this.state.addPhone}
-                        phoneTypes={this.state.phone}
-                        data={dataBits.phones}
-                    />
-                    <AddressForm
-                        visible={this.state.addAddress}
-                        addressTypes={this.state.address}
-                        stateNames={this.state.states}
-                        data={dataBits.addresses}
-                    />
-                    <button className="btn btn-primary btn-block my-3">Go!</button>
-                </form>
-            </main>;
+        if (this.state.addPhone) {
+            classNamePhone += 'active';
         }
+
+        if (this.state.addAddress) {
+            classNameAddress += 'active';
+        }
+
+        return <main className="">
+            <Banner title="Contact Form" subtitle="You might remember them later." />
+            <form onSubmit={this.handleSubmit} className="border p-3 rounded shadow-sm">
+                <input type="hidden" name="id" defaultValue={dataBits.id} />
+                <input type="hidden" name="substring" defaultValue={userBits.sub} />
+                <MainForm data={dataBits} />
+                <hr />
+                <div className="btn-group-toggle btn-group btn-block" data-toggle="buttons">
+                    <label htmlFor="phoneCheck" className={classNamePhone}>
+                        <input type="checkbox"
+                            id="phoneCheck"
+                            onChange={this.handlePhoneChange}
+                            name="phoneCheck" value="true" />
+                        {phoneText}
+                    </label>
+                    <label htmlFor="addressCheck" className={classNameAddress}>
+                        <input type="checkbox"
+                            id="addressCheck"
+                            onChange={this.handleAddressChange}
+                            name="addressCheck" value="true" />
+                        {addressText}
+                    </label>
+                </div>
+                <br />
+                <PhoneForm
+                    visible={this.state.addPhone}
+                    phoneTypes={this.state.phone}
+                    data={dataBits.phones}
+                />
+                <AddressForm
+                    visible={this.state.addAddress}
+                    addressTypes={this.state.address}
+                    stateNames={this.state.states}
+                    data={dataBits.addresses}
+                />
+                <button className="btn btn-primary btn-block my-3">Go!</button>
+            </form>
+        </main>;
     };
 }
 
@@ -207,7 +214,10 @@ function PhoneForm(props) {
 
     if (props.visible) {
         let phones = phoneTypes.map(c =>
-            <option key={c.value} value={c.name} selected={caller.callerType === c.name}>{c.name}</option>
+            <option
+                key={c.value} value={c.name}
+            selected={caller.callerType === c.name}
+            >{c.name}</option>
         );
 
         return (
@@ -310,24 +320,24 @@ function MainForm(props) {
                 <div className="form-group col-sm">
                     <label className="label" htmlFor="firstName">First Name</label>
                     <input
-                        type="text" name="firstName" className="form-control" defaultValue={mainFormData.firstName}/>
+                        type="text" name="firstName" className="form-control" defaultValue={mainFormData.firstName} />
                 </div>
                 <div className="form-group col-sm">
                     <label className="label" htmlFor="lastName">Last Name</label>
                     <input
-                        type="text" name="lastName" className="form-control" defaultValue={mainFormData.lastName}/>
+                        type="text" name="lastName" className="form-control" defaultValue={mainFormData.lastName} />
                 </div>
             </div>
             <div className="form-group">
                 <label className="label" htmlFor="email">Email Address</label>
                 <input
-                    type="email" name="email" className="form-control" defaultValue={mainFormData.email}/>
+                    type="email" name="email" className="form-control" defaultValue={mainFormData.email} />
             </div>
             <div className="form-group">
                 <label className="label" htmlFor="website">Website</label>
                 <input
                     type="url" name="website" className="form-control" placeholder="https://example.com"
-                    defaultValue={mainFormData.website} pattern="https://.*"/>
+                    defaultValue={mainFormData.website} pattern="https://.*" />
             </div>
         </div>
     );
