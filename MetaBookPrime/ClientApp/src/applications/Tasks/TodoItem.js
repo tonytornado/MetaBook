@@ -66,6 +66,7 @@ export default class TodoItem extends Component {
 
     render() {
         let thing = this.state.item;
+        let taskText = thing.timeToComplete ? <tr><td><b>Active Time</b></td><td>{thing.timeToComplete}</td></tr> : null;
 
         return (
             <>
@@ -91,6 +92,7 @@ export default class TodoItem extends Component {
                                 <td><b>Due</b></td>
                                 <td>{thing.dueDate ? dateFormatter(thing.dueDate) : "Not Set"}</td>
                             </tr>
+                            {taskText}
                         </tbody>
                     </table>
                 </div>

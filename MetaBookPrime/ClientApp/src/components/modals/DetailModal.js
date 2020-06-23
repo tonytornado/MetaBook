@@ -2,8 +2,8 @@ import React from 'react';
 import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 
 export function DetailModal(props) {
-    return <div>
-        <Button color="link" tag="a" className="text" onClick={props.clicker}>
+    return <>
+        <Button color="primary" className="text" onClick={props.clicker}>
             {props.buttonLabel}
         </Button>
         <Modal isOpen={props.opener}
@@ -15,5 +15,5 @@ export function DetailModal(props) {
                 {props.children}
             </ModalBody>
         </Modal>
-    </div>;
+    </>;
 }

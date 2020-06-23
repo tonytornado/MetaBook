@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
 
 /**
- * Returns a clock that syncs to local time.
+ * Returns a clock that syncs to local
  */
 export default function Timer() {
-    const [time, setTime] = useState(new Date);
+    const [time, setTime] = useState(new Date());
     useEffect(() => {
-        setInterval(
-            setTime(new Date), 1000
-        )
+        const TimerId = setInterval(
+            () => setTime(new Date()),
+            1000
+        );
+        return () => {
+            clearInterval(TimerId);
+        }
+
+
     });
 
     return <FormattedTime date={time} />

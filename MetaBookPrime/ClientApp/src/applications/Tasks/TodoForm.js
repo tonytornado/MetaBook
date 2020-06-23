@@ -69,6 +69,7 @@ export default class TodoForm extends Component {
 
     render() {
         const mainFormData = this.state.item;
+        const make = this.state.item.id == 0 ? "Add" : "Edit";
 
         return (
             <div>
@@ -78,7 +79,7 @@ export default class TodoForm extends Component {
                     <input type="hidden" name="ownerId" defaultValue={this.state.userData.sub}/>
                     <div>
                         <div className="form-group">
-                            <input type="text" placeholder="Add Task" name="title" className="form-control"
+                            <input type="text" placeholder="Task" name="title" className="form-control"
                                    defaultValue={mainFormData.title}/>
                         </div>
                         <div className="form-group">
@@ -88,9 +89,9 @@ export default class TodoForm extends Component {
                     </div>
                     <div className="form-group">
                         <label htmlFor="dueDate">Due Date</label>
-                        <input type="date" className="form-control" name="dueDate" defaultValue={mainFormData.dueDate} />
+                        <input type="datetime-local" className="form-control" name="dueDate" defaultValue={mainFormData.dueDate} />
                     </div>
-                    <input type="submit" className="btn btn-primary btn-block" name="task-act" value="Add Task"/>
+                    <input type="submit" className="btn btn-primary btn-block" name="task-act" value={make}/>
                 </form>
             </div>
         );
