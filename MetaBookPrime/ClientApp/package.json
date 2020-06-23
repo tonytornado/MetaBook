@@ -26,7 +26,6 @@
   "devDependencies": {
     "ajv": "latest",
     "cross-env": "latest",
-    "eslint": "latest",
     "eslint-config-react-app": "latest",
     "eslint-plugin-flowtype": "latest",
     "eslint-plugin-import": "latest",

@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
-import {Container} from 'reactstrap';
+import {Container, Row, Col} from 'reactstrap';
 import {NavMenu} from './NavMenu';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSpinner, faSync} from '@fortawesome/free-solid-svg-icons';
+import Timer from './helpers/Timer';
 
+/**
+ * The overall layout for the application.
+ */
 export class Layout extends Component {
     static displayName = Layout.name;
 
@@ -42,8 +46,11 @@ Banner.displayName = Banner.name
  * */
 export function Footer() {
     return (
-        <div className="text-center text-light bg-dark py-3">
-            <p>Tony T. &copy; 2019</p>
+        <div className="text-center text-light bg-dark py-3 fixed-bottom">
+            <Row>
+                <Col><p>Tony T. &copy; 2019</p></Col>
+                <Col><Timer /></Col>
+            </Row>
         </div>
     );
 }
